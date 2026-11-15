@@ -45,7 +45,7 @@ pub struct UpdateStatus {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub check_error: Option<String>,
 
-    /// The running build, as a release name (`tsudev-cwico-v26.8.19`).
+    /// The running build, as a release name (`tsucwico-v26.8.19`).
     pub current_release: String,
     /// …and as the raw semver, for support reports.
     pub current_version: String,

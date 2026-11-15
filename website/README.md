@@ -1,7 +1,7 @@
 # Website cwico.tsudev.com
 
 Trang sản phẩm của cwico: [Astro](https://astro.build) dựng trang tĩnh, host trên **Cloudflare Workers Static Assets**
-(Worker `tsudev-cwico-website`, chỉ tài sản tĩnh, không có mã chạy phía máy chủ; tên miền `cwico.tsudev.com` gắn bằng
+(Worker `tsucwico-website`, chỉ tài sản tĩnh, không có mã chạy phía máy chủ; tên miền `cwico.tsudev.com` gắn bằng
 `custom_domain` trong `wrangler.jsonc`). Không dùng Pages: wrangler 4.15x chuyển lệnh tạo dự án Pages mới sang Workers
 và tự cài adapter SSR - xem chú thích trong `wrangler.jsonc`.
 

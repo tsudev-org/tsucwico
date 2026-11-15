@@ -119,6 +119,17 @@ export async function openProductSite(): Promise<void> {
   return call<void>("open_product_site");
 }
 
+/** The ecosystem donation page; the app never embeds account details (decision 20261112-02). */
+export const DONATE_URL = "https://tsudev.com/ung-ho";
+
+export async function openDonatePage(): Promise<void> {
+  if (!isDesktop()) {
+    window.open(DONATE_URL, "_blank", "noopener,noreferrer");
+    return;
+  }
+  return call<void>("open_donate_page");
+}
+
 export async function openBackupDir(): Promise<void> {
   if (!isDesktop()) return;
   return call<void>("open_backup_dir");

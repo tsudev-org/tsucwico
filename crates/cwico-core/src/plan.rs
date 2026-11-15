@@ -307,7 +307,7 @@ impl RemovalPlan {
         if options.create_restore_point && has_destructive && !options.dry_run {
             preamble.push(Step::CreateRestorePoint {
                 description: format!(
-                    "tsudev-cwico: before removing {} item{}",
+                    "Tsu Cwico: before removing {} item{}",
                     items.len(),
                     if items.len() == 1 { "" } else { "s" }
                 ),

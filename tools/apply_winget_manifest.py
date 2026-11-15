@@ -40,7 +40,7 @@ def verify_installer_url(url: str, expected_sha: str) -> None:
     only after a pull request has been opened against someone else's
     repository. This has caught a real bug already: the URL was built from the
     *version* (`.../download/v26.8.1901/`) where the *tag*
-    (`.../download/tsudev-cwico-v26.8.19/`) belongs, which 404s.
+    (`.../download/tsucwico-v26.8.19/`) belongs, which 404s.
     """
     print(f"  fetching {url}")
     try:
@@ -120,15 +120,21 @@ def main() -> int:
             )
             # The release name appears in download and release-notes URLs.
             text = re.sub(
-                r"releases/(download|tag)/tsudev-cwico-v[\d.]+",
+                r"releases/(download|tag)/(?:tsucwico|tsudev-cwico)-v[\d.]+",
                 lambda m: f"releases/{m.group(1)}/{release}",
                 text,
             )
             text = re.sub(
-                r"tsudev-cwico_[\d.]+_x64_en-US\.msi",
-                f"tsudev-cwico_{semver}_x64_en-US.msi",
+                # Up to 26.11.1002 the MSI was `tsudev-cwico_<v>_x64_en-US.msi`;
+                # release.yml now names it `tsucwico_<v>_x64.msi`.
+                r"(?:tsucwico|tsudev-cwico)_[\d.]+_x64(?:_en-US)?\.msi",
+                f"tsucwico_{semver}_x64.msi",
                 text,
             )
+            # Renamed Tsu Cwico after 26.11.1002 (docs/adr/0001); the package
+            # identifier `tsudev.cwico` is published and never changes.
+            text = text.replace("github.com/tsudev-org/tsudev-cwico/", "github.com/tsudev-org/tsucwico/")
+            text = re.sub(r"^PackageName:.*$", "PackageName: Tsu Cwico", text, flags=re.MULTILINE)
             path.write_text(text)
 
     url = read_field(generated, "InstallerUrl")

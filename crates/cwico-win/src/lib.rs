@@ -1,4 +1,4 @@
-//! Windows backend for tsudev-cwico.
+//! Windows backend for Tsu Cwico.
 //!
 //! Implements [`cwico_core::PlatformBackend`] with direct Win32 and WinRT
 //! calls: registry enumeration, the AppX packaging API, the service control

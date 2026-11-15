@@ -46,9 +46,9 @@ Copy-Item app/src-tauri/icons/StoreLogo.png packaging/msix/staging/Assets/
 Copy-Item packaging/msix/AppxManifest.xml packaging/msix/staging/
 
 # 3. Pack and sign
-makeappx pack /d packaging/msix/staging /p build/tsudev-cwico-v26.8.19-x64.msix
+makeappx pack /d packaging/msix/staging /p build/tsucwico-v26.8.19-x64.msix
 signtool sign /fd SHA256 /a /f cert.pfx /p $env:CERT_PASSWORD `
-  build/tsudev-cwico-v26.8.19-x64.msix
+  build/tsucwico-v26.8.19-x64.msix
 ```
 
 `Publisher` in `AppxManifest.xml` must match the certificate subject exactly,

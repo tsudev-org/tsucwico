@@ -58,20 +58,31 @@ def test_ordering() -> None:
     # which naive string comparison gets wrong.
     check(
         "the 10th release of a day sorts above the 2nd",
-        semver_key(version.to_semver("tsudev-cwico-v26.8.19.10"))
-        > semver_key(version.to_semver("tsudev-cwico-v26.8.19.2")),
+        semver_key(version.to_semver("tsucwico-v26.8.19.10"))
+        > semver_key(version.to_semver("tsucwico-v26.8.19.2")),
     )
     # And a new day must beat any number of same-day releases.
     check(
         "a new day beats the 99th release of the previous one",
-        semver_key(version.to_semver("tsudev-cwico-v26.8.20"))
-        > semver_key(version.to_semver("tsudev-cwico-v26.8.19.99")),
+        semver_key(version.to_semver("tsucwico-v26.8.20"))
+        > semver_key(version.to_semver("tsucwico-v26.8.19.99")),
     )
 
 
 def test_accepted_input_forms() -> None:
-    for short in ["v26.8.19", "26.8.19", "tsudev-cwico-v26.8.19"]:
+    for short in ["v26.8.19", "26.8.19", "tsucwico-v26.8.19"]:
         check(f"accepts `{short}`", version.to_semver(short) == "26.8.1901")
+
+
+def test_legacy_names() -> None:
+    """Tags up to 26.11.1002 carry the old name tsudev-cwico (docs/adr/0001)."""
+    for case in CASES["legacyNames"]:
+        name, semver = case["name"], case["semver"]
+        check(
+            f"legacy {name} -> {semver} -> tsucwico-v...",
+            version.to_semver(name) == semver
+            and version.to_name(semver).startswith("tsucwico-v"),
+        )
 
 
 def test_rejected_names() -> None:
@@ -102,6 +113,7 @@ def main() -> int:
         test_round_trip,
         test_ordering,
         test_accepted_input_forms,
+        test_legacy_names,
         test_rejected_names,
         test_rejected_semvers,
         test_manifests_agree,

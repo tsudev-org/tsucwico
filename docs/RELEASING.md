@@ -24,10 +24,10 @@ Releases are named for the day they ship:
 
 | Situation | Release name |
 |---|---|
-| First release on 19 August 2026 | `tsudev-cwico-v26.8.19` |
-| A second release the same day | `tsudev-cwico-v26.8.19.2` |
-| A third | `tsudev-cwico-v26.8.19.3` |
-| The next day | `tsudev-cwico-v26.8.20` |
+| First release on 19 August 2026 | `tsucwico-v26.8.19` |
+| A second release the same day | `tsucwico-v26.8.19.2` |
+| A third | `tsucwico-v26.8.19.3` |
+| The next day | `tsucwico-v26.8.20` |
 
 Internally each maps to a semver whose patch field carries the day and the
 release counter (`26.8.1901`), because Cargo, the MSI bundler and the updater
@@ -105,7 +105,9 @@ Before publishing, confirm on the draft:
 
 - [ ] `latest.json` is attached - without it no update is ever delivered
 - [ ] The MSI and NSIS installers are attached and their sizes look sane
-- [ ] `tsudev-cwico_<semver>_x64-cli.exe` is attached, and `cli.exe info` runs
+- [ ] `tsucwico_<semver>_x64-cli.exe` is attached, and `cli.exe info` runs
+- [ ] `SHA256SUMS.txt` and `SHA256SUMS.txt.sig` are attached and list every `.exe`, `.msi`, `.sig` and `latest.json`
+- [ ] **First release named Tsu Cwico only** (ADR-0001): on a Windows VM with a snapshot, install 26.11.1002 by MSI, launch, accept the update - one "Tsu Cwico" entry in Add/Remove Programs, none called tsudev-cwico; repeat with the 26.11.1002 NSIS setup
 - [ ] The release notes read the way you want them to, in a blocking dialog
 - [ ] **The signature verifies against the key this build carries:**
 
@@ -159,7 +161,7 @@ Because updates are mandatory, a broken release reaches everyone who opens the
 app. In order of preference:
 
 1. **Fix forward.** Cut the next release the same day -
-   `tsudev-cwico-v26.8.19.2` - and publish it. Users who have not yet updated
+   `tsucwico-v26.8.19.2` - and publish it. Users who have not yet updated
    go straight to the fixed build; users who did get the fix on next start.
    This is almost always the right answer, and it is what the same-day
    counter exists for.

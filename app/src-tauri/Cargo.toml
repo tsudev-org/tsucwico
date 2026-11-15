@@ -1,6 +1,6 @@
 [package]
 name        = "cwico-app"
-description = "tsudev-cwico desktop application."
+description = "Tsu Cwico desktop application."
 version.workspace      = true
 edition.workspace      = true
 rust-version.workspace = true

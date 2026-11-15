@@ -19,7 +19,7 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Brand } from "./Brand";
 import { Button } from "./primitives";
 
-const ISSUES_URL = "https://github.com/tsudev-org/tsudev-cwico/issues/new";
+const ISSUES_URL = "https://github.com/tsudev-org/tsucwico/issues/new";
 
 interface State {
   error: Error | null;

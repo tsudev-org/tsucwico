@@ -5,7 +5,7 @@
 // hạn mức 100.000 lượt/ngày của Workers.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "tsudev-cwico-website",
+  "name": "tsucwico-website",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",

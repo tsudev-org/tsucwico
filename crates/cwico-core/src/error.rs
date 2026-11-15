@@ -1,4 +1,4 @@
-//! Error taxonomy shared by every layer of tsudev-cwico.
+//! Error taxonomy shared by every layer of Tsu Cwico.
 //!
 //! The engine never panics on a per-item failure: an item that cannot be
 //! removed records its [`Error`] in the step outcome and the run continues.

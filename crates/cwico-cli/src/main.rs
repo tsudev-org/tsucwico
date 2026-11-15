@@ -1,4 +1,4 @@
-//! `cwico` - the headless interface to tsudev-cwico.
+//! `cwico` - the headless interface to Tsu Cwico.
 //!
 //! Everything the GUI can do, scriptable. Three reasons it exists:
 //!
@@ -23,7 +23,7 @@ use std::path::PathBuf;
 use std::process::ExitCode;
 
 const HELP: &str = concat!(
-    "tsudev-cwico ",
+    "Tsu Cwico ",
     env!("CARGO_PKG_VERSION"),
     r#" - deep Windows debloater and software removal toolkit
 https://tsudev.com
@@ -492,7 +492,7 @@ fn run() -> Result<ExitCode, String> {
                 });
                 println!("{}", serde_json::to_string_pretty(&value).unwrap());
             } else {
-                println!("\n  tsudev-cwico {}", env!("CARGO_PKG_VERSION"));
+                println!("\n  Tsu Cwico {}", env!("CARGO_PKG_VERSION"));
                 println!("  https://tsudev.com\n");
                 println!("  platform         {}", info.platform);
                 println!("  os               {}", info.os_description);

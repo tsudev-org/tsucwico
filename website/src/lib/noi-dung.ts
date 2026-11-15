@@ -4,10 +4,12 @@ import { readFileSync } from 'node:fs';
 import { dirname, join, normalize } from 'node:path';
 import { Marked } from 'marked';
 
-export const REPO = 'tsudev-org/tsudev-cwico';
+export const REPO = 'tsudev-org/tsucwico';
 export const REPO_URL = `https://github.com/${REPO}`;
 export const SITE = 'https://cwico.tsudev.com';
-export const SAN_PHAM = 'cwico';
+export const SAN_PHAM = 'Tsu Cwico';
+/** Trang Ủng hộ trung tâm của hệ sinh thái (quyết định 20261112-02): site sản phẩm chỉ trỏ về đây, không nhúng STK/QR. */
+export const UNG_HO_URL = 'https://tsudev.com/ung-ho';
 
 // Gốc repo: build chạy trong website/ (npm run build), nên gốc là thư mục cha.
 const GOC = normalize(join(process.cwd(), '..'));
@@ -207,7 +209,7 @@ export function banMoiNhat(): Promise<BanPhatHanh> {
   boNho ??= (async () => {
     const headers: Record<string, string> = {
       Accept: 'application/vnd.github+json',
-      'User-Agent': 'tsudev-cwico-website',
+      'User-Agent': 'tsucwico-website',
     };
     if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
     const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, { headers });
@@ -232,7 +234,7 @@ export function banMoiNhat(): Promise<BanPhatHanh> {
     const [, y, m, d] = r.published_at.match(/^(\d{4})-(\d{2})-(\d{2})/) ?? [];
     return {
       tag: r.tag_name,
-      phienBan: r.tag_name.replace(/^tsudev-cwico-v/, ''),
+      phienBan: r.tag_name.replace(/^(?:tsucwico|tsudev-cwico)-v/, ''),
       ngay: `${d}/${m}/${y}`,
       url: r.html_url,
       goi,

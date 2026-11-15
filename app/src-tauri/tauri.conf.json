@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tsudev-cwico",
+  "productName": "Tsu Cwico",
   "version": "26.11.1002",
   "identifier": "com.tsudev.cwico",
   "build": {
@@ -13,7 +13,7 @@
     "withGlobalTauri": false,
     "windows": [
       {
-        "title": "tsudev-cwico - Windows Debloater",
+        "title": "Tsu Cwico - Windows Debloater",
         "width": 1280,
         "height": 820,
         "minWidth": 940,
@@ -68,14 +68,16 @@
         "displayLanguageSelector": true,
         "installerIcon": "icons/icon.ico",
         "headerImage": "installer/nsis-header.bmp",
-        "sidebarImage": "installer/nsis-sidebar.bmp"
+        "sidebarImage": "installer/nsis-sidebar.bmp",
+        "installerHooks": "installer/hooks.nsh"
       },
       "wix": {
         "language": [
           "en-US"
         ],
         "bannerPath": "installer/wix-banner.bmp",
-        "dialogImagePath": "installer/wix-dialog.bmp"
+        "dialogImagePath": "installer/wix-dialog.bmp",
+        "upgradeCode": "96371ec9-5fcd-5edb-a65d-8641d9975827"
       }
     },
     "createUpdaterArtifacts": true
@@ -83,7 +85,7 @@
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://github.com/tsudev-org/tsudev-cwico/releases/latest/download/latest.json"
+        "https://github.com/tsudev-org/tsucwico/releases/latest/download/latest.json"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNBMDU5NzhFODY4QkU3Q0UKUldUTzU0dUdqcGNGT293UVN1Q28zbWhjNXdqL2o3NEM1OHRCWlVIQkdNWjZEZWNER1Y5S01RSlEK",
       "windows": {

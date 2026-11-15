@@ -143,7 +143,7 @@ impl<'a> Engine<'a> {
 
         if !plan.options.dry_run && !self.backend.is_elevated() {
             return Err(Error::NeedsElevation(
-                "removing software requires running tsudev-cwico as Administrator".into(),
+                "removing software requires running Tsu Cwico as Administrator".into(),
             ));
         }
 

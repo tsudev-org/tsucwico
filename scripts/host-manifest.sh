@@ -62,7 +62,7 @@ else
   )"
 fi
 
-# ── Nhóm ngoài git của tsudev-cwico ─────────────────────────────────────────
+# ── Nhóm ngoài git của Tsu Cwico ─────────────────────────────────────────
 # Đã kiểm 03/11/2026: TRONG thư mục dự án không có file ignore nào phải đi
 # theo (toàn bộ là target/, node_modules/, gen/, __pycache__, và
 # ui/public/tweaks.json - bản sao byte-giống-hệt của data/tweaks.json đang

@@ -12,10 +12,10 @@ const [y, m, d] = CSDL.updated.split('-');
 const tim = (r: (typeof quyTac)[number]) =>
   chuanHoa([tenQuyTac(r).vi, tenQuyTac(r).en, r.reason.vi, r.description?.vi ?? '', r.id, ...(r.tags ?? []), ...(r.processes ?? []), ...(r.services ?? [])].join(' '));
 ---
-<Trang tieuDe="Cơ sở dữ liệu an toàn" moTa={`Tra cứu ${CSDL.rules.length} quy tắc phân loại của cwico: phần mềm nào An toàn, Cẩn trọng hay Trọng yếu khi gỡ trên Windows, kèm lý do và thứ được dọn.`} duongDan="/co-so-du-lieu/" coLoc>
+<Trang tieuDe="Cơ sở dữ liệu an toàn" moTa={`Tra cứu ${CSDL.rules.length} quy tắc phân loại của Tsu Cwico: phần mềm nào An toàn, Cẩn trọng hay Trọng yếu khi gỡ trên Windows, kèm lý do và thứ được dọn.`} duongDan="/co-so-du-lieu/" coLoc>
   <div class="khung trang-hep">
     <h1>Cơ sở dữ liệu an toàn</h1>
-    <p class="dan">Mỗi mục cwico tìm thấy được đối chiếu với các quy tắc dưới đây. Bản <strong>{CSDL.version}</strong>, cập nhật {d}/{m}/{y}, gồm {CSDL.rules.length} quy tắc: {dem.critical} Trọng yếu, {dem.caution} Cẩn trọng, {dem.safe} An toàn. Mục không khớp quy tắc nào là <strong>Chưa rõ</strong> và luôn phải xác nhận riêng.</p>
+    <p class="dan">Mỗi mục Tsu Cwico tìm thấy được đối chiếu với các quy tắc dưới đây. Bản <strong>{CSDL.version}</strong>, cập nhật {d}/{m}/{y}, gồm {CSDL.rules.length} quy tắc: {dem.critical} Trọng yếu, {dem.caution} Cẩn trọng, {dem.safe} An toàn. Mục không khớp quy tắc nào là <strong>Chưa rõ</strong> và luôn phải xác nhận riêng.</p>
     <p class="dan">Nguồn: <a href={`${REPO_URL}/blob/main/data/safety-db.json`} target="_blank" rel="noopener noreferrer">data/safety-db.json</a>. Thấy quy tắc sai hoặc thiếu? <a href={`${REPO_URL}/issues/new`} target="_blank" rel="noopener noreferrer">Báo cho dự án</a> - phân loại thận trọng: một mục Cẩn trọng thừa chỉ tốn một cú nhấp, một mục An toàn sai làm người dùng mất tính năng.</p>
 
     <BoLoc id="qt" danhMuc="quy-tac" nhan="Tìm quy tắc" goiY="Ví dụ: onedrive, edge, xbox, telemetry, defender" tong={quyTac.length}

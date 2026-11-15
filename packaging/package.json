@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "tsudev-cwico",
+  "name": "tsucwico",
   "winget": "tsudev.cwico",
   "homepage": "https://cwico.tsudev.com",
   "license": "MIT",
@@ -9,22 +9,29 @@
     "en": "Deep Windows debloater and software removal toolkit"
   },
   "release": {
-    "repo": "tsudev-org/tsudev-cwico",
-    "tagRegex": "^tsudev-cwico-v\\d+\\.\\d+\\.\\d+\\.\\d+$"
+    "repo": "tsudev-org/tsucwico",
+    "tagRegex": "^(?:tsucwico|tsudev-cwico)-v(?<name>\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?)$",
+    "sums": "SHA256SUMS.txt",
+    "version": {
+      "from": "tag",
+      "rule": "semver = YY.M.(D*100+N); N = 1 when the tag has 3 parts. tsucwico-v26.11.16 -> 26.11.1601, tsucwico-v26.11.10.2 -> 26.11.1002",
+      "tool": "tools/version.py to-semver <tag>"
+    },
+    "legacyTagPrefix": "tsudev-cwico"
   },
   "assets": {
     "windows-x64": {
-      "file": "tsudev-cwico_{version}_x64-cli.exe",
+      "file": "tsucwico_{version}_x64-cli.exe",
       "kind": "portable",
-      "bin": "tsudev-cwico_{version}_x64-cli.exe"
+      "bin": "tsucwico_{version}_x64-cli.exe"
     },
     "windows-x64-installer": {
-      "file": "tsudev-cwico_{version}_x64-setup.exe",
+      "file": "tsucwico_{version}_x64-setup.exe",
       "kind": "installer",
       "installer": "nullsoft"
     },
     "windows-x64-msi": {
-      "file": "tsudev-cwico_{version}_x64_en-US.msi",
+      "file": "tsucwico_{version}_x64_en-US.msi",
       "kind": "installer",
       "installer": "wix"
     }

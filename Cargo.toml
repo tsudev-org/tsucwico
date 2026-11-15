@@ -1,5 +1,5 @@
 # =============================================================================
-#  tsudev-cwico -- Cargo workspace
+#  Tsu Cwico -- Cargo workspace
 #  Deep Windows debloater & software removal toolkit
 #  https://tsudev.com
 # =============================================================================
@@ -30,7 +30,7 @@ edition      = "2021"
 rust-version = "1.82"
 authors      = ["tsudev <contact@tsudev.com>"]
 homepage     = "https://tsudev.com"
-repository   = "https://github.com/tsudev-org/tsudev-cwico"
+repository   = "https://github.com/tsudev-org/tsucwico"
 license      = "MIT"
 
 [workspace.dependencies]

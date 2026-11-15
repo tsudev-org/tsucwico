@@ -1,6 +1,6 @@
 [package]
 name        = "cwico-cli"
-description = "Headless command-line interface for tsudev-cwico."
+description = "Headless command-line interface for Tsu Cwico."
 version.workspace      = true
 edition.workspace      = true
 rust-version.workspace = true

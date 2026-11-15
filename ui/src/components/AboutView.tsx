@@ -11,7 +11,7 @@ import type { AboutInfo, Locale } from "../types";
 import { formatDate, translator } from "../i18n";
 import { Brand } from "./Brand";
 import { Button, Notice, Panel } from "./primitives";
-import { openBackupDir, openProductSite } from "../api";
+import { openBackupDir, openDonatePage, openProductSite } from "../api";
 
 export function AboutView({
   info,
@@ -47,9 +47,15 @@ export function AboutView({
             {info.appRelease} · MIT
           </p>
         </div>
-        <Button variant="primary" onClick={() => void openProductSite()}>
-          {t("about.website")} ↗
-        </Button>
+        <div className="flex flex-wrap justify-center gap-2">
+          <Button variant="primary" onClick={() => void openProductSite()}>
+            {t("about.website")} ↗
+          </Button>
+          <Button onClick={() => void openDonatePage()}>{t("about.donate")} ↗</Button>
+        </div>
+        <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>
+          {t("about.donateNote")}
+        </p>
       </Panel>
 
       <Panel>

@@ -116,14 +116,14 @@ pub fn write_restore_script(out_dir: &Path, backups: &[RegistryBackup]) -> Resul
     let mut script = String::from(
         "@echo off\r\n\
          REM ---------------------------------------------------------------\r\n\
-         REM  tsudev-cwico -- registry rollback\r\n\
+         REM  Tsu Cwico -- registry rollback\r\n\
          REM  https://tsudev.com\r\n\
          REM\r\n\
          REM  Re-imports every registry key this run backed up.\r\n\
          REM  Right-click this file and choose \"Run as administrator\".\r\n\
          REM ---------------------------------------------------------------\r\n\
          setlocal\r\n\
-         echo Restoring registry keys backed up by tsudev-cwico...\r\n\r\n",
+         echo Restoring registry keys backed up by Tsu Cwico...\r\n\r\n",
     );
 
     for backup in backups {

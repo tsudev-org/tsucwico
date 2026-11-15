@@ -1,6 +1,6 @@
 //! # cwico-core
 //!
-//! The platform-independent half of **tsudev-cwico**, a deep Windows
+//! The platform-independent half of **Tsu Cwico**, a deep Windows
 //! debloater and software-removal toolkit.
 //!
 //! Nothing in this crate touches an operating system. Scanning, classifying
@@ -80,10 +80,15 @@ pub use tweaks::{Tweak, TweakCatalog, TweakCategory};
 pub use version::{current_release_name, name_for_semver, Release};
 
 /// Product name, used in restore-point descriptions and log headers.
-pub const PRODUCT_NAME: &str = "tsudev-cwico";
+pub const PRODUCT_NAME: &str = "Tsu Cwico";
 
 /// Product homepage. The UI links its logo and wordmark here.
 pub const PRODUCT_URL: &str = "https://tsudev.com";
+
+/// The ecosystem's single donation page (decision 20261112-02). The desktop app
+/// only opens it in the browser: no account number or QR code is ever built in,
+/// and donating never unlocks anything.
+pub const DONATE_URL: &str = "https://tsudev.com/ung-ho";
 
 /// Crate version, mirroring the workspace version.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

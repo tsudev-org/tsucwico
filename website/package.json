@@ -1,5 +1,5 @@
 {
-  "name": "tsudev-cwico-website",
+  "name": "tsucwico-website",
   "private": true,
   "type": "module",
   "description": "Trang sản phẩm cwico.tsudev.com (Astro, trang tĩnh; JavaScript chỉ để lọc danh mục, trang vẫn đọc được khi tắt JS)",

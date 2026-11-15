@@ -1,6 +1,6 @@
 [package]
 name        = "cwico-win"
-description = "Windows backend for tsudev-cwico: registry, AppX, services, tasks, restore points and deep cleaning."
+description = "Windows backend for Tsu Cwico: registry, AppX, services, tasks, restore points and deep cleaning."
 version.workspace      = true
 edition.workspace      = true
 rust-version.workspace = true
