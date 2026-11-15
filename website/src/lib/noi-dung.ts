@@ -159,11 +159,18 @@ export function laNgoai(href: string): boolean {
 export function renderMd(md: string, tepMd: string): string {
   const sach = md.replace(/^<div align="center">[\s\S]*?<\/div>\s*/m, '').replace(/^#\s+.+\n/m, '');
   const marked = new Marked({ gfm: true });
+  // CHANGELOG lặp "Added/Changed/Fixed" ở mỗi bản: id trùng phá liên kết neo và bị cổng quét giao diện bắt.
+  // Id lặp lại thì thêm hậu tố -2, -3... (cùng cách GitHub đánh neo).
+  const daDung = new Map<string, number>();
   marked.use({
     renderer: {
       heading({ tokens, depth }) {
         const text = this.parser.parseInline(tokens);
-        return `<h${depth} id="${slug(text)}">${text}</h${depth}>\n`;
+        const goc = slug(text);
+        const lan = (daDung.get(goc) ?? 0) + 1;
+        daDung.set(goc, lan);
+        const id = lan === 1 ? goc : `${goc}-${lan}`;
+        return `<h${depth} id="${id}">${text}</h${depth}>\n`;
       },
       link({ href, title, tokens }) {
         const text = this.parser.parseInline(tokens);

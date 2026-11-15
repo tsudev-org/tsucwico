@@ -23,7 +23,7 @@ Một sản phẩm của [tsudev](https://tsudev.com).
 
 ## Công cụ này làm gì
 
-Windows giấu phần mềm đã cài ở ít nhất sáu nơi khác nhau. `cwico` đọc tất cả,
+Windows giấu phần mềm đã cài ở ít nhất sáu nơi khác nhau. Tsu Cwico đọc tất cả,
 phân loại mọi thứ tìm được, và cho phép bạn gỡ những gì không cần - mà hệ điều
 hành vẫn hoạt động bình thường.
 

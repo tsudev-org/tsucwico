@@ -25,7 +25,7 @@ Một sản phẩm của [tsudev](https://tsudev.com).
 
 ## What it does
 
-Windows hides installed software in at least six unrelated places. `cwico`
+Windows hides installed software in at least six unrelated places. Tsu Cwico
 reads all of them, classifies everything it finds, and lets you remove what you
 do not need - without breaking the operating system.
 
