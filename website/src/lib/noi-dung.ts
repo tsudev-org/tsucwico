@@ -251,3 +251,53 @@ export function banMoiNhat(): Promise<BanPhatHanh> {
 }
 
 export const mb = (b: number) => `${(b / 1024 / 1024).toFixed(1).replace('.', ',')} MB`;
+
+// ---------------------------------------------------------------------------
+// Cài bằng lệnh (phiếu 20261114-02): sinh lúc build từ catalog chính thức của các kho gói
+// ---------------------------------------------------------------------------
+
+export interface LenhCai { kenh: string; heDieuHanh: 'Windows' | 'macOS' | 'Linux'; lenh: string[] }
+
+/** Một nguồn: `packaging/package.json`. Mã winget giữ ở đó (manifest nằm ở microsoft/winget-pkgs). */
+export const GOI = JSON.parse(docTep('packaging/package.json')) as { name: string; winget?: string; homepage: string; channels: string[] };
+
+const KHO_GOI = {
+  pkg: 'https://pkg.tsudev.com/catalog.json',
+  scoop: 'https://raw.githubusercontent.com/tsudev-org/scoop-bucket/main/catalog.json',
+  brew: 'https://raw.githubusercontent.com/tsudev-org/homebrew-tap/main/catalog.json',
+} as const;
+
+interface GoiKho { name: string; homepage: string; replacedBy?: string; install?: string }
+
+async function taiKho(ten: keyof typeof KHO_GOI): Promise<GoiKho[]> {
+  const url = KHO_GOI[ten];
+  // Tải lỗi thì build THẤT BẠI - không lặng lẽ ra khối rỗng (phiếu 20261114-02 mục 2).
+  const res = await fetch(url, { signal: AbortSignal.timeout(20000) }).catch((e) => {
+    throw new Error(`Cài bằng lệnh: không tải được ${url}: ${e}`);
+  });
+  if (!res.ok) throw new Error(`Cài bằng lệnh: ${url} trả ${res.status}`);
+  const cat = (await res.json()) as { schema: number; packages: GoiKho[] };
+  if (cat.schema !== 1 || !Array.isArray(cat.packages)) throw new Error(`Cài bằng lệnh: ${url} sai hợp đồng schema 1`);
+  const nha = GOI.homepage.replace(/\/$/, '');
+  return cat.packages.filter((p) => !p.replacedBy && p.homepage?.replace(/\/$/, '') === nha);
+}
+
+let boNhoLenh: Promise<LenhCai[]> | undefined;
+
+/** Mọi kênh đang có của app, đúng thứ tự Windows -> macOS -> Linux. Tên gói lấy từ kho, không gõ tay. */
+export function lenhCai(): Promise<LenhCai[]> {
+  boNhoLenh ??= (async () => {
+    const [pkg, scoop, brew] = await Promise.all([taiKho('pkg'), taiKho('scoop'), taiKho('brew')]);
+    const ds: LenhCai[] = [];
+    if (GOI.winget) ds.push({ kenh: 'winget', heDieuHanh: 'Windows', lenh: [`winget install --id ${GOI.winget} -e`] });
+    for (const p of scoop)
+      ds.push({ kenh: 'Scoop', heDieuHanh: 'Windows', lenh: ['scoop bucket add tsudev https://github.com/tsudev-org/scoop-bucket', `scoop install tsudev/${p.name}`] });
+    for (const p of brew) ds.push({ kenh: 'Homebrew', heDieuHanh: 'macOS', lenh: [`brew install tsudev-org/tap/${p.name}`] });
+    for (const p of pkg) {
+      ds.push({ kenh: 'APT', heDieuHanh: 'Linux', lenh: [`sudo apt install ${p.name}`] });
+      ds.push({ kenh: 'DNF', heDieuHanh: 'Linux', lenh: [`sudo dnf install ${p.name}`] });
+    }
+    return ds;
+  })();
+  return boNhoLenh;
+}
