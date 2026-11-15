@@ -49,4 +49,4 @@ Xem hàng đợi trong `logs/STATE.md`.
 
 - Logo sản phẩm riêng theo `BRAND_ASSETS.md` mục 15 (v3.6.0): ảnh gốc `assets/brand/source/`, cấu hình
   `assets/brand/brand.json`, sinh bằng `node website/scripts/brand-assets.mjs` (CI chạy `--check`).
-
+- Tên gói Scoop `tsucwico` (không `tsudev-cwico` như `PACKAGING.md` mục 2), theo ADR-0001 và tiền lệ `tsucontact`.

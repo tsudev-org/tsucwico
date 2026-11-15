@@ -2,7 +2,7 @@
 
 - **Mã phiếu**: 20261115-01 (phiếu con)
 - **Từ**: phiên agent-files (repo `tsufiles`), chủ dự án yêu cầu 15/11/2026 - **Đến**: phiên kế tiếp của repo `tsudev-cwico`
-- **Trạng thái**: MỞ
+- **Trạng thái**: ĐANG - 2.1 xong (PR #70), Scorecard xong; còn 2.3 Best Practices + Scoop
 - **Phiếu mẹ (ĐỌC TRƯỚC, mục 0 nguyên tắc + mục 3 quy trình)**: `~/projects/logs/handover/20261115-01_yeu-cau-ho-so-xac-minh-toan-he.md`
 - **Công cụ + mẫu đã đạt passing 100%**: `~/projects/logs/tools/bestpractices/` (`README.md`, `bp.cjs`, `mau-tsufiles.json`);
   mẫu hồ sơ dạng đọc: `~/projects/tsufiles/docs/best-practices.md`.
@@ -25,3 +25,5 @@ Tự chứng nhận sai bị phát hiện sẽ làm hỏng hồ sơ SignPath c�
 ## Kết quả xử lý (phiên nhận điền)
 
 -
+
+- 16/11/2026 - phiên tsudev-cwico-dd: 2.1 SHA256SUMS.txt liệt kê mọi tệp tải về, ký bằng khóa updater (`SHA256SUMS.txt.sig`), `actions/attest-build-provenance@v4` trên `subject-checksums`; tên tệp cũ của bản đã phát hành không đổi. 2.2 `scorecard.yml` đã thêm; Scoop chờ bucket (phiếu linux-packages 20261116-01). 2.3 chưa làm (STATE: BP-1).

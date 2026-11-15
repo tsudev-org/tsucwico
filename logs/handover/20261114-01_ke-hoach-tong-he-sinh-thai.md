@@ -3,7 +3,7 @@
 - **Mã phiếu**: 20261114-01
 - **Lập**: phiên 52 của repo `tsudev`, 14/11/2026, theo uỷ quyền của chủ dự án ("tự chọn phương án chuyên nghiệp,
   hiện đại nhất, cập nhật vào kế hoạch để phiên sau làm đến khi hoàn thành 100%")
-- **Trạng thái**: MỞ - mỗi phiên của mỗi repo đọc mục 1 + đúng dòng của repo mình ở mục 3, làm, rồi đánh dấu tiến độ
+- **Trạng thái**: ĐANG - xem dòng tiến độ cuối
   ở BẢN SAO phiếu trong repo mình (không sửa bản trung tâm này trừ phiên tsudev)
 - **Chi tiết kỹ thuật + quyết định đã chốt (D1-D9)**: `tsudev/docs/de-xuat-bao-mat-cms-cai-bang-lenh.md`
 
@@ -60,3 +60,5 @@ thái. Mỗi repo: kiểm từng phiếu với mã + production ⇒ ĐÓNG kèm 
 4. Nộp đơn SignPath Foundation cho `tsudev-org` (D5).
 5. PAT `WINGET_TOKEN` (`public_repo`) đặt làm secret ở các repo app cần winget.
 6. Giữ khoá riêng `age` cho bản sao lưu DB (P1.9) và bản sao khoá ký ngoại tuyến (G11).
+
+- 16/11/2026 - phiên tsudev-cwico-dd (tsucwico): P0 đối soát: ĐÓNG 20261111-01, 20261112-01, 20261113-02, 20261113-07, 20261114-02; 20261110-01/02 là phiếu kết phiên (không có việc mở); 20261113-03, 20261115-01 ĐANG. Mục 3: 20261113-07 xong, 20261114-02 xong, Scoop chờ bucket, SignPath chờ D5.
