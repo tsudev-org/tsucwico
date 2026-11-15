@@ -16,7 +16,7 @@ Một sản phẩm của [tsudev](https://tsudev.com).
 [![License: MIT](https://img.shields.io/badge/license-MIT-2482bd)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.82%2B-ef6d18)](https://www.rust-lang.org)
 [![Safety rules](https://img.shields.io/badge/safety%20rules-58-2482bd)](data/safety-db.json)
-[![Tests](https://img.shields.io/badge/tests-140-2482bd)](#tests)
+[![Tests](https://img.shields.io/badge/tests-141-2482bd)](#tests)
 
 [Website](https://cwico.tsudev.com) · [tsudev.com](https://tsudev.com) · [Quick start](#quick-start) · [Safety model](#the-safety-model) · [Tiếng Việt](docs/README.vi.md)
 
@@ -299,7 +299,7 @@ everywhere.
 cargo test
 ```
 
-**140 tests.** The ones that matter most:
+**141 tests.** The ones that matter most:
 
 * `selecting_everything_still_cannot_remove_a_critical_component` - ticks every
   row, confirms every prompt, presses go, and asserts Defender and RPC survive.
