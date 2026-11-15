@@ -94,7 +94,7 @@ That is the actual reason to sign, more than any single warning.
 
 **[SignPath Foundation](https://signpath.org/)** issues free OV code-signing
 certificates to qualifying open-source projects, with the key held in an HSM
-and signing driven from CI. `tsudev-cwico` meets the substantive conditions -
+and signing driven from CI. Tsu Cwico meets the substantive conditions -
 OSI-approved licence (MIT), public repository owned by the maintainers, no
 proprietary components - with three things to do first:
 

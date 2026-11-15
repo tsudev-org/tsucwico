@@ -4,18 +4,19 @@
   <img src="assets/brand/tsudev-logo.png" alt="tsudev" width="96">
 </a>
 
-<h1>cwico</h1>
+<h1>Tsu Cwico</h1>
 
 **Deep Windows debloater &amp; software removal toolkit**<br>
 *Bộ công cụ rà quét và gỡ bỏ phần mềm Windows chuyên sâu*
 
 Một sản phẩm của [tsudev](https://tsudev.com).
 
-[![CI](https://github.com/tsudev-org/tsudev-cwico/actions/workflows/ci.yml/badge.svg)](https://github.com/tsudev-org/tsudev-cwico/actions/workflows/ci.yml)
+[![CI](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml/badge.svg)](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tsudev-org/tsucwico/badge)](https://securityscorecards.dev/viewer/?uri=github.com/tsudev-org/tsucwico)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2482bd)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.82%2B-ef6d18)](https://www.rust-lang.org)
 [![Safety rules](https://img.shields.io/badge/safety%20rules-58-2482bd)](data/safety-db.json)
-[![Tests](https://img.shields.io/badge/tests-140-2482bd)](#tests)
+[![Tests](https://img.shields.io/badge/tests-141-2482bd)](#tests)
 
 [Website](https://cwico.tsudev.com) · [tsudev.com](https://tsudev.com) · [Quick start](#quick-start) · [Safety model](#the-safety-model) · [Tiếng Việt](docs/README.vi.md)
 
@@ -25,7 +26,7 @@ Một sản phẩm của [tsudev](https://tsudev.com).
 
 ## What it does
 
-Windows hides installed software in at least six unrelated places. `cwico`
+Windows hides installed software in at least six unrelated places. Tsu Cwico
 reads all of them, classifies everything it finds, and lets you remove what you
 do not need - without breaking the operating system.
 
@@ -200,7 +201,7 @@ Before the first destructive step of any run:
 ### Use it
 
 Download the installer from [cwico.tsudev.com](https://cwico.tsudev.com/tai-ve/) or
-[releases](https://github.com/tsudev-org/tsudev-cwico/releases), or:
+[releases](https://github.com/tsudev-org/tsucwico/releases), or:
 
 ```powershell
 winget install tsudev.cwico
@@ -212,8 +213,8 @@ can be removed.
 ### Build it
 
 ```bash
-git clone https://github.com/tsudev-org/tsudev-cwico
-cd tsudev-cwico
+git clone https://github.com/tsudev-org/tsucwico
+cd tsucwico
 
 # Engine tests - run on any host, no flags needed
 cargo test
@@ -248,7 +249,7 @@ so `--name Edge` selects *Microsoft Edge* and not *Acme Ledger Desktop*.
 ## Architecture
 
 ```
-tsudev-cwico/
+tsucwico/
 ├── crates/
 │   ├── cwico-core/          Platform-independent engine. No OS calls at all.
 │   │   ├── model.rs           SoftwareItem, SafetyClass, Action
@@ -298,7 +299,7 @@ everywhere.
 cargo test
 ```
 
-**140 tests.** The ones that matter most:
+**141 tests.** The ones that matter most:
 
 * `selecting_everything_still_cannot_remove_a_critical_component` - ticks every
   row, confirms every prompt, presses go, and asserts Defender and RPC survive.
@@ -401,6 +402,22 @@ easiest to contribute to. A rule looks like:
 Both `reason` translations are required - a test enforces it. Classify
 conservatively: `Caution` costs a user one confirmation click, while a wrong
 `Safe` costs them a feature they did not agree to lose.
+
+---
+
+## Support
+
+Tsu Cwico is free and stays free. If it saved you an afternoon, you can support
+tsudev at **[tsudev.com/ung-ho](https://tsudev.com/ung-ho)** - voluntary, 100%
+goes to the developer, and it unlocks nothing. The app's About panel links to
+the same page; no payment details are built into any release.
+
+## Names
+
+The product was called `tsudev-cwico` up to release 26.11.1002 and is now
+**Tsu Cwico** (repository `tsudev-org/tsucwico`, release tags `tsucwico-v*`).
+The command stays `cwico`, the winget id stays `tsudev.cwico`, and existing
+installs update in place. Details: [ADR-0001](docs/adr/0001-ten-san-pham-tsu-cwico.md).
 
 ---
 

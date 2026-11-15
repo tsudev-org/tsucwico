@@ -9,7 +9,7 @@ experience than no blocking screen at all, so this is not cosmetic.
 
 Usage:
     tools/changelog_section.py                      # the current version
-    tools/changelog_section.py tsudev-cwico-v26.8.19
+    tools/changelog_section.py tsucwico-v26.8.19
 """
 from __future__ import annotations
 

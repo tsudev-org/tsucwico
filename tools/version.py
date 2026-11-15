@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-The single place that knows how tsudev-cwico versions work.
+The single place that knows how Tsu Cwico versions work.
 
 Releases are named by date: the release published on 19 August 2026 is
-`tsudev-cwico-v26.8.19`, and a second release the same day is
-`tsudev-cwico-v26.8.19.2`.
+`tsucwico-v26.8.19`, and a second release the same day is
+`tsucwico-v26.8.19.2`.
 
 That four-component name is not valid semver, and Cargo, the MSI bundler and
 the Tauri updater all require semver - the updater in particular *compares*
@@ -14,10 +14,10 @@ both the day and the release-of-day counter:
 
     patch = day × 100 + n            (n starts at 1)
 
-    tsudev-cwico-v26.8.19     <->  26.8.1901
-    tsudev-cwico-v26.8.19.2   <->  26.8.1902
-    tsudev-cwico-v26.8.20     <->  26.8.2001
-    tsudev-cwico-v26.9.1      <->  26.9.101
+    tsucwico-v26.8.19     <->  26.8.1901
+    tsucwico-v26.8.19.2   <->  26.8.1902
+    tsucwico-v26.8.20     <->  26.8.2001
+    tsucwico-v26.9.1      <->  26.9.101
 
 Ordering holds in every direction: 1901 < 1902 < 2001, and a September release
 sorts above any August one on the minor field. Up to 99 releases a day.
@@ -25,8 +25,8 @@ sorts above any August one on the minor field. Up to 99 releases a day.
 Usage
     tools/version.py current              print the version the project claims
     tools/version.py next                 compute today's next release name
-    tools/version.py to-semver <name>     tsudev-cwico-v26.8.19 -> 26.8.1901
-    tools/version.py to-name <semver>     26.8.1901 -> tsudev-cwico-v26.8.19
+    tools/version.py to-semver <name>     tsucwico-v26.8.19 -> 26.8.1901
+    tools/version.py to-name <semver>     26.8.1901 -> tsucwico-v26.8.19
     tools/version.py set <name|semver>    write it to every manifest
     tools/version.py check                verify every manifest agrees
 """
@@ -40,7 +40,10 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-PRODUCT = "tsudev-cwico"
+PRODUCT = "tsucwico"
+#: Releases up to 26.11.1002 were tagged `tsudev-cwico-v...` (docs/adr/0001).
+#: Still parsed, never produced.
+LEGACY_PRODUCT = "tsudev-cwico"
 
 #: Files that carry the version, and how to read/write it.
 CARGO_TOML = ROOT / "Cargo.toml"
@@ -49,7 +52,7 @@ UI_PACKAGE = ROOT / "ui" / "package.json"
 
 SEMVER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 NAME_RE = re.compile(
-    rf"^(?:{re.escape(PRODUCT)}-)?v?(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?$"
+    rf"^(?:{re.escape(PRODUCT)}-|{re.escape(LEGACY_PRODUCT)}-)?v?(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?$"
 )
 
 MAX_RELEASES_PER_DAY = 99
@@ -65,7 +68,7 @@ class VersionError(ValueError):
 
 
 def parse_name(name: str) -> tuple[int, int, int, int]:
-    """`tsudev-cwico-v26.8.19.2` -> (26, 8, 19, 2). The counter defaults to 1."""
+    """`tsucwico-v26.8.19.2` -> (26, 8, 19, 2). The counter defaults to 1."""
     match = NAME_RE.match(name.strip())
     if not match:
         raise VersionError(
@@ -193,7 +196,7 @@ def cmd_current() -> int:
 def existing_tags() -> list[str]:
     try:
         out = subprocess.run(
-            ["git", "tag", "--list", f"{PRODUCT}-v*"],
+            ["git", "tag", "--list", f"{PRODUCT}-v*", f"{LEGACY_PRODUCT}-v*"],
             cwd=ROOT,
             capture_output=True,
             text=True,

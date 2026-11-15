@@ -4,13 +4,13 @@
   <img src="../assets/brand/tsudev-logo.png" alt="tsudev" width="96">
 </a>
 
-<h1>cwico</h1>
+<h1>Tsu Cwico</h1>
 
 **Bộ công cụ rà quét và gỡ bỏ phần mềm Windows chuyên sâu**
 
 Một sản phẩm của [tsudev](https://tsudev.com).
 
-[![CI](https://github.com/tsudev-org/tsudev-cwico/actions/workflows/ci.yml/badge.svg)](https://github.com/tsudev-org/tsudev-cwico/actions/workflows/ci.yml)
+[![CI](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml/badge.svg)](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml)
 [![Giấy phép: MIT](https://img.shields.io/badge/gi%E1%BA%A5y%20ph%C3%A9p-MIT-2482bd)](../LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.82%2B-ef6d18)](https://www.rust-lang.org)
 [![Quy tắc an toàn](https://img.shields.io/badge/quy%20t%E1%BA%AFc%20an%20to%C3%A0n-58-2482bd)](../data/safety-db.json)
@@ -23,7 +23,7 @@ Một sản phẩm của [tsudev](https://tsudev.com).
 
 ## Công cụ này làm gì
 
-Windows giấu phần mềm đã cài ở ít nhất sáu nơi khác nhau. `cwico` đọc tất cả,
+Windows giấu phần mềm đã cài ở ít nhất sáu nơi khác nhau. Tsu Cwico đọc tất cả,
 phân loại mọi thứ tìm được, và cho phép bạn gỡ những gì không cần - mà hệ điều
 hành vẫn hoạt động bình thường.
 
@@ -194,8 +194,8 @@ và không gỡ được gì.
 ### Tự build
 
 ```bash
-git clone https://github.com/tsudev-org/tsudev-cwico
-cd tsudev-cwico
+git clone https://github.com/tsudev-org/tsucwico
+cd tsucwico
 
 # Test bộ máy - chạy được trên mọi hệ điều hành
 cargo test
@@ -271,9 +271,9 @@ Mỗi bản phát hành được đặt tên theo ngày ra mắt:
 
 | Tình huống | Tên phiên bản |
 |---|---|
-| Bản đầu tiên ngày 19/8/2026 | `tsudev-cwico-v26.8.19` |
-| Bản thứ hai cùng ngày | `tsudev-cwico-v26.8.19.2` |
-| Ngày hôm sau | `tsudev-cwico-v26.8.20` |
+| Bản đầu tiên ngày 19/8/2026 | `tsucwico-v26.8.19` |
+| Bản thứ hai cùng ngày | `tsucwico-v26.8.19.2` |
+| Ngày hôm sau | `tsucwico-v26.8.20` |
 
 Bên trong, mỗi tên ánh xạ sang một semver ba số mà phần patch mang cả ngày lẫn
 số thứ tự trong ngày (`26.8.1901`) - vì Cargo, bộ đóng gói MSI và bộ cập nhật
@@ -338,6 +338,22 @@ Bắt buộc có cả hai bản dịch `reason` - đã có test kiểm tra. Hãy
 hướng thận trọng: phân loại nhầm thành `Cẩn trọng` chỉ tốn của người dùng một
 cú nhấp, còn phân loại nhầm thành `An toàn` khiến họ mất một tính năng mà họ
 không hề đồng ý đánh đổi.
+
+---
+
+## Ủng hộ
+
+Tsu Cwico miễn phí và sẽ luôn miễn phí. Nếu công cụ giúp ích cho bạn, có thể ủng
+hộ tsudev tại **[tsudev.com/ung-ho](https://tsudev.com/ung-ho)** - tự nguyện,
+100% tới nhà phát triển, không mở khóa tính năng nào. Hộp Giới thiệu trong app
+trỏ về cùng trang đó; không bản phát hành nào chứa thông tin thanh toán.
+
+## Tên gọi
+
+Đến bản 26.11.1002 sản phẩm tên `tsudev-cwico`; nay là **Tsu Cwico** (repo
+`tsudev-org/tsucwico`, nhãn phát hành `tsucwico-v*`). Lệnh vẫn là `cwico`, mã
+winget vẫn là `tsudev.cwico`, bản đã cài tự cập nhật tại chỗ. Chi tiết:
+[ADR-0001](adr/0001-ten-san-pham-tsu-cwico.md).
 
 ---
 

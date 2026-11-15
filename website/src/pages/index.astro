@@ -10,7 +10,7 @@ const tongQuyTac = CSDL.rules.length;
 const sauNoi = [
   { t: 'Chương trình đã cài', d: 'Khóa Uninstall ở HKLM và HKCU, đọc cả hai chế độ xem 64-bit và WOW6432Node - không sót phần mềm 32-bit.' },
   { t: 'Ứng dụng UWP / AppX', d: 'Tên gói, nhà phát hành, kiến trúc, đường dẫn cài; phân biệt gói khung và gói hệ thống qua PackageManager.' },
-  { t: 'Gói nạp sẵn (provisioned)', d: 'Gói đã nạp vào ảnh Windows, tự cài lại cho mọi tài khoản mới - gỡ thường không hết, cwico gỡ tận gốc.' },
+  { t: 'Gói nạp sẵn (provisioned)', d: 'Gói đã nạp vào ảnh Windows, tự cài lại cho mọi tài khoản mới - gỡ thường không hết, Tsu Cwico gỡ tận gốc.' },
   { t: 'Dịch vụ Windows', d: 'Tên hiển thị, trạng thái, kiểu khởi động và ImagePath, đọc trực tiếp từ Service Control Manager.' },
   { t: 'Tác vụ lập lịch', d: 'Đường dẫn đầy đủ, trạng thái bật và đang chạy của từng tác vụ qua COM của Task Scheduler.' },
   { t: 'Khởi động cùng máy', d: 'Run, RunOnce ở cả hai hive, cả hai chế độ xem, cùng thư mục Startup của người dùng và của máy.' },
@@ -33,7 +33,7 @@ const lop = [
       <div>
         <span class="nhan">Phiên bản {ban.phienBan} · {ban.ngay}</span>
         <h1>Gỡ phần mềm thừa trên Windows <span class="chu-tim">mà không làm hỏng máy</span></h1>
-        <p class="mo-dau__phu">cwico đọc cả sáu nơi Windows giấu phần mềm đã cài, phân loại từng mục kèm lý do, rồi chỉ gỡ những gì bạn đã xem và đồng ý - sau khi đã tạo điểm khôi phục.</p>
+        <p class="mo-dau__phu">Tsu Cwico đọc cả sáu nơi Windows giấu phần mềm đã cài, phân loại từng mục kèm lý do, rồi chỉ gỡ những gì bạn đã xem và đồng ý - sau khi đã tạo điểm khôi phục.</p>
         <div class="mo-dau__nut">
           {exe && <a class="nut nut--chinh" href={exe.url}>Tải bộ cài cho Windows (x64)</a>}
           <a class="nut nut--phu" href="/tai-ve/">winget, MSI và kiểm tra tệp</a>
@@ -50,7 +50,7 @@ const lop = [
   <section class="muc" aria-labelledby="so-lieu">
     <div class="khung">
       <h2 id="so-lieu">Ba lớp bảo vệ giữa bạn và một chiếc máy không khởi động được</h2>
-      <p class="muc__dan">Lỗi tệ nhất của một công cụ dọn Windows là máy không lên. cwico đặt ba lớp độc lập trước kết cục đó; mỗi lớp đều có kiểm thử tự động chạy trên mọi lần thay đổi mã.</p>
+      <p class="muc__dan">Lỗi tệ nhất của một công cụ dọn Windows là máy không lên. Tsu Cwico đặt ba lớp độc lập trước kết cục đó; mỗi lớp đều có kiểm thử tự động chạy trên mọi lần thay đổi mã.</p>
       <ul class="so-lieu">
         <li><strong>{tongQuyTac}</strong><span>quy tắc phân loại</span></li>
         <li><strong>{dem.critical}</strong><span>thành phần bị chặn cứng</span></li>
@@ -88,7 +88,7 @@ const lop = [
   <section class="muc" aria-labelledby="sau-noi">
     <div class="khung">
       <h2 id="sau-noi">Sáu nơi Windows giấu phần mềm</h2>
-      <p class="muc__dan">Trình "Ứng dụng đã cài" của Windows chỉ cho bạn thấy một phần. cwico đọc trực tiếp bằng API Win32 và WinRT, không qua PowerShell.</p>
+      <p class="muc__dan">Trình "Ứng dụng đã cài" của Windows chỉ cho bạn thấy một phần. Tsu Cwico đọc trực tiếp bằng API Win32 và WinRT, không qua PowerShell.</p>
       <ul class="the-luoi">
         {sauNoi.map((x) => <li class="the"><h3>{x.t}</h3><p>{x.d}</p></li>)}
       </ul>

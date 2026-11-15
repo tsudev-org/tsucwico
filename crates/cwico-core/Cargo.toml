@@ -1,6 +1,6 @@
 [package]
 name        = "cwico-core"
-description = "Platform-agnostic engine for tsudev-cwico: scanning, safety classification, uninstall planning."
+description = "Platform-agnostic engine for Tsu Cwico: scanning, safety classification, uninstall planning."
 version.workspace      = true
 edition.workspace      = true
 rust-version.workspace = true

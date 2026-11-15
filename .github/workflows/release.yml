@@ -2,8 +2,9 @@ name: Release
 
 on:
   push:
-    # Release tags carry the full product name: tsudev-cwico-v26.8.19
-    tags: ["tsudev-cwico-v*"]
+    # Release tags carry the product's machine name: tsucwico-v26.11.16.
+    # Up to 26.11.1002 they were tsudev-cwico-v* (docs/adr/0001).
+    tags: ["tsucwico-v*"]
   workflow_dispatch:
     inputs:
       publish:
@@ -13,6 +14,10 @@ on:
 
 permissions:
   contents: write
+  # actions/attest-build-provenance: signs a SLSA provenance statement for
+  # every file a user downloads, verifiable with `gh attestation verify`.
+  id-token: write
+  attestations: write
 
 jobs:
   build:
@@ -103,6 +108,10 @@ jobs:
           # `latest.json` is what installed copies poll. Without it the
           # updater has nothing to read and no update is ever delivered.
           uploadUpdaterJson: true
+          # The bundler names files after productName ("Tsu Cwico_..."); the
+          # release carries the machine name instead, which packaging/package.json,
+          # tools/winget-manifest.ps1 and the website all expect.
+          releaseAssetNamePattern: "tsucwico_[version]_[arch][setup][ext]"
           args: --verbose
 
       - name: Build installers only
@@ -128,7 +137,7 @@ jobs:
         shell: bash
         run: |
           semver=$(python3 tools/version.py current | grep -oE '\(semver [^)]+\)' | sed 's/(semver //;s/)//')
-          name="tsudev-cwico_${semver}_x64-cli.exe"
+          name="tsucwico_${semver}_x64-cli.exe"
           mkdir -p dist-cli
           cp target/release/cwico.exe "dist-cli/$name"
           (cd dist-cli && sha256sum "$name")
@@ -140,6 +149,36 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload "${{ github.ref_name }}" "${{ steps.cli.outputs.path }}" --clobber
+
+      # SHA256SUMS.txt lists every file a user can download from the release,
+      # under the names it was uploaded with. Scoop and winget take their hashes
+      # from it rather than from a copy. SHA256SUMS.txt.sig is signed with the
+      # updater key (`tauri signer sign`: a base64-wrapped minisign signature;
+      # base64-decode it, then `minisign -Vm SHA256SUMS.txt -x <decoded> -P
+      # <pubkey>` with the pubkey from tauri.conf.json, also base64-decoded).
+      - name: Publish SHA256SUMS.txt and build provenance
+        if: startsWith(github.ref, 'refs/tags/') || inputs.publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          tag="${{ github.ref_name }}"
+          rm -rf dist-release && mkdir dist-release
+          gh release download "$tag" -D dist-release -p '*.exe' -p '*.msi' -p '*.sig' -p 'latest.json'
+          cd dist-release
+          ls -1 | grep -v '^SHA256SUMS' | sort | xargs sha256sum > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          npx --yes @tauri-apps/cli@2 signer sign SHA256SUMS.txt
+          gh release upload "$tag" SHA256SUMS.txt SHA256SUMS.txt.sig --clobber
+
+      - name: Attest the release files
+        if: startsWith(github.ref, 'refs/tags/') || inputs.publish
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-checksums: dist-release/SHA256SUMS.txt
 
       - name: Record installer hashes
         shell: pwsh

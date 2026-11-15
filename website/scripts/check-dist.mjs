@@ -29,7 +29,7 @@ function kiemTra(tep, html) {
   trang.set(duong, new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])));
 
   const title = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? '';
-  if (!/^(.+ - )?cwico \| tsudev$/.test(title)) loi.push(`${ten}: title sai khuôn: ${title}`);
+  if (!/^(.+ - )?Tsu Cwico \| tsudev$/.test(title)) loi.push(`${ten}: title sai khuôn: ${title}`);
   if (!html.includes('<meta property="og:site_name" content="tsudev">')) loi.push(`${ten}: thiếu og:site_name tsudev`);
   if (!/<link rel="canonical" href="https:\/\/cwico\.tsudev\.com\//.test(html)) loi.push(`${ten}: thiếu canonical`);
   const mota = html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? '';

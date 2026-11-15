@@ -1,7 +1,7 @@
 //! The release-name ⇄ semver mapping.
 //!
-//! Releases are named for the day they ship: `tsudev-cwico-v26.8.19`, and
-//! `tsudev-cwico-v26.8.19.2` for a second release the same day.
+//! Releases are named for the day they ship: `tsucwico-v26.8.19`, and
+//! `tsucwico-v26.8.19.2` for a second release the same day.
 //!
 //! That four-component name is not valid semver, and Cargo, the MSI bundler
 //! and the updater all require semver. The updater in particular *compares*
@@ -12,10 +12,10 @@
 //! ```text
 //! patch = day × 100 + n            (n starts at 1)
 //!
-//! tsudev-cwico-v26.8.19     <->  26.8.1901
-//! tsudev-cwico-v26.8.19.2   <->  26.8.1902
-//! tsudev-cwico-v26.8.20     <->  26.8.2001
-//! tsudev-cwico-v26.9.1      <->  26.9.101
+//! tsucwico-v26.8.19     <->  26.8.1901
+//! tsucwico-v26.8.19.2   <->  26.8.1902
+//! tsucwico-v26.8.20     <->  26.8.2001
+//! tsucwico-v26.9.1      <->  26.9.101
 //! ```
 //!
 //! `tools/version.py` implements the same mapping for the build tooling. Both
@@ -25,8 +25,13 @@
 
 use crate::error::{Error, Result};
 
-/// Product name, and the prefix of every release name.
-pub const PRODUCT: &str = "tsudev-cwico";
+/// Machine name of the product (Tsu Cwico), and the prefix of every release name.
+pub const PRODUCT: &str = "tsucwico";
+
+/// The prefix releases carried up to 26.11.1002, before the product was renamed
+/// Tsu Cwico (docs/adr/0001). Old tags and CHANGELOG headings still use it, so
+/// it keeps parsing; nothing new is ever named with it.
+pub const LEGACY_PRODUCT: &str = "tsudev-cwico";
 
 /// At most 99 releases in a day, because the counter shares the patch field
 /// with the day number.
@@ -44,12 +49,13 @@ pub struct Release {
 }
 
 impl Release {
-    /// Parse a release name. Accepts the full `tsudev-cwico-v26.8.19`, the
+    /// Parse a release name. Accepts the full `tsucwico-v26.8.19`, the
     /// short `v26.8.19`, and the bare `26.8.19`, because all three get typed.
     pub fn parse_name(name: &str) -> Result<Self> {
         let trimmed = name.trim();
         let rest = trimmed
             .strip_prefix(&format!("{PRODUCT}-"))
+            .or_else(|| trimmed.strip_prefix(&format!("{LEGACY_PRODUCT}-")))
             .unwrap_or(trimmed);
         let rest = rest.strip_prefix('v').unwrap_or(rest);
 
@@ -192,6 +198,7 @@ mod tests {
         ascending_order: Vec<String>,
         rejected_names: Vec<String>,
         rejected_semvers: Vec<String>,
+        legacy_names: Vec<RoundTrip>,
     }
 
     #[derive(Deserialize)]
@@ -247,8 +254,8 @@ mod tests {
     #[test]
     fn the_tenth_release_of_a_day_sorts_above_the_second() {
         // Naive string comparison gets this wrong: "…19.10" < "…19.2".
-        let tenth = Release::parse_name("tsudev-cwico-v26.8.19.10").unwrap();
-        let second = Release::parse_name("tsudev-cwico-v26.8.19.2").unwrap();
+        let tenth = Release::parse_name("tsucwico-v26.8.19.10").unwrap();
+        let second = Release::parse_name("tsucwico-v26.8.19.2").unwrap();
         assert!(tenth.to_semver() > second.to_semver() || tenth > second);
         assert!(tenth.day * 100 + tenth.counter > second.day * 100 + second.counter);
     }
@@ -270,8 +277,17 @@ mod tests {
     }
 
     #[test]
+    fn release_names_from_before_the_rename_still_parse() {
+        for case in cases().legacy_names {
+            let release = Release::parse_name(&case.name).unwrap();
+            assert_eq!(release.to_semver(), case.semver, "{}", case.name);
+            assert!(release.to_name().starts_with("tsucwico-v"), "{}", case.name);
+        }
+    }
+
+    #[test]
     fn accepts_the_short_forms_a_maintainer_would_type() {
-        for input in ["tsudev-cwico-v26.8.19", "v26.8.19", "26.8.19"] {
+        for input in ["tsucwico-v26.8.19", "v26.8.19", "26.8.19"] {
             assert_eq!(Release::parse_name(input).unwrap().to_semver(), "26.8.1901");
         }
     }
@@ -279,7 +295,7 @@ mod tests {
     #[test]
     fn an_unrecognised_version_degrades_instead_of_failing() {
         // A stray version must not become an error dialog in the UI.
-        assert_eq!(name_for_semver("1.0.0"), "tsudev-cwico-v1.0.0");
+        assert_eq!(name_for_semver("1.0.0"), "tsucwico-v1.0.0");
     }
 
     #[test]
@@ -292,7 +308,7 @@ mod tests {
 
     #[test]
     fn iso_date_is_rendered_for_display() {
-        let r = Release::parse_name("tsudev-cwico-v26.8.19").unwrap();
+        let r = Release::parse_name("tsucwico-v26.8.19").unwrap();
         assert_eq!(r.iso_date(), "2026-08-19");
     }
 }

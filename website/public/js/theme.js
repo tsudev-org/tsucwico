@@ -83,3 +83,15 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ganNut);
   else ganNut();
 })();
+
+// Nút "Chép" của khối Cài bằng lệnh (/tai-ve/). Ở đây vì CSP chỉ cho script cùng gốc đã khai báo,
+// không script nội tuyến. Ủy quyền sự kiện: không cần chờ DOM.
+document.addEventListener('click', function (e) {
+  var nut = e.target && e.target.closest ? e.target.closest('[data-chep]') : null;
+  if (!nut || !navigator.clipboard) return;
+  navigator.clipboard.writeText(nut.getAttribute('data-chep') || '').then(
+    function () { nut.textContent = 'Đã chép'; },
+    function () { nut.textContent = 'Không chép được'; }
+  );
+  setTimeout(function () { nut.textContent = 'Chép'; }, 1800);
+});

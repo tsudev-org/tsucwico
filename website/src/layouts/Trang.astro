@@ -4,7 +4,7 @@ import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/palette.css';
 import '../styles/site.css';
-import { REPO_URL, SAN_PHAM, SITE } from '../lib/noi-dung';
+import { REPO_URL, SAN_PHAM, SITE, UNG_HO_URL } from '../lib/noi-dung';
 
 interface Props {
   tieuDe?: string;      // Tên trang; bỏ trống ở trang chủ
@@ -35,8 +35,8 @@ const cheDo = [
 const ld = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'tsudev-cwico',
-  alternateName: 'cwico',
+  name: 'Tsu Cwico',
+  alternateName: ['cwico', 'tsudev-cwico'],
   operatingSystem: 'Windows 10, Windows 11',
   applicationCategory: 'UtilitiesApplication',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'VND' },
@@ -79,9 +79,9 @@ const ld = {
     <a class="bo-qua" href="#noi-dung">Bỏ qua tới nội dung</a>
     <header class="dau-trang">
       <div class="khung dau-trang__trong">
-        <a class="thuong-hieu" href="/" aria-label="cwico - Trang chủ">
+        <a class="thuong-hieu" href="/" aria-label="Tsu Cwico - Trang chủ">
           <picture><source type="image/avif" srcset="/brand/logo-cwico-48.avif 1x, /brand/logo-cwico-96.avif 2x, /brand/logo-cwico-144.avif 3x"><source type="image/webp" srcset="/brand/logo-cwico-48.webp 1x, /brand/logo-cwico-96.webp 2x, /brand/logo-cwico-144.webp 3x"><img src="/brand/logo-cwico-96.webp" alt="" width="36" height="36"></picture>
-          <span>cwico</span>
+          <span>Tsu Cwico</span>
         </a>
         <nav aria-label="Chính">
           <ul class="menu">
@@ -107,7 +107,7 @@ const ld = {
               <picture><source type="image/avif" srcset="/brand/logo-tsudev-48.avif 1x, /brand/logo-tsudev-96.avif 2x, /brand/logo-tsudev-144.avif 3x"><source type="image/webp" srcset="/brand/logo-tsudev-48.webp 1x, /brand/logo-tsudev-96.webp 2x, /brand/logo-tsudev-144.webp 3x"><img src="/brand/logo-tsudev-96.webp" alt="" width="28" height="28"></picture>
               <span>tsudev</span>
             </a>
-            <p>cwico là phần mềm mã nguồn mở theo giấy phép MIT, một sản phẩm của
+            <p>Tsu Cwico là phần mềm mã nguồn mở theo giấy phép MIT, một sản phẩm của
               <a href="https://tsudev.com" target="_blank" rel="noopener noreferrer">tsudev</a> - hệ sinh thái sản phẩm và công cụ phần mềm tại tsudev.com.</p>
           </div>
           <nav aria-label="Hệ sinh thái tsudev">
@@ -115,6 +115,7 @@ const ld = {
               <li><a href="https://tsudev.com/terms" target="_blank" rel="noopener noreferrer">Điều khoản sử dụng</a></li>
               <li><a href="https://tsudev.com/privacy" target="_blank" rel="noopener noreferrer">Chính sách riêng tư</a></li>
               <li><a href="https://tsudev.com/projects" target="_blank" rel="noopener noreferrer">Sản phẩm khác</a></li>
+              <li><a href={UNG_HO_URL} target="_blank" rel="noopener noreferrer">Ủng hộ tsudev</a></li>
             </ul>
           </nav>
           <nav aria-label="Dự án">

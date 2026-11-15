@@ -10,8 +10,8 @@ can see what was agreed to.
 
 ## Project
 
-**Name:** tsudev-cwico
-**Repository:** https://github.com/tsudev-org/tsudev-cwico
+**Name:** Tsu Cwico
+**Repository:** https://github.com/tsudev-org/tsucwico
 **Website:** https://tsudev.com
 **Licence:** MIT (OSI-approved, no commercial dual-licensing)
 **Language:** Rust, TypeScript
@@ -68,7 +68,7 @@ uninstallers such as Revo or BCUninstaller. This is in that category.
 | OSI-approved licence, no dual-licensing | [MIT](../../LICENSE); GitHub reports SPDX `MIT` |
 | No proprietary components | All dependencies are open source; `Cargo.lock` and `package-lock.json` are committed |
 | Actively maintained | Public commit history |
-| Released product | Release `tsudev-cwico-v26.8.19` |
+| Released product | Release `tsucwico-v26.8.19` |
 | Functionality documented on the download page | [README](../../README.md), with screenshots |
 | Team owns the repository | Yes; not a fork |
 | Signs only its own binaries | The release workflow builds from a tag on `main` and signs nothing else |
@@ -97,7 +97,7 @@ Two reasons beyond the usual:
 ## Build pipeline
 
 GitHub Actions, `.github/workflows/release.yml`, on `windows-latest`.
-Triggered by a tag matching `tsudev-cwico-v*`. Produces an MSI (WiX) and an
+Triggered by a tag matching `tsucwico-v*`. Produces an MSI (WiX) and an
 NSIS installer via the Tauri bundler, plus a CLI binary.
 
 A signing step would be inserted after the build and before the artefacts are

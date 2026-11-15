@@ -1,6 +1,6 @@
 # Danh sách loại trừ khi chuyển bản sao repo này sang máy khác:
 #
-#   rsync -az --exclude-from=.rsync-exclude <nguon>:projects/tsudev-cwico/ ~/projects/tsudev-cwico/
+#   rsync -az --exclude-from=.rsync-exclude <nguon>:projects/tsucwico/ ~/projects/tsucwico/
 #
 # ⚠️ ĐÂY KHÔNG PHẢI .gitignore. Đã kiểm ngày 03/11/2026: repo này KHÔNG có
 # file nào bị git bỏ qua mà phải đi theo. Toàn bộ nhóm ignore đều sinh lại được

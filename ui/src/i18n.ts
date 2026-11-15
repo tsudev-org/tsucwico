@@ -10,7 +10,7 @@
 import type { Locale, SafetyClass, SourceKind } from "./types";
 
 const vi = {
-  "app.title": "tsudev-cwico",
+  "app.title": "Tsu Cwico",
   "app.subtitle": "Dọn dẹp & gỡ phần mềm Windows chuyên sâu",
 
   "nav.software": "Phần mềm",
@@ -129,6 +129,8 @@ const vi = {
   "about.release": "Bản phát hành",
   "about.arch": "Kiến trúc",
   "about.website": "Truy cập tsudev.com",
+  "about.donate": "Ủng hộ tsudev",
+  "about.donateNote": "Ủng hộ tự nguyện, 100% tới nhà phát triển, không mở khóa tính năng nào.",
   "pager.label": "Số bản ghi mỗi trang",
   "pager.perPage": "/ trang",
   "pager.items": "mục",
@@ -197,7 +199,7 @@ const vi = {
 export type TranslationKey = keyof typeof vi;
 
 const en: Record<TranslationKey, string> = {
-  "app.title": "tsudev-cwico",
+  "app.title": "Tsu Cwico",
   "app.subtitle": "Deep Windows debloater & software removal",
 
   "nav.software": "Software",
@@ -316,6 +318,8 @@ const en: Record<TranslationKey, string> = {
   "about.release": "Release",
   "about.arch": "Architecture",
   "about.website": "Visit tsudev.com",
+  "about.donate": "Support tsudev",
+  "about.donateNote": "Voluntary, 100% goes to the developer, unlocks nothing.",
   "pager.label": "Rows per page",
   "pager.perPage": "/ page",
   "pager.items": "items",

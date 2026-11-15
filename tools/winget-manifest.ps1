@@ -16,7 +16,7 @@
 .PARAMETER Tag
     The git tag the release was published under, used verbatim in the download
     URL. The tag and the version are *different strings* - the tag is
-    `tsudev-cwico-v26.8.19` and the version is `26.8.1901` - and treating one
+    `tsucwico-v26.8.19` and the version is `26.8.1901` - and treating one
     as the other produces a URL that 404s. Defaults to the tag this version
     would be published under.
 
@@ -27,13 +27,13 @@
     Where to write the manifest.
 
 .EXAMPLE
-    ./tools/winget-manifest.ps1 -Tag tsudev-cwico-v26.8.19
+    ./tools/winget-manifest.ps1 -Tag tsucwico-v26.8.19
 #>
 [CmdletBinding()]
 param(
     [string]$BundleDir = "app/src-tauri/target/release/bundle",
     [string]$Tag = "",
-    [string]$Repository = "tsudev-org/tsudev-cwico",
+    [string]$Repository = "tsudev-org/tsucwico",
     [string]$OutFile = "winget-installer-manifest.yaml"
 )
 
@@ -74,12 +74,16 @@ $Version = $conf.version
 # The tag goes into the URL verbatim, because that is what the asset path
 # contains. On a manual run `github.ref_name` is a branch name, so derive the
 # tag this version would be published under instead.
-if (-not $Tag -or $Tag -notmatch '^tsudev-cwico-v') {
+if (-not $Tag -or $Tag -notmatch '^(tsucwico|tsudev-cwico)-v') {
     if ($Tag) { Write-Host "ref '$Tag' is not a release tag; deriving it from the version" }
     $Tag = (python3 tools/version.py to-name $Version).Trim()
 }
 
-$url = "https://github.com/$Repository/releases/download/$Tag/$($msi.Name)"
+# The bundler names the MSI after productName ("Tsu Cwico_<v>_x64_en-US.msi");
+# release.yml uploads it as `tsucwico_<v>_x64.msi` (releaseAssetNamePattern),
+# and the download URL has to use the uploaded name.
+$assetName = "tsucwico_$($Version)_x64.msi"
+$url = "https://github.com/$Repository/releases/download/$Tag/$assetName"
 $today = Get-Date -Format 'yyyy-MM-dd'
 
 # Matches the house style of microsoft/winget-pkgs: the schema comment and
@@ -113,6 +117,6 @@ $lines = @(
 $lines -join "`n" | Set-Content -Path $OutFile -Encoding utf8
 Write-Host "wrote $OutFile"
 Write-Host "  tag         $Tag"
-Write-Host "  installer   $($msi.Name)"
+Write-Host "  installer   $assetName (built as $($msi.Name))"
 Write-Host "  sha256      $sha"
 Write-Host "  productCode $productCode"

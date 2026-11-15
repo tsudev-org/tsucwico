@@ -1,4 +1,4 @@
-# AGENTS.md - tsudev-cwico
+# AGENTS.md - Tsu Cwico
 
 > **ĐỌC FILE NÀY ĐẦU TIÊN trong mọi phiên làm việc mới.**
 

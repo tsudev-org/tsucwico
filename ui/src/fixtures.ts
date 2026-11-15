@@ -275,7 +275,7 @@ const ITEMS: SoftwareItem[] = [
 export function about(): AboutInfo {
   return {
     appVersion: "26.8.1901",
-    appRelease: "tsudev-cwico-v26.8.19",
+    appRelease: "tsucwico-v26.8.19",
     productUrl: "https://tsudev.com",
     platform: {
       platform: "browser",
@@ -482,7 +482,7 @@ export async function executePlan(plan: RemovalPlan): Promise<RunReport> {
     restorePoint: plan.options.createRestorePoint
       ? {
           sequenceNumber: 42,
-          description: "tsudev-cwico: before removing items",
+          description: "Tsu Cwico: before removing items",
           createdAt: new Date().toISOString(),
         }
       : undefined,
@@ -546,7 +546,7 @@ export async function checkForUpdate(): Promise<UpdateStatus> {
   const mode = new URLSearchParams(window.location.search).get("preview");
 
   const base = {
-    currentRelease: "tsudev-cwico-v26.8.19",
+    currentRelease: "tsucwico-v26.8.19",
     currentVersion: "26.8.1901",
   };
 
@@ -555,7 +555,7 @@ export async function checkForUpdate(): Promise<UpdateStatus> {
       ...base,
       available: true,
       checked: true,
-      newRelease: "tsudev-cwico-v26.8.25",
+      newRelease: "tsucwico-v26.8.25",
       newVersion: "26.8.2501",
       publishedAt: "2026-08-25T09:14:00Z",
       // Deliberately the shape a real CHANGELOG section produces - blockquote,

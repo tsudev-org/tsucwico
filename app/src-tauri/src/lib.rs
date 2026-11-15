@@ -106,7 +106,7 @@ fn default_backup_dir() -> PathBuf {
 pub struct AboutInfo {
     /// The raw semver, for support reports.
     pub app_version: String,
-    /// The name users recognise: `tsudev-cwico-v26.8.19`.
+    /// The name users recognise: `tsucwico-v26.8.19`.
     pub app_release: String,
     pub product_url: String,
     pub platform: PlatformInfo,
@@ -323,6 +323,17 @@ fn open_product_site(app: AppHandle) -> ApiResult<()> {
         .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
 }
 
+/// Open the tsudev donation page in the user's browser (About panel).
+///
+/// Fixed URL for the same reason as `open_product_site`.
+#[tauri::command]
+fn open_donate_page(app: AppHandle) -> ApiResult<()> {
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(cwico_core::DONATE_URL, None::<&str>)
+        .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
+}
+
 /// Open the folder holding `.reg` backups and transaction logs.
 #[tauri::command]
 fn open_backup_dir(app: AppHandle, state: State<'_, AppState>) -> ApiResult<()> {
@@ -395,7 +406,7 @@ pub fn run() {
                 version = env!("CARGO_PKG_VERSION"),
                 platform = %state.backend.platform_info().platform,
                 elevated = state.backend.is_elevated(),
-                "tsudev-cwico starting"
+                "Tsu Cwico starting"
             );
             app.manage(state);
             Ok(())
@@ -410,9 +421,10 @@ pub fn run() {
             check_for_update,
             install_update,
             open_product_site,
+            open_donate_page,
             open_backup_dir,
             relaunch_as_admin,
         ])
         .run(tauri::generate_context!())
-        .expect("failed to start the tsudev-cwico window");
+        .expect("failed to start the Tsu Cwico window");
 }
