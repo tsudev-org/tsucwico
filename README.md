@@ -12,6 +12,7 @@
 Một sản phẩm của [tsudev](https://tsudev.com).
 
 [![CI](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml/badge.svg)](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tsudev-org/tsucwico/badge)](https://securityscorecards.dev/viewer/?uri=github.com/tsudev-org/tsucwico)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2482bd)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.82%2B-ef6d18)](https://www.rust-lang.org)
 [![Safety rules](https://img.shields.io/badge/safety%20rules-58-2482bd)](data/safety-db.json)
