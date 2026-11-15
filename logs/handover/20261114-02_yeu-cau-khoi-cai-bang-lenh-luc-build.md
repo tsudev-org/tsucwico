@@ -3,7 +3,7 @@
 - **Mã phiếu**: 20261114-02
 - **Từ**: phiên 52 repo `tsudev`, 14/11/2026 - kế hoạch tổng 20261114-01, việc C5
 - **Gửi**: tsudev-cwico, tsudev-swico, tsudev-contact, tsudev-trafficmonitor, tsufiles, lotus-share
-- **Trạng thái**: MỞ - ghi "Đã đọc" + PR + trạng thái production vào cuối bản sao trong repo mình
+- **Trạng thái**: ĐÓNG - PR #70, production 16/11/2026
 
 ## Yêu cầu
 
@@ -26,3 +26,5 @@ Scoop, Homebrew, APT, DNF), mỗi lệnh có nút Chép, nhóm theo hệ điều
 - Trang production hiện đúng các kênh như `tsudev.com/apps` cho cùng app (đối chiếu từng lệnh).
 - `node ~/projects/logs/tools/quet-giao-dien.cjs https://<site>.tsudev.com /` ra OK.
 - ⛔ Chạm chân trang / logo / script cài ⇒ PR + chờ chủ dự án duyệt (cổng Bảo vệ bản quyền).
+
+- 16/11/2026 - phiên tsudev-cwico-dd: Đã đọc. `website/src/lib/noi-dung.ts` `lenhCai()` tải lúc build 3 catalog (pkg.tsudev.com, scoop-bucket, homebrew-tap), lọc `homepage` = `https://cwico.tsudev.com`, bỏ gói `replacedBy`; winget lấy từ `packaging/package.json`; tải lỗi -> build ném lỗi. Khối "Cài bằng lệnh" nằm trên nút tải ở `/tai-ve/`, có nút Chép (gắn ở `/js/theme.js` vì CSP) và dòng "Gói được ký...". Production hiện `winget install --id tsudev.cwico -e` - khớp tsudev.com/apps (chỉ winget; Scoop `tsucwico` đang chờ bucket, phiếu linux-packages 20261116-01).

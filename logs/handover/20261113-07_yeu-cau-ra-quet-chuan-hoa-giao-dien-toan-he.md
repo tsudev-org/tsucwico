@@ -5,7 +5,7 @@
 - **Gửi**: mọi repo có website / trang `*.tsudev.com` - tsudev-cwico, tsudev-swico, tsudev-contact,
   tsudev-trafficmonitor, tsufiles (`tsudev-files`), lotus-share, linux-packages (trang kho, nếu có),
   6 repo game TsuGameLabs + tsudev-game-kit
-- **Trạng thái**: MỞ - mỗi repo ghi "Đã đọc" + kết quả vào cuối phiếu BẢN SAO trong repo mình
+- **Trạng thái**: ĐÓNG - PR #70, production 16/11/2026
 
 ## 1. Yêu cầu của chủ dự án
 
@@ -59,3 +59,5 @@ mâu thuẫn nội dung hoặc thiếu chuyên nghiệp; sửa để giao diện
 - Công cụ ở mục 2.1 in `OK` cho mọi trang × khổ × chế độ trên PRODUCTION (mã thoát 0), hoặc ghi rõ ngoại lệ có lý do.
 - Ảnh 390px + 1280px trước/sau của trang chủ và một trang con, đính kèm PR.
 - Ghi vào cuối bản sao phiếu này: "Đã đọc" + danh sách lỗi tìm thấy + PR + trạng thái production.
+
+- 16/11/2026 - phiên tsudev-cwico-dd: Đã đọc. Quét `quet-giao-dien.cjs` 9 trang (gồm 404) x 390/1280 x Tối/Sáng. Lỗi tìm thấy: trùng `id` added/changed/fixed ở `/nhat-ky/` (sửa: neo tiêu đề thêm hậu tố -2, -3); chữ tên cũ "cwico" ở tiêu đề/hero/chân trang (đổi Tsu Cwico). Không có tràn khung, ảnh vỡ, h1 sai, nút không tên. PRODUCTION còn 2 ngoại lệ có lý do: (1) `/khong-ton-tai` trả 404 đúng ý (trang 404 có h1); (2) lỗi console CSP do Cloudflare tự chèn script thử thách (`contentDocument`/`__CF$cv$params`) - việc CF-ZONE-1 của chủ dự án ở cấu hình vùng tsudev.com, KHÔNG nới CSP. Site không có đăng nhập nên không có cột "Tài khoản"; chân trang đã có hàng "© tsudev" + bộ chọn Sáng/Tối/Hệ thống.
