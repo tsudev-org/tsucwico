@@ -27,3 +27,11 @@
 
 - `~/projects/linux-packages/logs/handover/20261116-01_yeu-cau-goi-scoop-tsucwico.md` (gói Scoop `tsucwico`).
 - `~/projects/tsudev/logs/handover/20261116-90_yeu-cau-doi-ten-tsu-cwico.md` (danh bạ tsudev.com) + đã nhắn phiên `tsudev-1e`.
+
+## Kết quả phiếu (cập nhật cuối phiên)
+
+- `tsudev` 20261116-90: XONG phần danh bạ - tsudev#275 đã gộp + deploy (v2026.11.16.3), `/apps` hiện "Tsu Cwico",
+  link Release trỏ `tsudev-org/tsucwico`; giữ mã `cwico`, winget `tsudev.cwico`, tên miền, logo. **Còn chờ chủ dự
+  án duyệt** tsudev#276 (`TRADEMARKS` + khóa `metadata.json` `tsudev-cwico` -> `tsucwico`, vùng ⛔). Gói Scoop
+  `tsucwico` tự vào danh mục ở lần `npm run pkg:catalog` kế tiếp sau khi bucket có gói.
+- `linux-packages` 20261116-01 (gói Scoop): chưa có phản hồi - theo dõi ở SCOOP-1.
