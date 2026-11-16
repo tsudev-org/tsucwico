@@ -37,7 +37,8 @@
     }
   },
   "channels": [
-    "winget"
+    "winget",
+    "scoop"
   ],
   "planned": []
 }
