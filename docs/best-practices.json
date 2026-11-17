@@ -1,0 +1,276 @@
+{
+  "fields": {
+    "name": "Tsu Cwico",
+    "homepage_url": "https://cwico.tsudev.com"
+  },
+  "criteria": {
+    "description_good": [
+      "Met",
+      "README.md describes Tsu Cwico: a Windows debloater that scans installed software, classifies each item Safe/Caution/Critical and removes it with a restore point and registry backup first: https://github.com/tsudev-org/tsucwico/blob/main/README.md"
+    ],
+    "interact": [
+      "Met",
+      "README.md and CONTRIBUTING.md explain how to get the source and binaries, report bugs (issue form) and contribute: https://github.com/tsudev-org/tsucwico/blob/main/CONTRIBUTING.md"
+    ],
+    "contribution": [
+      "Met",
+      "CONTRIBUTING.md explains the pull request process and the checks to run first: https://github.com/tsudev-org/tsucwico/blob/main/CONTRIBUTING.md"
+    ],
+    "contribution_requirements": [
+      "Met",
+      "CONTRIBUTING.md lists the requirements: cargo fmt, cargo clippy, cargo test, UI build, both translations, the safety rules for the catalogue: https://github.com/tsudev-org/tsucwico/blob/main/CONTRIBUTING.md"
+    ],
+    "floss_license": [
+      "Met",
+      "Apache-2.0: https://github.com/tsudev-org/tsucwico/blob/main/LICENSE"
+    ],
+    "floss_license_osi": [
+      "Met",
+      "Apache-2.0 is OSI approved."
+    ],
+    "license_location": [
+      "Met",
+      "https://github.com/tsudev-org/tsucwico/blob/main/LICENSE"
+    ],
+    "documentation_basics": [
+      "Met",
+      "README.md covers installation (winget, Scoop, installer), usage, the safety model and verification; docs/SAFETY.md documents the classification: https://github.com/tsudev-org/tsucwico/blob/main/docs/SAFETY.md"
+    ],
+    "documentation_interface": [
+      "Met",
+      "The CLI (cwico info, scan, plan, ...) and its flags are documented in the README command-line section: https://github.com/tsudev-org/tsucwico/blob/main/README.md"
+    ],
+    "sites_https": [
+      "Met",
+      "Project site https://cwico.tsudev.com and the GitHub repository/releases are HTTPS only."
+    ],
+    "discussion": [
+      "Met",
+      "GitHub Issues are public and searchable: https://github.com/tsudev-org/tsucwico/issues"
+    ],
+    "english": [
+      "Met",
+      "Documentation is in English (Vietnamese translation in docs/README.vi.md): https://github.com/tsudev-org/tsucwico/blob/main/README.md"
+    ],
+    "maintained": [
+      "Met",
+      "Actively maintained, regular commits in November 2026: https://github.com/tsudev-org/tsucwico/commits/main"
+    ],
+    "repo_public": [
+      "Met",
+      "https://github.com/tsudev-org/tsucwico"
+    ],
+    "repo_track": [
+      "Met",
+      "Git tracks every change with author and date."
+    ],
+    "repo_interim": [
+      "Met",
+      "Work in progress is pushed to branches and pull requests between releases."
+    ],
+    "repo_distributed": [
+      "Met",
+      "Git."
+    ],
+    "version_unique": [
+      "Met",
+      "Each release has a unique version and git tag: https://github.com/tsudev-org/tsucwico/tags"
+    ],
+    "version_semver": [
+      "Met",
+      "Calendar Versioning (YY.M.DD with a build counter), managed by tools/version.py: https://github.com/tsudev-org/tsucwico/blob/main/docs/RELEASING.md"
+    ],
+    "version_tags": [
+      "Met",
+      "Releases are tagged (tsudev-cwico-v26.8.19, tsudev-cwico-v26.11.10.2): https://github.com/tsudev-org/tsucwico/tags"
+    ],
+    "release_notes": [
+      "Met",
+      "CHANGELOG.md summarises each release; the entry is also shown in the update dialog: https://github.com/tsudev-org/tsucwico/blob/main/CHANGELOG.md"
+    ],
+    "release_notes_vulns": [
+      "N/A",
+      "No publicly known vulnerability has been fixed in any release so far."
+    ],
+    "report_process": [
+      "Met",
+      "Bug reports use GitHub Issues with an issue form: https://github.com/tsudev-org/tsucwico/issues/new/choose"
+    ],
+    "report_tracker": [
+      "Met",
+      "GitHub Issues: https://github.com/tsudev-org/tsucwico/issues"
+    ],
+    "report_responses": [
+      "Met",
+      "No external bug report has been filed so far; the maintainer reads every issue and acknowledges reports within days."
+    ],
+    "enhancement_responses": [
+      "Met",
+      "No external enhancement request has been filed so far; the maintainer answers each one."
+    ],
+    "report_archive": [
+      "Met",
+      "GitHub Issues are public and searchable: https://github.com/tsudev-org/tsucwico/issues?q=is%3Aissue"
+    ],
+    "vulnerability_report_process": [
+      "Met",
+      "SECURITY.md explains what counts as a vulnerability for this tool and how to report it: https://github.com/tsudev-org/tsucwico/blob/main/SECURITY.md"
+    ],
+    "vulnerability_report_private": [
+      "Met",
+      "GitHub private vulnerability reporting is enabled: https://github.com/tsudev-org/tsucwico/security/advisories/new"
+    ],
+    "vulnerability_report_response": [
+      "Met",
+      "No vulnerability report was received in the last 6 months. SECURITY.md commits to an acknowledgement within 72 hours."
+    ],
+    "build": [
+      "Met",
+      "cargo build plus the Tauri bundler; the release workflow builds the installers on GitHub Actions from a tagged commit: https://github.com/tsudev-org/tsucwico/blob/main/.github/workflows/release.yml"
+    ],
+    "build_common_tools": [
+      "Met",
+      "cargo, npm and the Tauri CLI."
+    ],
+    "build_floss_tools": [
+      "Met",
+      "Rust, cargo, Node.js and Tauri are FLOSS."
+    ],
+    "test": [
+      "Met",
+      "An automated cargo test suite (175 tests, including adversarial safety tests for the deletion guard and command parser) runs on Linux and Windows: https://github.com/tsudev-org/tsucwico/blob/main/docs/SAFETY.md"
+    ],
+    "test_invocation": [
+      "Met",
+      "cargo test (documented in CONTRIBUTING.md)."
+    ],
+    "test_most": [
+      "Met",
+      "The engine keeps its safety logic in a pure crate (cwico-core) precisely so that its whole suite - classification, guard, command parsing, plans - runs in CI; the Windows crate tests its host-independent parts."
+    ],
+    "test_continuous_integration": [
+      "Met",
+      "GitHub Actions runs clippy and tests on Linux and Windows for every push and pull request: https://github.com/tsudev-org/tsucwico/blob/main/.github/workflows/ci.yml"
+    ],
+    "test_policy": [
+      "Met",
+      "CONTRIBUTING.md requires cargo test to pass and adversarial tests for safety changes; SECURITY.md asks reporters for a failing test case: https://github.com/tsudev-org/tsucwico/blob/main/CONTRIBUTING.md"
+    ],
+    "tests_are_added": [
+      "Met",
+      "Safety fixes come with tests, e.g. the plan/restore-point visibility fix (PR #55): https://github.com/tsudev-org/tsucwico/pull/55"
+    ],
+    "tests_documented_added": [
+      "Met",
+      "The test expectations are written in CONTRIBUTING.md and docs/SAFETY.md: https://github.com/tsudev-org/tsucwico/blob/main/CONTRIBUTING.md"
+    ],
+    "warnings": [
+      "Met",
+      "cargo clippy --all-targets -- -D warnings runs in CI: https://github.com/tsudev-org/tsucwico/blob/main/.github/workflows/ci.yml"
+    ],
+    "warnings_fixed": [
+      "Met",
+      "Clippy warnings fail CI (-D warnings); main has none."
+    ],
+    "warnings_strict": [
+      "Met",
+      "Clippy with -D warnings on all targets."
+    ],
+    "know_secure_design": [
+      "Met",
+      "SECURITY.md lists the design commitments (Critical items can never be removed, catalogue data cannot execute, minimal web-view capabilities, signed updates, recoverable runs) and docs/SAFETY.md the safety model: https://github.com/tsudev-org/tsucwico/blob/main/SECURITY.md"
+    ],
+    "know_common_errors": [
+      "Met",
+      "The common errors for an elevated deletion tool are documented with their defences and tests: path traversal into protected locations, command injection through UninstallString, poisoned catalogue data, privilege escalation: https://github.com/tsudev-org/tsucwico/blob/main/docs/SAFETY.md"
+    ],
+    "crypto_published": [
+      "Met",
+      "Only published algorithms: Ed25519 (minisign) signatures on updates, SHA-256 checksums, TLS for HTTPS."
+    ],
+    "crypto_call": [
+      "Met",
+      "Update signature checks use tauri-plugin-updater (minisign verification) and HTTPS uses the TLS library of the HTTP client; the project implements no cryptography itself."
+    ],
+    "crypto_floss": [
+      "Met",
+      "All cryptography comes from FLOSS libraries (Tauri updater, Rust TLS stack)."
+    ],
+    "crypto_keylength": [
+      "Met",
+      "Ed25519 (128-bit security) for update signatures; TLS uses modern defaults."
+    ],
+    "crypto_working": [
+      "Met",
+      "No broken algorithms are used."
+    ],
+    "crypto_weaknesses": [
+      "Met",
+      "No SHA-1, MD5 or other weak algorithm is used for security."
+    ],
+    "crypto_pfs": [
+      "Met",
+      "HTTPS uses TLS 1.2+/1.3 with ECDHE key exchange."
+    ],
+    "crypto_password_storage": [
+      "N/A",
+      "The program stores no passwords."
+    ],
+    "crypto_random": [
+      "N/A",
+      "The program generates no keys or nonces at runtime (signing keys exist only in the release environment)."
+    ],
+    "delivery_mitm": [
+      "Met",
+      "Releases are delivered over HTTPS; installers carry build provenance attestations, SHA256SUMS.txt is published, and updates are only installed if signed with the pinned minisign key."
+    ],
+    "delivery_unsigned": [
+      "Met",
+      "Update metadata and payloads are fetched over HTTPS and the payload signature is verified against a key pinned in the app, never trusted from the download location."
+    ],
+    "vulnerabilities_fixed_60_days": [
+      "Met",
+      "No unpatched medium-or-higher vulnerability is present in the released software. The only open Dependabot alert (GHSA-wrw7-89jp-8q8g, glib < 0.20) is in gtk3 bindings that Tauri pulls in only for Linux targets; the project ships Windows builds only, and cargo tree for x86_64-pc-windows-msvc contains no glib. No fixed glib exists for the gtk3 stack yet."
+    ],
+    "vulnerabilities_critical_fixed": [
+      "Met",
+      "No critical vulnerability has been reported."
+    ],
+    "no_leaked_credentials": [
+      "Met",
+      "The repository contains no credentials; the updater private key and signing secrets live only in GitHub secrets, and secret scanning with push protection is enabled."
+    ],
+    "static_analysis": [
+      "Met",
+      "Clippy on every change and GitHub CodeQL code scanning (Rust, JavaScript/TypeScript, Actions): https://github.com/tsudev-org/tsucwico/security/code-scanning"
+    ],
+    "static_analysis_common_vulnerabilities": [
+      "Met",
+      "CodeQL security queries look for common vulnerabilities; clippy includes correctness and suspicious lints."
+    ],
+    "static_analysis_fixed": [
+      "Met",
+      "No medium or higher severity code vulnerability found by static analysis remains open."
+    ],
+    "static_analysis_often": [
+      "Met",
+      "Static analysis runs on every push and pull request."
+    ],
+    "dynamic_analysis": [
+      "Unmet",
+      "No fuzzing or other dynamic analysis tool is run yet; adversarial unit tests cover the deletion guard and command parser with crafted malicious inputs."
+    ],
+    "dynamic_analysis_unsafe": [
+      "N/A",
+      "The program is written in Rust (safe code) and TypeScript."
+    ],
+    "dynamic_analysis_enable_assertions": [
+      "Unmet",
+      "No dynamic analysis runs yet (see dynamic_analysis)."
+    ],
+    "dynamic_analysis_fixed": [
+      "N/A",
+      "No dynamic analysis has been run, so no issue was discovered by it."
+    ]
+  }
+}

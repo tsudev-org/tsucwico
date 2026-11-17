@@ -12,7 +12,8 @@
 
 | Version | Supported |
 |---|---|
-| 1.0.x | ✅ |
+| Latest release ([Releases](https://github.com/tsudev-org/tsucwico/releases/latest)) | ✅ |
+| Older releases | ❌ - installed copies are moved to the latest release by the mandatory update |
 
 ## What counts as a security issue here
 
@@ -64,19 +65,22 @@ Expect an acknowledgement within 72 hours.
 These are properties the project intends to keep. A change that breaks one is
 a bug, not a trade-off:
 
-1. **No network access.** The application makes no outbound connections. It
-   does not check for updates, report telemetry or fetch rule updates at
-   runtime. The only navigation is the user clicking the tsudev logo, which
-   opens the product site in their own browser.
+1. **One network request, and only for updates.** On startup the installed
+   app fetches `latest.json` from this repository's GitHub Releases over
+   HTTPS. It sends no telemetry and fetches no rule updates; offline, it runs
+   normally. An update is installed only if it is signed with the minisign
+   (Ed25519) key pinned in `app/src-tauri/tauri.conf.json` - a compromised
+   download location alone cannot push code. See [docs/SIGNING.md](docs/SIGNING.md).
 2. **`Critical` is absolute.** No flag, configuration file, command-line
    switch or confirmation dialog removes an item classified `Critical`.
 3. **Data cannot execute.** `runCommand` tweak effects are restricted to a
    fixed allow-list (`powercfg`, `dism`, `tzutil`, `netsh`) plus internal
    actions implemented in Rust. A poisoned catalogue cannot run arbitrary code.
-4. **The web view has no capabilities of its own.** The Tauri capability set
-   grants window controls and nothing else - no filesystem, shell or HTTP
-   plugin. Everything the front end can do goes through this project's own
-   commands, which are individually reviewable.
+4. **The web view has no capabilities of its own.** The Tauri capability sets
+   grant window controls and, on Windows only, the updater (which can install
+   nothing but a payload signed by the pinned key) - no filesystem, shell or
+   HTTP plugin. Everything else the front end can do goes through this
+   project's own commands, which are individually reviewable.
 5. **`open_product_site` takes no URL.** It always opens `https://tsudev.com`.
    A command that accepted an arbitrary URL would be a phishing primitive if
    the web view were ever compromised.
@@ -88,8 +92,10 @@ a bug, not a trade-off:
 
 Release binaries are built by
 [GitHub Actions](https://github.com/tsudev-org/tsucwico/blob/main/.github/workflows/release.yml)
-from a tagged commit, and each release publishes `sha256sums.txt`.
+from a tagged commit. Each release publishes `SHA256SUMS.txt`, and the installers carry build provenance
+attestations:
 
 ```powershell
-Get-FileHash .\tsucwico_26.8.1901_x64_en-US.msi -Algorithm SHA256
+Get-FileHash .\tsudev-cwico_26.11.1002_x64_en-US.msi -Algorithm SHA256   # compare with SHA256SUMS.txt
+gh attestation verify .\tsudev-cwico_26.11.1002_x64_en-US.msi --repo tsudev-org/tsucwico
 ```
