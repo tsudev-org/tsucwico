@@ -36,7 +36,7 @@ function kiemTra(tep, html) {
   const dai = [...mota.replace(/&[a-z#0-9]+;/g, 'x')].length;
   if (dai < 120 || dai > 160) loi.push(`${ten}: description ${dai} ký tự (cần 120-160)`);
 
-  for (const s of html.matchAll(/<script\b([^>]*)>/g)) {
+  for (const s of html.matchAll(/<script\b([^>]*)>/gi)) {
     const attr = s[1];
     if (attr.includes('type="application/ld+json"')) continue;
     if (/\ssrc="\/js\/theme\.js"/.test(attr)) continue;
