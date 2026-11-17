@@ -22,11 +22,11 @@
     ],
     "floss_license": [
       "Met",
-      "Apache-2.0: https://github.com/tsudev-org/tsucwico/blob/main/LICENSE"
+      "MIT License: https://github.com/tsudev-org/tsucwico/blob/main/LICENSE"
     ],
     "floss_license_osi": [
       "Met",
-      "Apache-2.0 is OSI approved."
+      "The MIT License is OSI approved."
     ],
     "license_location": [
       "Met",
