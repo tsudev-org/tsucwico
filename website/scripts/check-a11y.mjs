@@ -55,7 +55,8 @@ const tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 let total = 0;
 const list = pages(dist);
 const CHE_DO = [
-  { ten: 'moi/may-sang', scheme: 'light', luu: null, mongDoi: 'dark' },
+  { ten: 'moi/may-sang', scheme: 'light', luu: null, mongDoi: 'light' }, // khách mới theo máy (PRODUCT_POLICY 1.2)
+  { ten: 'moi/may-toi', scheme: 'dark', luu: null, mongDoi: 'dark' },
   { ten: 'light', scheme: 'dark', luu: 'light', mongDoi: 'light' },
   { ten: 'dark', scheme: 'light', luu: 'dark', mongDoi: 'dark' },
   { ten: 'system/light', scheme: 'light', luu: 'system', mongDoi: 'light' },
