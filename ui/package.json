@@ -11,6 +11,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test test/defaults.test.mjs",
     "sync:data": "node -e \"require('fs').copyFileSync('../data/tweaks.json','public/tweaks.json')\"",
     "predev": "npm run sync:data",
     "prebuild": "npm run sync:data"
