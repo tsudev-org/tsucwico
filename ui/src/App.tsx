@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import * as api from "./api";
 import { CwicoError } from "./api";
 import { formatDateTime, translator } from "./i18n";
+import { THEME_CHOICES, initialLocale, initialTheme, type ThemeChoice } from "./defaults";
 import type {
   AboutInfo,
   UpdateStatus,
@@ -43,20 +44,15 @@ import { formatBytes } from "./i18n";
 type Tab = "software" | "tweaks" | "activity" | "about";
 
 const THEME_KEY = "cwico.theme";
-/** Phiếu 20261110-05: chỉ Sáng / Tối / Hệ thống, mặc định Tối; giá trị cũ không hợp lệ -> Tối. */
-type ThemeChoice = "light" | "dark" | "system";
-const THEME_CHOICES: ThemeChoice[] = ["light", "dark", "system"];
+/** Chỉ Sáng / Tối / Hệ thống; lần đầu theo hệ thống (PRODUCT_POLICY 1, xem defaults.ts). */
 const systemDark = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
 const LOCALE_KEY = "cwico.locale";
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(
-    () => (localStorage.getItem(LOCALE_KEY) as Locale) ?? "vi",
+    () => initialLocale(localStorage.getItem(LOCALE_KEY), navigator.languages ?? [navigator.language]),
   );
-  const [theme, setTheme] = useState<ThemeChoice>(() => {
-    const saved = localStorage.getItem(THEME_KEY);
-    return THEME_CHOICES.includes(saved as ThemeChoice) ? (saved as ThemeChoice) : "dark";
-  });
+  const [theme, setTheme] = useState<ThemeChoice>(() => initialTheme(localStorage.getItem(THEME_KEY)));
   const [osDark, setOsDark] = useState(systemDark);
   const dark = theme === "dark" || (theme === "system" && osDark);
   const [tab, setTab] = useState<Tab>("software");

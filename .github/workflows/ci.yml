@@ -83,6 +83,8 @@ jobs:
       - run: npm --prefix ui ci
       - name: Type-check
         run: npm --prefix ui run typecheck
+      - name: Test mặc định ngôn ngữ/giao diện (PRODUCT_POLICY 1.4)
+        run: npm --prefix ui test
       - name: Build
         run: npm --prefix ui run build
 

@@ -1,7 +1,7 @@
 {
   "name": "tsucwico-ui",
   "version": "26.11.1002",
-  "description": "Front end for Tsu Cwico \u2014 deep Windows debloater and software removal toolkit.",
+  "description": "Front end for Tsu Cwico — deep Windows debloater and software removal toolkit.",
   "homepage": "https://tsudev.com",
   "license": "MIT",
   "private": true,
@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "sync:data": "node -e \"require('fs').copyFileSync('../data/tweaks.json','public/tweaks.json')\"",
     "predev": "npm run sync:data",
-    "prebuild": "npm run sync:data"
+    "prebuild": "npm run sync:data",
+    "test": "node --experimental-strip-types --test test/defaults.test.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.11.1",
