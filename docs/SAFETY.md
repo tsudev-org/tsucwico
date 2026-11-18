@@ -1,9 +1,9 @@
 <div align="center">
-<a href="https://tsudev.com"><img src="../assets/brand/tsudev-logo.png" alt="tsudev" width="72" height="91"></a>
+<a href="https://tsudev.com"><img src="../assets/brand/tsudev-logo.png" alt="TsuDEV" width="72" height="91"></a>
 
 # The safety model
 
-<a href="https://tsudev.com"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/brand/tsudev-wordmark-dark.png"><img src="../assets/brand/tsudev-wordmark.png" alt="tsudev" height="24"></picture></a> · <a href="https://tsudev.com">tsudev.com</a>
+<a href="https://tsudev.com"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/brand/tsudev-wordmark-dark.png"><img src="../assets/brand/tsudev-wordmark.png" alt="TsuDEV" height="24"></picture></a> · <a href="https://tsudev.com">tsudev.com</a>
 </div>
 
 ---
@@ -211,6 +211,6 @@ cargo test
 ---
 
 <div align="center">
-<a href="https://tsudev.com"><img src="../assets/brand/tsudev-logo.png" alt="tsudev" width="40" height="50"></a><br>
-<a href="https://tsudev.com"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/brand/tsudev-wordmark-dark.png"><img src="../assets/brand/tsudev-wordmark.png" alt="tsudev" height="24"></picture></a>
+<a href="https://tsudev.com"><img src="../assets/brand/tsudev-logo.png" alt="TsuDEV" width="40" height="50"></a><br>
+<a href="https://tsudev.com"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/brand/tsudev-wordmark-dark.png"><img src="../assets/brand/tsudev-wordmark.png" alt="TsuDEV" height="24"></picture></a>
 </div>

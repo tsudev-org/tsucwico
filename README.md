@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://tsudev.com">
-  <img src="assets/brand/tsudev-logo.png" alt="tsudev" width="96">
+  <img src="assets/brand/tsudev-logo.png" alt="TsuDEV" width="96">
 </a>
 
 <h1>Tsu Cwico</h1>
@@ -9,7 +9,7 @@
 **Deep Windows debloater &amp; software removal toolkit**<br>
 *Bộ công cụ rà quét và gỡ bỏ phần mềm Windows chuyên sâu*
 
-Một sản phẩm của [tsudev](https://tsudev.com).
+Một sản phẩm của [TsuDEV](https://tsudev.com).
 
 [![CI](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml/badge.svg)](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tsudev-org/tsucwico/badge)](https://securityscorecards.dev/viewer/?uri=github.com/tsudev-org/tsucwico)
@@ -58,7 +58,7 @@ Removal runs a four-step flow per item:
 
 ## Product class
 
-**Class C - offline** under the tsudev account standard
+**Class C - offline** under the TsuDEV account standard
 ([`AUTH_AND_ACCOUNT.md`](.standards/docs/AUTH_AND_ACCOUNT.md) §1). Every
 function runs with no account and no server: there is no sign-in screen, and
 nothing is gated behind one. The only network request is the update check
@@ -409,7 +409,7 @@ conservatively: `Caution` costs a user one confirmation click, while a wrong
 ## Support
 
 Tsu Cwico is free and stays free. If it saved you an afternoon, you can support
-tsudev at **[tsudev.com/ung-ho](https://tsudev.com/ung-ho)** - voluntary, 100%
+TsuDEV at **[tsudev.com/ung-ho](https://tsudev.com/ung-ho)** - voluntary, 100%
 goes to the developer, and it unlocks nothing. The app's About panel links to
 the same page; no payment details are built into any release.
 
@@ -424,14 +424,14 @@ installs update in place. Details: [ADR-0001](docs/adr/0001-ten-san-pham-tsu-cwi
 
 ## Licence
 
-MIT © [tsudev](https://tsudev.com)
+MIT © [TsuDEV](https://tsudev.com)
 
 <div align="center">
 <br>
 <a href="https://tsudev.com">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/brand/tsudev-wordmark-dark.png">
-    <img src="assets/brand/tsudev-wordmark.png" alt="tsudev" width="180">
+    <img src="assets/brand/tsudev-wordmark.png" alt="TsuDEV" width="180">
   </picture>
 </a>
 </div>

@@ -66,26 +66,26 @@
   --dev-word: var(--color-dev-600);
 }
 
-/* Bảng màu đen tuyền + tím của hệ tsudev (phiếu logs/handover/20261110-05 mục 2, quyết định chủ dự án 10/11/2026;
+/* Bảng màu đen tuyền + xanh logo của hệ TsuDEV (v3.8.0, thay tím) (phiếu logs/handover/20261110-05 mục 2, quyết định chủ dự án 10/11/2026;
    khớp tsudev.com và cwico.tsudev.com). Ghi đè giá trị token của .standards (không sửa ở đó); `:root[...]` để thắng
    `[data-theme]` của tokens.css. Chỉ hai chế độ; "Hệ thống" giải bằng JavaScript (App.tsx). */
 :root[data-theme="dark"] {
   --bg-base: #0A0A0A;
-  --bg-surface: #111111;
-  --bg-subtle: #171717;
-  --bg-hover: #1F1F1F;
-  --border: #242424;
-  --border-strong: #2E2E2E;
+  --bg-surface: #0F1114;
+  --bg-subtle: #15181D;
+  --bg-hover: #1C2027;
+  --border: #22272F;
+  --border-strong: #2C323C;
   --border-control: #6E6E6E;
   --text-primary: #EDEDED;
   --text-secondary: #B4B4B4;
   --text-muted: #8F8F8F;
-  --text-link: #C4A1FF;
-  --primary: #A970FF;
-  --primary-hover: #BB8CFF;
-  --primary-active: #9A5CF5;
-  --on-primary: #0A0A0A;   /* mực đen: không tím nào vừa đạt 4.5:1 trên #0A0A0A vừa đạt 4.5:1 dưới chữ trắng */
-  --focus-ring: #A970FF;
+  --text-link: #7DD3FC;
+  --primary: #38BDF8;
+  --primary-hover: #7DD3FC;
+  --primary-active: #0EA5E9;
+  --on-primary: #0A0A0A;   /* mực đen: xanh lơ không đạt 4.5:1 dưới chữ trắng */
+  --focus-ring: #38BDF8;
   --on-status: #0A0A0A;
   color-scheme: dark;
 }
@@ -100,12 +100,12 @@
   --text-primary: #0A0A0A;
   --text-secondary: #3F3F46;
   --text-muted: #52525B;
-  --text-link: #6D28D9;
-  --primary: #7C3AED;
-  --primary-hover: #6D28D9;
-  --primary-active: #5B21B6;
+  --text-link: #0757A3;
+  --primary: #0868C4;
+  --primary-hover: #0757A3;
+  --primary-active: #064785;
   --on-primary: #FFFFFF;
-  --focus-ring: #7C3AED;
+  --focus-ring: #0868C4;
   color-scheme: light;
 }
 
