@@ -51,11 +51,11 @@
       "../../data/safety-db.json": "data/safety-db.json",
       "../../data/tweaks.json": "data/tweaks.json"
     },
-    "copyright": "Copyright (c) 2026 tsudev",
+    "copyright": "Copyright (c) 2026 TsuDEV",
     "category": "Utility",
     "shortDescription": "Deep Windows debloater and software removal toolkit",
     "longDescription": "Scan every corner of Windows (installed programs, UWP/AppX packages, services, scheduled tasks and autostart entries), then remove what you do not need, safely. Every item is classified Safe, Caution or Critical; critical system components cannot be removed at all. A System Restore Point and .reg backups are taken before anything changes.",
-    "publisher": "tsudev",
+    "publisher": "TsuDEV",
     "homepage": "https://tsudev.com",
     "windows": {
       "digestAlgorithm": "sha256",

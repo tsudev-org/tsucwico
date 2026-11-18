@@ -24,7 +24,7 @@ npm ci
 npm run dev          # xem thử ở http://localhost:4321
 npm run build        # dựng vào dist/ và kiểm tra
 npm run check:a11y   # axe-core WCAG 2.2 AA mọi trang, sáng + tối (lần đầu: npx playwright install chromium)
-npm run deploy       # build rồi wrangler deploy (cần `npx wrangler login` với tài khoản tsudev)
+npm run deploy       # build rồi wrangler deploy (cần `npx wrangler login` với tài khoản TsuDEV)
 ```
 
 Sau mỗi lần phát hành bản mới hoặc sửa `data/*.json`, chạy lại `npm run deploy` để trang cập nhật.

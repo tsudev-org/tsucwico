@@ -1,14 +1,14 @@
 <div align="center">
 
 <a href="https://tsudev.com">
-  <img src="../assets/brand/tsudev-logo.png" alt="tsudev" width="96">
+  <img src="../assets/brand/tsudev-logo.png" alt="TsuDEV" width="96">
 </a>
 
 <h1>Tsu Cwico</h1>
 
 **Bộ công cụ rà quét và gỡ bỏ phần mềm Windows chuyên sâu**
 
-Một sản phẩm của [tsudev](https://tsudev.com).
+Một sản phẩm của [TsuDEV](https://tsudev.com).
 
 [![CI](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml/badge.svg)](https://github.com/tsudev-org/tsucwico/actions/workflows/ci.yml)
 [![Giấy phép: MIT](https://img.shields.io/badge/gi%E1%BA%A5y%20ph%C3%A9p-MIT-2482bd)](../LICENSE)
@@ -53,7 +53,7 @@ Quy trình gỡ bỏ gồm bốn bước cho mỗi mục:
 
 ## Hạng sản phẩm
 
-**Hạng C - ngoại tuyến** theo chuẩn tài khoản tsudev
+**Hạng C - ngoại tuyến** theo chuẩn tài khoản TsuDEV
 ([`AUTH_AND_ACCOUNT.md`](../.standards/docs/AUTH_AND_ACCOUNT.md) mục 1). Mọi
 chức năng chạy không cần tài khoản, không cần máy chủ: không có màn hình đăng
 nhập, không chức năng nào bị khóa sau đăng nhập. Yêu cầu mạng duy nhất là kiểm
@@ -344,7 +344,7 @@ không hề đồng ý đánh đổi.
 ## Ủng hộ
 
 Tsu Cwico miễn phí và sẽ luôn miễn phí. Nếu công cụ giúp ích cho bạn, có thể ủng
-hộ tsudev tại **[tsudev.com/ung-ho](https://tsudev.com/ung-ho)** - tự nguyện,
+hộ TsuDEV tại **[tsudev.com/ung-ho](https://tsudev.com/ung-ho)** - tự nguyện,
 100% tới nhà phát triển, không mở khóa tính năng nào. Hộp Giới thiệu trong app
 trỏ về cùng trang đó; không bản phát hành nào chứa thông tin thanh toán.
 
@@ -359,14 +359,14 @@ winget vẫn là `tsudev.cwico`, bản đã cài tự cập nhật tại chỗ. 
 
 ## Giấy phép
 
-MIT © [tsudev](https://tsudev.com)
+MIT © [TsuDEV](https://tsudev.com)
 
 <div align="center">
 <br>
 <a href="https://tsudev.com">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="../assets/brand/tsudev-wordmark-dark.png">
-    <img src="../assets/brand/tsudev-wordmark.png" alt="tsudev" width="180">
+    <img src="../assets/brand/tsudev-wordmark.png" alt="TsuDEV" width="180">
   </picture>
 </a>
 </div>

@@ -63,7 +63,7 @@ export function Button({
 }) {
   const styles: Record<ButtonVariant, React.CSSProperties> = {
     primary: {
-      // Token primary + on-primary (QU-STD-1): Tối = tím #A970FF với mực đen, Sáng = #7C3AED với chữ trắng
+      // Token primary + on-primary (QU-STD-1): Tối = xanh lơ #38BDF8 với mực đen, Sáng = #0868C4 với chữ trắng
       background: "var(--primary)",
       color: "var(--on-primary)",
       borderColor: "var(--primary-hover)",

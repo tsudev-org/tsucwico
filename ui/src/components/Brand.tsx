@@ -44,7 +44,7 @@ export function Brand({ size = "md", tagline, className = "" }: BrandProps) {
         if (event.key === "Enter" || event.key === " ") open(event);
       }}
       title="tsudev.com"
-      aria-label="tsudev - mở tsudev.com / open tsudev.com"
+      aria-label="TsuDEV - mở tsudev.com / open tsudev.com"
       className={`group inline-flex items-center ${scale.gap} rounded-lg px-1 py-0.5 no-underline transition-opacity hover:opacity-85 ${className}`}
     >
       <img

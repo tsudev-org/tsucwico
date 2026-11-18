@@ -1,5 +1,5 @@
 // Kiểm tra bản build (chạy sau astro build, CI chặn khi lỗi):
-// - mọi trang có title đúng khuôn, og:site_name = tsudev, canonical, description 120-160 ký tự (ECOSYSTEM_IDENTITY mục 2.2);
+// - mọi trang có title đúng khuôn, og:site_name = TsuDEV, canonical, description 120-160 ký tự (ECOSYSTEM_IDENTITY mục 2.2);
 // - không có script/CSS nội tuyến (CSP chặn); script ngoài chỉ được là /js/loc.js và /js/theme.js; không có on*="...";
 // - /js/theme.js (chống nháy màu) nạp đồng bộ trong <head>, trước mọi stylesheet; _headers giữ script-src 'self';
 // - bộ chọn giao diện Sáng/Tối/Hệ thống là radiogroup ở chân trang, mặc định Tối (phiếu 20261110-05);
@@ -29,8 +29,8 @@ function kiemTra(tep, html) {
   trang.set(duong, new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])));
 
   const title = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? '';
-  if (!/^(.+ - )?Tsu Cwico \| tsudev$/.test(title)) loi.push(`${ten}: title sai khuôn: ${title}`);
-  if (!html.includes('<meta property="og:site_name" content="tsudev">')) loi.push(`${ten}: thiếu og:site_name tsudev`);
+  if (!/^(.+ - )?Tsu Cwico \| TsuDEV$/.test(title)) loi.push(`${ten}: title sai khuôn: ${title}`);
+  if (!html.includes('<meta property="og:site_name" content="TsuDEV">')) loi.push(`${ten}: thiếu og:site_name TsuDEV`);
   if (!/<link rel="canonical" href="https:\/\/cwico\.tsudev\.com\//.test(html)) loi.push(`${ten}: thiếu canonical`);
   const mota = html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? '';
   const dai = [...mota.replace(/&[a-z#0-9]+;/g, 'x')].length;

@@ -15,7 +15,7 @@ Worth stating in the submission notes, because a debloater looks alarming
 from the outside:
 
 * **No network access of its own.** No telemetry, no update check, no
-  analytics. The only outbound navigation is the user clicking the tsudev
+  analytics. The only outbound navigation is the user clicking the TsuDEV
   logo, which opens `https://tsudev.com` in their default browser.
 * **Nothing is removed without an explicit action.** There is no "optimise
   now" button, no default selection, and no background operation.

@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://tsudev.com"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/brand/tsudev-wordmark-dark.png"><img src="../assets/brand/tsudev-wordmark.png" alt="tsudev" height="24"></picture></a>
+<a href="https://tsudev.com"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/brand/tsudev-wordmark-dark.png"><img src="../assets/brand/tsudev-wordmark.png" alt="TsuDEV" height="24"></picture></a>
 
 # Releasing
 
