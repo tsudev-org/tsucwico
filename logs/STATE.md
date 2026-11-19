@@ -1,15 +1,15 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp (phiếu toàn hệ 20261117-P2):** đọc `~/projects/logs/handover/20261117-P2_ke-hoach-phan-phoi-tin-cay-da-nen-tang.md` hàng 5 (`tsucwico`) ở mục 3
-> + `.standards/docs/DISTRIBUTION_TRUST.md` (chuẩn v3.7.0) + `.standards/docs/VERSIONING.md` mục 2. Khuôn thẻ/tên tệp mới chỉ áp
-> cho bản phát hành KẾ TIẾP, đọc mục 2.4 (updater đã cài) trước khi đổi.
+> **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 bên dưới (Release `v26.11.1901` đang NHÁP, chờ 👤 thử nâng cấp + Publish).
+> Phiếu toàn hệ: `~/projects/logs/handover/20261117-P2_*` hàng 5 (P1 XONG phần mã 19/11; còn P2 MSIX, P4 ký) và
+> `20261119-01_ke-hoach-toan-he-v3.8.0.md` (T7 Pro/Ủng hộ, T8 website có hình/video, M4).
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
 
 ## Hàng đợi task (làm từ trên xuống)
 
-- [ ] **REL-TSU-1** Phát hành bản đầu tiên mang tên Tsu Cwico: `python3 tools/version.py set $(python3 tools/version.py next)`, thêm mục `## tsucwico-v...` vào CHANGELOG, tag -> draft. TRƯỚC KHI chủ dự án công bố: kiểm tên tệp tài sản (`tsucwico_<v>_x64-setup.exe`, `_x64.msi` - khuôn `releaseAssetNamePattern`, chưa chạy thật), `SHA256SUMS.txt(.sig)`, attestation; và nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ còn MỘT mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md`). Rồi `tools/apply_winget_manifest.py` + nộp winget.
+- [ ] **REL-TSU-1** Bản đầu tiên mang tên Tsu Cwico + khuôn thẻ v3: **Release nháp [`v26.11.1901`](https://github.com/tsudev-org/tsucwico/releases/tag/v26.11.1901)** (19/11/2026, phiên tsucwico-ea, run 44531891240). Đã kiểm trên nháp: 10 tệp đúng khuôn (`tsucwico_26.11.1901_windows-x64-setup.exe`, `_windows-x64.msi`, `_windows-x64-cli.exe`, `_sbom.spdx.json`, `.sig`, `latest.json`, `SHA256SUMS.txt` + `.sig` + `.sigstore.json`); `sha256sum -c` 7/7; `tools/verify_update_signature.py` - bản đã cài chấp nhận 3 gói; `gh attestation verify` 4/4 (ký bởi `release.yml@refs/tags/v26.11.1901`); Sigstore `OK`; CLI có CompanyName TsuDEV / FileVersion 26.11.1901; `latest.json` cùng dạng URL với 26.11.10.2 (đã cập nhật thật được). **VirusTotal**: MSI + CLI 0/74; bộ cài NSIS 3/74 engine học máy (CrowdStrike, APEX, Trapmine) ⇒ báo nhầm theo phiếu `logs/handover/20261119-VT1_*` (SecureAge đã nộp; 👤 gửi 2 email soạn sẵn). **Còn 👤:** nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ một mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md` mục 5) ⇒ **Publish** (updater bắt buộc: Publish là đẩy tới mọi máy). Sau Publish: deploy website (trang tải về đọc `releases/latest` lúc build), `tools/apply_winget_manifest.py` (manifest trong artifact `installers`) + nộp winget (đợi #476024), Scoop tự lên nhờ scoop-bucket#24.
 - [x] **SCOOP-1** ✅ 16/11/2026 (phiên tsudev-27): gói `tsucwico` có ở scoop-bucket (`dba0759`, cài thử đạt), `channels` có `scoop`; website deploy lại (Worker `2aa95bdf`) - `/tai-ve/` hiện `scoop install tsudev/tsucwico`. Mô tả gói chép nhầm của Swico ⇒ sửa ở scoop-bucket#14.
 - [x] **BP-1** ✅ 17/11/2026 (phiên tsudev-27): hồ sơ [16838](https://www.bestpractices.dev/projects/16838) passing 100% (`docs/best-practices.json`, giấy phép MIT; `dynamic_analysis` Unmet trung thực). Kèm #75 (ghim SHA 20 action, quyền token, SECURITY.md khớp mã: có updater + chữ ký minisign), CodeQL default setup, #76 (cảnh báo CodeQL high ở check-dist). Còn: P1.5 good first issue (phiếu 20261113-03).
 - [x] **LOCAL-DIR** ✅ 16/11/2026 (phiên tsudev-27): thư mục cục bộ đổi `~/projects/tsudev-cwico` -> `~/projects/tsucwico`.
@@ -28,6 +28,7 @@
 
 ## Đã hoàn thành (mới nhất trên cùng)
 
+- 19/11/2026 - Phiên tsucwico-ea: **P1 phiếu P2 hàng 5** - khuôn VERSIONING v3 (#87: thẻ `v26.11.DDNN`, tiêu đề `Tsu Cwico <v>`, tệp `tsucwico_<v>_windows-x64-*`, test `updaterOrder` bằng crate `semver` của updater), SBOM + Sigstore + attestation + VirusTotal trong `release.yml`, CLI có thông tin phiên bản; scoop-bucket#24 (regex 2 khuôn, giấy phép MIT); **T3** lựa chọn ngôn ngữ "Theo hệ thống" (#88, thử thật trên Chromium); dependabot #79-#81; chuẩn v3.8.3 (#90); bản phát hành #89 + thẻ `v26.11.1901` (nháp). Phiếu V1 mục 6 ghi kết quả bước 2.
 - 16/11/2026 - Phiên tsudev-cwico-dd: **đổi tên sản phẩm Tsu Cwico, repo `tsudev-org/tsucwico`** (ADR-0001; bảo mật repo giữ nguyên, URL cũ 301, endpoint updater cũ 200); ghim MSI UpgradeCode + hook NSIS cho bản đã cài; SHA256SUMS + chữ ký + attestation trong `release.yml`, `SHA256SUMS.txt` tải lên Release 26.11.10.2; Ủng hộ -> `tsudev.com/ung-ho` (app, website, FUNDING.yml); khối "Cài bằng lệnh" sinh lúc build; sửa id trùng `/nhat-ky/`; Scorecard. PR #70. Đóng phiếu 20261111-01, 20261112-01, 20261113-02; 20261113-07, 20261114-02 xong sau deploy.
 - 10/11/2026 - Phiếu `20261110-05` (giao diện đen + tím kiểu Supabase): website (bộ chọn Sáng/Tối/Hệ thống ở chân trang thay menu 4 lựa chọn ở header của #58) + app Tauri (3 lựa chọn, mặc định Tối, bảng §2). Chi tiết: mục Kết quả của phiếu.
 - 10/11/2026 - Bộ quy ước nâng lên v3.3.0 (#63).
