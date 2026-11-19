@@ -28,6 +28,12 @@ release-of-day counter:
 
 ### Added
 
+- App: language picker with **Match system** (Theo hệ thống) next to
+  Tiếng Việt and English (tsudev-standards PRODUCT_POLICY 1.1). A first run
+  follows Windows' language (vi, en; anything else falls back to English) and
+  keeps following it live; picking a language stores it, picking Match system
+  goes back to the default.
+
 - Website `cwico.tsudev.com`: theme picker - Light, Dark or System, same as
   tsudev.com (stored under `tsudev-theme`; an old `warm` value reads as Light),
   as a radio group at the bottom of the footer next to `© tsudev`; Dark by

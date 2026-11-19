@@ -14,7 +14,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import * as api from "./api";
 import { CwicoError } from "./api";
 import { formatDateTime, translator } from "./i18n";
-import { THEME_CHOICES, initialLocale, initialTheme, type ThemeChoice } from "./defaults";
+import {
+  LOCALE_CHOICES,
+  THEME_CHOICES,
+  initialLocaleChoice,
+  initialTheme,
+  resolveLocale,
+  type LocaleChoice,
+  type ThemeChoice,
+} from "./defaults";
 import type {
   AboutInfo,
   UpdateStatus,
@@ -47,11 +55,15 @@ const THEME_KEY = "cwico.theme";
 /** Chỉ Sáng / Tối / Hệ thống; lần đầu theo hệ thống (PRODUCT_POLICY 1, xem defaults.ts). */
 const systemDark = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
 const LOCALE_KEY = "cwico.locale";
+/** Ngôn ngữ ưu tiên của Windows, như WebView2 báo. */
+const systemLanguages = (): readonly string[] => navigator.languages ?? [navigator.language];
 
 export default function App() {
-  const [locale, setLocale] = useState<Locale>(
-    () => initialLocale(localStorage.getItem(LOCALE_KEY), navigator.languages ?? [navigator.language]),
+  const [localeChoice, setLocaleChoice] = useState<LocaleChoice>(() =>
+    initialLocaleChoice(localStorage.getItem(LOCALE_KEY)),
   );
+  const [osLanguages, setOsLanguages] = useState<readonly string[]>(systemLanguages);
+  const locale: Locale = resolveLocale(localeChoice, osLanguages);
   const [theme, setTheme] = useState<ThemeChoice>(() => initialTheme(localStorage.getItem(THEME_KEY)));
   const [osDark, setOsDark] = useState(systemDark);
   const dark = theme === "dark" || (theme === "system" && osDark);
@@ -110,7 +122,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(LOCALE_KEY, locale);
+    const onChange = () => setOsLanguages(systemLanguages());
+    window.addEventListener("languagechange", onChange);
+    return () => window.removeEventListener("languagechange", onChange);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(LOCALE_KEY, localeChoice);
+  }, [localeChoice]);
+
+  useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
 
@@ -377,7 +398,7 @@ export default function App() {
       <UpdateGate
         status={update}
         locale={locale}
-        onLocaleToggle={() => setLocale(locale === "vi" ? "en" : "vi")}
+        onLocaleToggle={() => setLocaleChoice(locale === "vi" ? "en" : "vi")}
       />
     );
   }
@@ -424,15 +445,24 @@ export default function App() {
 
         <span className="flex-1" />
 
-        <button
-          type="button"
-          onClick={() => setLocale(locale === "vi" ? "en" : "vi")}
-          title={t("locale.toggle")}
-          className="rounded-lg border px-2.5 py-1.5 text-xs font-semibold uppercase"
-          style={{ borderColor: "var(--border-strong)", color: "var(--text-secondary)" }}
+        <select
+          value={localeChoice}
+          onChange={(e) => setLocaleChoice(e.target.value as LocaleChoice)}
+          aria-label={t("locale.group")}
+          title={t("locale.group")}
+          className="rounded-lg border px-2 py-1.5 text-xs font-semibold"
+          style={{
+            borderColor: "var(--border-control)",
+            color: "var(--text-secondary)",
+            background: "var(--surface-panel)",
+          }}
         >
-          {locale === "vi" ? "VI" : "EN"}
-        </button>
+          {LOCALE_CHOICES.map((c) => (
+            <option key={c} value={c}>
+              {c === "system" ? `${t("locale.system")} (${locale === "vi" ? "VI" : "EN"})` : t(`locale.${c}`)}
+            </option>
+          ))}
+        </select>
         <div
           role="radiogroup"
           aria-label={t("theme.group")}
