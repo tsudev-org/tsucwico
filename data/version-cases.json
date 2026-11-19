@@ -5,55 +5,63 @@
     "the Python tooling and the Rust runtime cannot drift apart: changing one",
     "implementation without the other fails a test in the language that was",
     "not changed.",
-    "legacyNames: releases up to 26.11.1002 were tagged with the old product name tsudev-cwico (docs/adr/0001); both prefixes must keep parsing."
+    "From 19/11/2026 release names follow tsudev-standards VERSIONING.md 2.2 (v3): tag v{YY}.{M}.{DD}{NN}, e.g. v26.11.1901.",
+    "legacyNames: releases up to 26.11.1002 were tagged tsudev-cwico-vYY.M.D[.N] (docs/adr/0001); tsucwico-vYY.M.D[.N] was the scheme between the rename and v3. Both must keep parsing.",
+    "updaterOrder: semvers of builds already installed on users' machines, then the next release; the updater compares these as semver (VERSIONING.md 2.4)."
   ],
   "roundTrip": [
     {
-      "name": "tsucwico-v26.8.19",
+      "name": "v26.8.1901",
       "semver": "26.8.1901"
     },
     {
-      "name": "tsucwico-v26.8.19.2",
+      "name": "v26.8.1902",
       "semver": "26.8.1902"
     },
     {
-      "name": "tsucwico-v26.8.19.10",
+      "name": "v26.8.1910",
       "semver": "26.8.1910"
     },
     {
-      "name": "tsucwico-v26.8.20",
+      "name": "v26.8.2001",
       "semver": "26.8.2001"
     },
     {
-      "name": "tsucwico-v26.8.31",
+      "name": "v26.8.3101",
       "semver": "26.8.3101"
     },
     {
-      "name": "tsucwico-v26.9.1",
+      "name": "v26.9.0101",
       "semver": "26.9.101"
     },
     {
-      "name": "tsucwico-v26.12.31",
+      "name": "v26.11.1901",
+      "semver": "26.11.1901"
+    },
+    {
+      "name": "v26.12.3101",
       "semver": "26.12.3101"
     },
     {
-      "name": "tsucwico-v27.1.1",
+      "name": "v27.1.0101",
       "semver": "27.1.101"
     },
     {
-      "name": "tsucwico-v27.1.1.99",
+      "name": "v27.1.0199",
       "semver": "27.1.199"
     }
   ],
   "ascendingOrder": [
-    "tsucwico-v26.8.19",
-    "tsucwico-v26.8.19.2",
+    "tsudev-cwico-v26.8.19",
+    "v26.8.1902",
     "tsucwico-v26.8.19.10",
-    "tsucwico-v26.8.20",
-    "tsucwico-v26.8.31",
-    "tsucwico-v26.9.1",
-    "tsucwico-v26.12.31",
-    "tsucwico-v27.1.1"
+    "v26.8.2001",
+    "v26.8.3101",
+    "v26.9.0101",
+    "tsudev-cwico-v26.11.10.2",
+    "v26.11.1901",
+    "v26.12.3101",
+    "v27.1.0101"
   ],
   "rejectedNames": [
     "26.8.19.0",
@@ -61,7 +69,10 @@
     "26.8.32",
     "nonsense",
     "",
-    "v"
+    "v",
+    "v26.11.1900",
+    "v26.11.3201",
+    "v26.11.19011"
   ],
   "rejectedSemvers": [
     "1.0.0",
@@ -71,12 +82,33 @@
   ],
   "legacyNames": [
     {
+      "name": "tsudev-cwico-v26.8.19",
+      "semver": "26.8.1901"
+    },
+    {
+      "name": "tsudev-cwico-v26.11.10.2",
+      "semver": "26.11.1002"
+    },
+    {
       "name": "tsucwico-v26.8.19",
       "semver": "26.8.1901"
     },
     {
       "name": "tsucwico-v26.11.10.2",
       "semver": "26.11.1002"
+    },
+    {
+      "name": "v26.8.19",
+      "semver": "26.8.1901"
+    },
+    {
+      "name": "26.8.19.2",
+      "semver": "26.8.1902"
     }
+  ],
+  "updaterOrder": [
+    "26.8.1901",
+    "26.11.1002",
+    "26.11.1901"
   ]
 }

@@ -300,7 +300,7 @@ everywhere.
 cargo test
 ```
 
-**141 tests.** The ones that matter most:
+**143 tests.** The ones that matter most:
 
 * `selecting_everything_still_cannot_remove_a_critical_component` - ticks every
   row, confirms every prompt, presses go, and asserts Defender and RPC survive.
@@ -416,7 +416,7 @@ the same page; no payment details are built into any release.
 ## Names
 
 The product was called `tsudev-cwico` up to release 26.11.1002 and is now
-**Tsu Cwico** (repository `tsudev-org/tsucwico`, release tags `tsucwico-v*`).
+**Tsu Cwico** (repository `tsudev-org/tsucwico`, release tags `v*` such as `v26.11.1901`; up to 26.11.1002 `tsudev-cwico-v*`).
 The command stays `cwico`, the winget id stays `tsudev.cwico`, and existing
 installs update in place. Details: [ADR-0001](docs/adr/0001-ten-san-pham-tsu-cwico.md).
 

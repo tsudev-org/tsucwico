@@ -267,18 +267,18 @@ hình an toàn và toàn bộ giao diện vốn đã sẵn sàng đa nền tản
 
 ## Quy ước phiên bản
 
-Mỗi bản phát hành được đặt tên theo ngày ra mắt:
+Phiên bản theo `VERSIONING.md` mục 2.2 của bộ quy ước tsudev (từ 19/11/2026):
+`YY.M.DDNN`, thẻ git là `v` + phiên bản, tệp `tsucwico_{phiên bản}_windows-x64-...`.
 
-| Tình huống | Tên phiên bản |
-|---|---|
-| Bản đầu tiên ngày 19/8/2026 | `tsucwico-v26.8.19` |
-| Bản thứ hai cùng ngày | `tsucwico-v26.8.19.2` |
-| Ngày hôm sau | `tsucwico-v26.8.20` |
+| Tình huống | Thẻ | Semver trong manifest |
+|---|---|---|
+| Bản đầu tiên ngày 19/11/2026 | `v26.11.1901` | `26.11.1901` |
+| Bản thứ hai cùng ngày | `v26.11.1902` | `26.11.1902` |
+| Ngày 3/12/2026 | `v26.12.0301` | `26.12.301` |
 
-Bên trong, mỗi tên ánh xạ sang một semver ba số mà phần patch mang cả ngày lẫn
-số thứ tự trong ngày (`26.8.1901`) - vì Cargo, bộ đóng gói MSI và bộ cập nhật
-đều bắt buộc ba thành phần, và bộ cập nhật *so sánh* chính con số đó để biết
-người dùng có đang lạc hậu hay không.
+Semver không cho số 0 ở đầu nên ngày 1-9 bỏ số 0 trong manifest (và tên tệp);
+bộ cập nhật *so sánh* semver, phần patch = ngày × 100 + số thứ tự vẫn xếp đúng
+thứ tự phát hành. Thẻ cũ (`tsudev-cwico-v26.11.10.2`...) giữ nguyên, vẫn đọc được.
 
 Không bao giờ viết phiên bản bằng tay: `tools/version.py` giữ quy tắc này.
 
@@ -351,7 +351,7 @@ trỏ về cùng trang đó; không bản phát hành nào chứa thông tin tha
 ## Tên gọi
 
 Đến bản 26.11.1002 sản phẩm tên `tsudev-cwico`; nay là **Tsu Cwico** (repo
-`tsudev-org/tsucwico`, nhãn phát hành `tsucwico-v*`). Lệnh vẫn là `cwico`, mã
+`tsudev-org/tsucwico`, nhãn phát hành `v*`; tới 26.11.1002 là `tsudev-cwico-v*`). Lệnh vẫn là `cwico`, mã
 winget vẫn là `tsudev.cwico`, bản đã cài tự cập nhật tại chỗ. Chi tiết:
 [ADR-0001](adr/0001-ten-san-pham-tsu-cwico.md).
 

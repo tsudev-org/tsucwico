@@ -97,7 +97,7 @@ Two reasons beyond the usual:
 ## Build pipeline
 
 GitHub Actions, `.github/workflows/release.yml`, on `windows-latest`.
-Triggered by a tag matching `tsucwico-v*`. Produces an MSI (WiX) and an
+Triggered by a tag matching `v*` (`v26.11.1901`). Produces an MSI (WiX) and an
 NSIS installer via the Tauri bundler, plus a CLI binary.
 
 A signing step would be inserted after the build and before the artefacts are

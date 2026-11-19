@@ -92,10 +92,14 @@ a bug, not a trade-off:
 
 Release binaries are built by
 [GitHub Actions](https://github.com/tsudev-org/tsucwico/blob/main/.github/workflows/release.yml)
-from a tagged commit. Each release publishes `SHA256SUMS.txt`, and the installers carry build provenance
-attestations:
+from a tagged commit. Each release publishes `SHA256SUMS.txt`, signed keyless with Sigstore
+(`SHA256SUMS.txt.sigstore.json`, from 26.11.1901) and with the updater key (`SHA256SUMS.txt.sig`), an SPDX SBOM,
+and build provenance attestations for every file:
 
 ```powershell
-Get-FileHash .\tsudev-cwico_26.11.1002_x64_en-US.msi -Algorithm SHA256   # compare with SHA256SUMS.txt
-gh attestation verify .\tsudev-cwico_26.11.1002_x64_en-US.msi --repo tsudev-org/tsucwico
+Get-FileHash .\tsucwico_26.11.1901_windows-x64.msi -Algorithm SHA256   # compare with SHA256SUMS.txt
+gh attestation verify .\tsucwico_26.11.1901_windows-x64.msi --repo tsudev-org/tsucwico
+cosign verify-blob SHA256SUMS.txt --bundle SHA256SUMS.txt.sigstore.json `
+  --certificate-identity-regexp '^https://github.com/tsudev-org/tsucwico/\.github/workflows/release\.yml@refs/tags/v' `
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```

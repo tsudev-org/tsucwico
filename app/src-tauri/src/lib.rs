@@ -106,7 +106,7 @@ fn default_backup_dir() -> PathBuf {
 pub struct AboutInfo {
     /// The raw semver, for support reports.
     pub app_version: String,
-    /// The name users recognise: `tsucwico-v26.8.19`.
+    /// The version users see (VERSIONING.md 2.5): `26.11.1901`.
     pub app_release: String,
     pub product_url: String,
     pub platform: PlatformInfo,

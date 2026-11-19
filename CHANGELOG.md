@@ -5,22 +5,17 @@ All notable changes to this project are documented here, following
 
 ## Versioning
 
-Releases are named by date. The release published on 19 August 2026 is
-`tsudev-cwico-v26.8.19`; a second release the same day is
-`tsudev-cwico-v26.8.19.2`.
+From 19 November 2026 releases follow tsudev-standards `VERSIONING.md` 2.2:
+version `YY.M.DDNN`, tag `v` + version, title `Tsu Cwico {version}`.
 
-Cargo, the MSI bundler and the updater all require three-component semver -
-the updater *compares* versions to decide whether a user is out of date - so
-each name maps to a semver whose patch field carries the day and the
-release-of-day counter:
+| Release | Tag | semver |
+|---|---|---|
+| first on 19 Nov 2026 | `v26.11.1901` | `26.11.1901` |
+| second that day | `v26.11.1902` | `26.11.1902` |
+| 3 Dec 2026 | `v26.12.0301` | `26.12.301` |
 
-| Release | semver |
-|---|---|
-| `tsudev-cwico-v26.8.19` | `26.8.1901` |
-| `tsudev-cwico-v26.8.19.2` | `26.8.1902` |
-| `tsudev-cwico-v26.8.20` | `26.8.2001` |
-| `tsudev-cwico-v26.9.1` | `26.9.101` |
-
+Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
+`tsudev-cwico-v26.11.10.2` (= `26.11.1002`); those tags never change.
 `tools/version.py` is the only thing that should ever compute a version;
 `tools/test_version.py` checks the mapping still sorts in release order.
 
@@ -33,6 +28,11 @@ release-of-day counter:
   follows Windows' language (vi, en; anything else falls back to English) and
   keeps following it live; picking a language stores it, picking Match system
   goes back to the default.
+- Releases carry a keyless Sigstore signature of `SHA256SUMS.txt`
+  (`SHA256SUMS.txt.sigstore.json`), an SPDX SBOM, build provenance for every
+  file and a VirusTotal scan of the draft (tsudev-standards
+  `DISTRIBUTION_TRUST.md` 2-3); the command-line `cwico.exe` now carries
+  Windows version information (CompanyName TsuDEV).
 
 - Website `cwico.tsudev.com`: theme picker - Light, Dark or System, same as
   tsudev.com (stored under `tsudev-theme`; an old `warm` value reads as Light),
@@ -42,6 +42,13 @@ release-of-day counter:
   (`script-src 'self'`) is unchanged.
 
 ### Changed
+
+- Release naming (tsudev-standards `VERSIONING.md` 2.2): tags `v26.11.1901`,
+  release title `Tsu Cwico 26.11.1901`, files
+  `tsucwico_26.11.1901_windows-x64-setup.exe` / `_windows-x64.msi` /
+  `_windows-x64-cli.exe`; the About screen and the update dialog show
+  `26.11.1901`. Installed 26.8.1901 and 26.11.1002 builds see the new release
+  as newer (tested with the updater's `semver` crate).
 
 - tsudev ecosystem look (ticket `20261110-05`): pure black + violet palette,
   Supabase-style header, buttons and cards, one seamless page background, on

@@ -214,7 +214,7 @@ export interface PlatformInfo {
 export interface AboutInfo {
   /** Raw semver, for support reports. */
   appVersion: string;
-  /** The name users recognise: `tsucwico-v26.8.19`. */
+  /** The version users see (VERSIONING.md 2.5): `26.11.1901`. */
   appRelease: string;
   productUrl: string;
   platform: PlatformInfo;

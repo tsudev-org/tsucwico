@@ -230,7 +230,7 @@ export function banMoiNhat(): Promise<BanPhatHanh> {
     const goi = r.assets
       .filter((a) => /\.(exe|msi)$/.test(a.name))
       .map((a) => ({
-        // Tệp CLI (`..._x64-cli.exe`, từ bản sau 26.8.1901) không phải bộ cài.
+        // Tệp CLI (`..._windows-x64-cli.exe`; `..._x64-cli.exe` tới 26.11.1002) không phải bộ cài.
         loai: (a.name.endsWith('-cli.exe') ? 'cli' : a.name.endsWith('.exe') ? 'exe' : 'msi') as GoiTai['loai'],
         ten: a.name,
         url: a.browser_download_url,
@@ -241,7 +241,8 @@ export function banMoiNhat(): Promise<BanPhatHanh> {
     const [, y, m, d] = r.published_at.match(/^(\d{4})-(\d{2})-(\d{2})/) ?? [];
     return {
       tag: r.tag_name,
-      phienBan: r.tag_name.replace(/^(?:tsucwico|tsudev-cwico)-v/, ''),
+      // Thẻ `v26.11.1901` (VERSIONING.md 2.2); tới 26.11.1002 là `tsudev-cwico-v26.11.10.2`.
+      phienBan: r.tag_name.replace(/^(?:(?:tsucwico|tsudev-cwico)-)?v/, ''),
       ngay: `${d}/${m}/${y}`,
       url: r.html_url,
       goi,

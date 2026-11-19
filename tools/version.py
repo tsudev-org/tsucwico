@@ -2,31 +2,36 @@
 """
 The single place that knows how Tsu Cwico versions work.
 
-Releases are named by date: the release published on 19 August 2026 is
-`tsucwico-v26.8.19`, and a second release the same day is
-`tsucwico-v26.8.19.2`.
+From 19 November 2026 releases follow tsudev-standards VERSIONING.md 2.2 (v3):
+the version is `YY.M.DDNN` - two-digit year, month without a leading zero,
+two-digit day, two-digit release-of-day counter - and the git tag is that
+version with a lower-case `v`:
 
-That four-component name is not valid semver, and Cargo, the MSI bundler and
-the Tauri updater all require semver - the updater in particular *compares*
-versions to decide whether an update exists, so the encoding has to sort
-correctly. The name therefore maps to a semver where the patch field carries
-both the day and the release-of-day counter:
+    v26.11.1901    first release on 19 November 2026     semver 26.11.1901
+    v26.11.1902    second release that day                semver 26.11.1902
+    v26.12.0301    3 December 2026                        semver 26.12.301
 
-    patch = day × 100 + n            (n starts at 1)
+Cargo, the MSI bundler and the Tauri updater need semver, which forbids a
+leading zero, so days 1-9 lose it in the manifests (26.12.301) while the tag
+and the version users see keep it (v26.12.0301). The updater *compares*
+semvers to decide whether an update exists; patch = day x 100 + n sorts in
+release order either way.
 
-    tsucwico-v26.8.19     <->  26.8.1901
-    tsucwico-v26.8.19.2   <->  26.8.1902
-    tsucwico-v26.8.20     <->  26.8.2001
-    tsucwico-v26.9.1      <->  26.9.101
+Older tags are still parsed, never produced:
 
-Ordering holds in every direction: 1901 < 1902 < 2001, and a September release
-sorts above any August one on the minor field. Up to 99 releases a day.
+    tsudev-cwico-v26.8.19      (up to 26.11.1002, docs/adr/0001)  -> 26.8.1901
+    tsudev-cwico-v26.11.10.2                                      -> 26.11.1002
+    tsucwico-v26.11.16[.N]     (scheme between the rename and v3)
+
+so a build installed from any of them (26.8.1901, 26.11.1002) sees
+26.11.1901 as newer (data/version-cases.json `updaterOrder`).
 
 Usage
     tools/version.py current              print the version the project claims
-    tools/version.py next                 compute today's next release name
-    tools/version.py to-semver <name>     tsucwico-v26.8.19 -> 26.8.1901
-    tools/version.py to-name <semver>     26.8.1901 -> tsucwico-v26.8.19
+    tools/version.py next                 compute today's next release tag
+    tools/version.py to-semver <name>     v26.11.1901 -> 26.11.1901
+    tools/version.py to-name <semver>     26.12.301 -> v26.12.0301
+    tools/version.py display <semver>     26.12.301 -> 26.12.0301
     tools/version.py set <name|semver>    write it to every manifest
     tools/version.py check                verify every manifest agrees
 """
@@ -51,8 +56,13 @@ TAURI_CONF = ROOT / "app" / "src-tauri" / "tauri.conf.json"
 UI_PACKAGE = ROOT / "ui" / "package.json"
 
 SEMVER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
+#: Current scheme: v26.11.1901 (the patch carries day and counter, 3-4 digits).
 NAME_RE = re.compile(
-    rf"^(?:{re.escape(PRODUCT)}-|{re.escape(LEGACY_PRODUCT)}-)?v?(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?$"
+    rf"^(?:{re.escape(PRODUCT)}-|{re.escape(LEGACY_PRODUCT)}-)?v?(\d+)\.(\d+)\.(\d{{3,4}})$"
+)
+#: Older schemes: [tsucwico-|tsudev-cwico-]v26.8.19[.2] (day of 1-2 digits).
+LEGACY_NAME_RE = re.compile(
+    rf"^(?:{re.escape(PRODUCT)}-|{re.escape(LEGACY_PRODUCT)}-)?v?(\d+)\.(\d+)\.(\d{{1,2}})(?:\.(\d+))?$"
 )
 
 MAX_RELEASES_PER_DAY = 99
@@ -68,14 +78,19 @@ class VersionError(ValueError):
 
 
 def parse_name(name: str) -> tuple[int, int, int, int]:
-    """`tsucwico-v26.8.19.2` -> (26, 8, 19, 2). The counter defaults to 1."""
+    """`v26.8.1902` (or legacy `tsudev-cwico-v26.8.19.2`) -> (26, 8, 19, 2)."""
     match = NAME_RE.match(name.strip())
-    if not match:
-        raise VersionError(
-            f"`{name}` is not a release name; expected {PRODUCT}-vYY.M.D[.N]"
-        )
-    year, month, day, counter = match.groups()
-    n = int(counter) if counter else 1
+    if match:
+        year, month, patch = match.groups()
+        day, n = divmod(int(patch), 100)
+    else:
+        match = LEGACY_NAME_RE.match(name.strip())
+        if not match:
+            raise VersionError(
+                f"`{name}` is not a release name; expected vYY.M.DDNN (e.g. v26.11.1901)"
+            )
+        year, month, day, counter = match.groups()
+        n = int(counter) if counter else 1
     if not 1 <= n <= MAX_RELEASES_PER_DAY:
         raise VersionError(f"release counter {n} is outside 1..{MAX_RELEASES_PER_DAY}")
     if not 1 <= int(month) <= 12:
@@ -110,11 +125,15 @@ def parse_semver(semver: str) -> tuple[int, int, int, int]:
     return year, month, day, n
 
 
-def to_name(semver: str) -> str:
-    """The semver -> the release name users see."""
+def display(semver: str) -> str:
+    """The semver -> the version users see: 26.12.301 -> 26.12.0301."""
     year, month, day, n = parse_semver(semver)
-    suffix = "" if n == 1 else f".{n}"
-    return f"{PRODUCT}-v{year}.{month}.{day}{suffix}"
+    return f"{year}.{month}.{day:02d}{n:02d}"
+
+
+def to_name(semver: str) -> str:
+    """The semver -> the release tag: 26.11.1901 -> v26.11.1901."""
+    return f"v{display(semver)}"
 
 
 # ---------------------------------------------------------------------------
@@ -196,7 +215,7 @@ def cmd_current() -> int:
 def existing_tags() -> list[str]:
     try:
         out = subprocess.run(
-            ["git", "tag", "--list", f"{PRODUCT}-v*", f"{LEGACY_PRODUCT}-v*"],
+            ["git", "tag", "--list", "v*", f"{PRODUCT}-v*", f"{LEGACY_PRODUCT}-v*"],
             cwd=ROOT,
             capture_output=True,
             text=True,
@@ -231,9 +250,7 @@ def cmd_next(today: dt.date | None = None) -> int:
         )
         return 1
 
-    suffix = "" if n == 1 else f".{n}"
-    name = f"{PRODUCT}-v{year}.{month}.{day}{suffix}"
-    print(name)
+    print(f"v{year}.{month}.{day:02d}{n:02d}")
     return 0
 
 
@@ -299,6 +316,9 @@ def main(argv: list[str]) -> int:
             return 0
         if command == "to-name":
             print(to_name(rest[0]))
+            return 0
+        if command == "display":
+            print(display(rest[0]))
             return 0
         if command == "set":
             return cmd_set(rest[0])
