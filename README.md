@@ -300,7 +300,7 @@ everywhere.
 cargo test
 ```
 
-**141 tests.** The ones that matter most:
+**143 tests.** The ones that matter most:
 
 * `selecting_everything_still_cannot_remove_a_critical_component` - ticks every
   row, confirms every prompt, presses go, and asserts Defender and RPC survive.
