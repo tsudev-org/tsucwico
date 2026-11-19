@@ -119,8 +119,29 @@ export async function openProductSite(): Promise<void> {
   return call<void>("open_product_site");
 }
 
-/** The ecosystem donation page; the app never embeds account details (decision 20261112-02). */
-export const DONATE_URL = "https://tsudev.com/ung-ho";
+/** The ecosystem donation page; the app never embeds account details (PRODUCT_POLICY 7.4). */
+export const DONATE_URL = "https://tsudev.com/ung-ho?app=tsucwico";
+export const PRO_URL = "https://tsudev.com/pro?app=tsucwico";
+
+/** Local mark of the last "several devices, no Pro" notice (PRODUCT_POLICY 7.3). */
+export const PRO_NOTICE_KEY = "tsu.pro_notice.last_shown";
+
+/**
+ * Device count to show the multi-device notice with, or null. The rule is in
+ * `cwico_core::pro`; this only hands it the stored mark.
+ */
+export async function proNotice(lastShown: string | null): Promise<number | null> {
+  if (!isDesktop()) return fixtures.proNotice();
+  return call<number | null>("pro_notice", { lastShown });
+}
+
+export async function openProPage(): Promise<void> {
+  if (!isDesktop()) {
+    window.open(PRO_URL, "_blank", "noopener,noreferrer");
+    return;
+  }
+  return call<void>("open_pro_page");
+}
 
 export async function openDonatePage(): Promise<void> {
   if (!isDesktop()) {

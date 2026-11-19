@@ -697,6 +697,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-opener",
  "tauri-plugin-updater",
+ "time",
  "tracing",
  "tracing-subscriber",
 ]
@@ -718,6 +719,7 @@ name = "cwico-core"
 version = "26.11.1901"
 dependencies = [
  "cwico-core",
+ "getrandom 0.3.4",
  "regex",
  "semver",
  "serde",

@@ -1,9 +1,9 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 bên dưới (Release `v26.11.1901` vẫn NHÁP 19/11 tối, chờ 👤 thử nâng cấp
-> + Publish; VirusTotal NSIS vẫn 3/71 - đọc lại theo phiếu VT1 mục 4). Phiếu toàn hệ: `20261119-01` - **T8 XONG** (#92,
-> deploy), **M4** phần agent xong (còn P4 ký = 👤); **T7 bị thay bằng PRO1** (phiếu `20261119-PRO1_*`, chờ PRO-A/B/D).
-> `20261117-P2_*` hàng 5: còn **P2 MSIX** - chờ 👤 tài khoản Partner Center (cần Identity Name/Publisher của Store).
+> **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 (Release `v26.11.1901` vẫn NHÁP 20/11, chờ 👤 thử nâng cấp + Publish;
+> VirusTotal NSIS 3/71 - phiếu VT1 mục 4). **PRO1 P1 XONG** (20/11, phiên tsucwico-e6, ADR-0002); P2 (đăng nhập
+> loopback PKCE + JWS + màn Pro) chờ tsudev: client `tsucwico`, tsudev#336 gộp (👤 migration Neon), trang `/pro` (B3);
+> P3 chờ crate `tsusync` (PRO-D3). `20261117-P2_*` hàng 5: còn **P2 MSIX** - chờ 👤 tài khoản Partner Center.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
@@ -11,11 +11,11 @@
 ## Hàng đợi task (làm từ trên xuống)
 
 - [ ] **REL-TSU-1** Bản đầu tiên mang tên Tsu Cwico + khuôn thẻ v3: **Release nháp [`v26.11.1901`](https://github.com/tsudev-org/tsucwico/releases/tag/v26.11.1901)** (19/11/2026, phiên tsucwico-ea, run 44531891240). Đã kiểm trên nháp: 10 tệp đúng khuôn (`tsucwico_26.11.1901_windows-x64-setup.exe`, `_windows-x64.msi`, `_windows-x64-cli.exe`, `_sbom.spdx.json`, `.sig`, `latest.json`, `SHA256SUMS.txt` + `.sig` + `.sigstore.json`); `sha256sum -c` 7/7; `tools/verify_update_signature.py` - bản đã cài chấp nhận 3 gói; `gh attestation verify` 4/4 (ký bởi `release.yml@refs/tags/v26.11.1901`); Sigstore `OK`; CLI có CompanyName TsuDEV / FileVersion 26.11.1901; `latest.json` cùng dạng URL với 26.11.10.2 (đã cập nhật thật được). **VirusTotal**: MSI + CLI 0/74; bộ cài NSIS 3/74 engine học máy (CrowdStrike, APEX, Trapmine) ⇒ báo nhầm theo phiếu `logs/handover/20261119-VT1_*` (SecureAge đã nộp; 👤 gửi 2 email soạn sẵn). **Còn 👤:** nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ một mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md` mục 5) ⇒ **Publish** (updater bắt buộc: Publish là đẩy tới mọi máy). Sau Publish: deploy website (trang tải về đọc `releases/latest` lúc build), `tools/apply_winget_manifest.py` (manifest trong artifact `installers`) + nộp winget (đợi #476024), Scoop tự lên nhờ scoop-bucket#24.
-- [ ] **PRO1** Lưu cục bộ mặc định; Pro mới có đồng bộ cài đặt (dịch vụ dùng chung PRO-D, crate `tsusync`); tài khoản chưa
-  Pro dùng ≥ 2 thiết bị ⇒ nhắc mỗi 30 ngày. Phiếu `logs/handover/20261119-PRO1_luu-cuc-bo-pro-dong-bo.md` (từ phiên
-  qulythuchi-b2, mục 5 "Đã chốt": Pro 49.000 ₫/tháng, 490.000 ₫/năm; HTTP 402 `pro_required`; `X-Tsu-Installation`;
-  TsuBadge; nội dung thông báo dùng nguyên văn phiếu gốc mục 9). THAY T7 của 20261119-01. **Chờ PRO-A (chuẩn v3.9.0),
-  PRO-B (máy chủ quyền lợi), PRO-D (dịch vụ đồng bộ)**; phần không phụ thuộc PRO-B/PRO-D làm được sau PRO-A.
+- [ ] **PRO1** Lưu cục bộ mặc định; Pro = đồng bộ cài đặt (TsuDEV Sync, crate `tsusync`); nhắc nhiều thiết bị mỗi 30
+  ngày. Phiếu `logs/handover/20261119-PRO1_luu-cuc-bo-pro-dong-bo.md`, kế hoạch phase ở **ADR-0002 mục 3**.
+  **P1 ✅** 20/11 (kiểm kê 0 byte rời máy, chuẩn v3.9.1, `cwico_core::pro`, hộp thoại `ProNotice`). **P2** chờ tsudev
+  (đăng ký client `tsucwico` redirect loopback, tsudev#336 gộp sau 👤 migration Neon, B3 `/pro` - đang 404). **P3** chờ
+  PRO-D3. Hợp đồng: PRODUCT_POLICY 7.4 bản v3.9.1 (KHÔNG theo mục 9.2 phiếu gốc - đã lỗi thời).
 - [ ] **P2-MSIX** Đích MSIX (`Version` = `YY.M.DDNN.0`) + nộp Microsoft Store + nút Store trên website. Chờ 👤 tạo tài
   khoản Partner Center cá nhân (phiếu P2 mục 4.1) - không đoán Identity Name/Publisher.
 - [x] **T8** ✅ 19/11/2026 (phiên tsucwico-c4): #92 gộp `20de2ab`, deploy Worker version `2fb094b0`; đo production: 1 video
@@ -38,6 +38,11 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 20/11/2026 - Phiên tsucwico-e6: **PRO1 P1** - chuẩn v3.9.1; ADR-0002 (kiểm kê: bản miễn phí 0 byte dữ liệu người
+  dùng rời máy); `cwico_core::pro` (claims JWS 7.4, `notice_due` 11 test gồm 5 ca bắt buộc, mã cài đặt 128 bit);
+  `ProNotice` vi/en nguyên văn + lệnh Tauri `pro_notice`/`open_pro_page`; khối "Dữ liệu chỉ ở máy này" ở Giới thiệu;
+  Ủng hộ có `?app=tsucwico`. Release vẫn nháp, winget#476024 vẫn chờ quản trị viên.
 
 - 19/11/2026 - Phiên tsucwico-c4: **T8** website có hình + video (#92): hero cặp ảnh Sáng/Tối, 5 tính năng so le, video
   86 giây MP4 + WebM + phụ đề vi tự lưu trữ, AVIF/WebP lúc build, khối Nền tảng, hiện dần khi cuộn; 5 ảnh preview cũ (tên

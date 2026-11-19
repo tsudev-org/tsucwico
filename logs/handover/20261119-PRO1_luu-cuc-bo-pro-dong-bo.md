@@ -28,7 +28,13 @@ Xem phiếu gốc mục 8 (giá Pro, ân hạn, nơi đặt dịch vụ đồng 
 
 ## 4. Kết quả xử lý (phiên nhận điền)
 
--
+- 20/11/2026 - tsucwico-e6: **P1** (PR `feat/pro1-buoc-1`). Kiểm kê: bản miễn phí đã 0 byte dữ liệu người dùng rời máy
+  (chỉ kiểm tra cập nhật GitHub, không định danh; cài đặt ở `localStorage`; sao lưu ở thư mục cục bộ) - không có đường
+  đồng bộ miễn phí nào phải tắt. ADR-0002 (Pro = đồng bộ cài đặt qua `tsusync`; đăng nhập tùy chọn loopback PKCE;
+  phase P1-P3). Chuẩn v3.9.1. `cwico_core::pro`: claims 7.4 (`iss` `https://tsudev.com/oidc`, `aud` `tsucwico`, trần 7
+  ngày), `notice_due` (5 ca bắt buộc + 6 ca phụ), mã cài đặt 128 bit. Hộp thoại `ProNotice` nguyên văn 7.3 vi/en, chỉ
+  hỏi lúc khởi động, lệnh `pro_notice` luôn `None` khi chưa có đăng nhập. Không đặt nút mua: `tsudev.com/pro` còn 404.
+  Còn: **P2** (chờ client `tsucwico` ở tsudev + tsudev#336 + B3), **P3** (chờ PRO-D3).
 
 ## 5. Đã chốt (19/11/2026, bổ sung sau khi mở phiếu)
 
