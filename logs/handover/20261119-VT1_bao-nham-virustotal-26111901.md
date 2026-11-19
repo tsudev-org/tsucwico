@@ -2,7 +2,8 @@
 
 - **Mã phiếu**: 20261119-VT1
 - **Từ**: phiên tsucwico-ea, 19/11/2026
-- **Trạng thái**: MỞ - SecureAge đã nộp; CrowdStrike + Trapmine chờ 👤 gửi email; Release `v26.11.1901` đang NHÁP
+- **Trạng thái**: MỞ - SecureAge đã nộp; CrowdStrike + Trapmine chờ 👤 gửi email; Release `v26.11.1901` đang NHÁP;
+  đọc lại 19/11 15:27 UTC vẫn 3/71 (mục 4)
 
 ## 1. Kết quả quét (job `virustotal` của run 44531891240)
 
@@ -37,3 +38,9 @@ Bản NSIS 26.11.1002 chưa từng lên VirusTotal nên không so được.
 ## 4. Kết quả xử lý
 
 - 19/11/2026 - phiên tsucwico-ea: mục 1-2.
+- 19/11/2026 - phiên tsucwico-c4: đọc `GET /files/<sha>` lúc 14:04 UTC (lượt quét 13:46) - NSIS **3/71** (CrowdStrike
+  `win/grayware_confidence_60% (D)`, Trapmine `malicious.moderate.ml.score`, APEX `Malicious` - y như mục 1); MSI 0/59,
+  CLI 0/64. Gửi lại `POST /analyse` (200) lúc 14:04; đọc lại 15:27 UTC: lượt 14:04:41 vẫn **3/71**, cùng 3 engine. Chưa
+  hãng nào gỡ (mới vài giờ sau báo; SecureAge thường 1-3 ngày). Chưa rõ 👤 đã gửi 2 email mục 3.1 chưa. Phiên sau đọc
+  lại sau 20/11. Ghi chú: `~/.config/tsudev/virustotal.env` chứa khóa trần (không dạng `VT_API_KEY=`) - đọc bằng
+  `K=$(tr -d '[:space:]' < ~/.config/tsudev/virustotal.env)`, KHÔNG `sed`/`cat` để xem dạng tệp.
