@@ -21,42 +21,56 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ## Unreleased
 
+## v26.11.1901 - 2026-11-19
+
+> **Tên mới: Tsu Cwico.** Phần mềm đổi tên từ tsudev-cwico thành Tsu Cwico,
+> có logo riêng, giao diện xanh TsuDEV, và lần chạy đầu theo ngôn ngữ + chế
+> độ sáng/tối của Windows. Cập nhật thay thế bản cũ tại chỗ: Add/Remove
+> Programs chỉ còn một mục "Tsu Cwico", dữ liệu và nhật ký giữ nguyên. Việc
+> phần mềm được hay không được gỡ không thay đổi.
+>
+> **New name: Tsu Cwico.** tsudev-cwico is now Tsu Cwico, with its own logo,
+> the TsuDEV blue look, and a first run that follows Windows' language and
+> light/dark mode. The update replaces the old build in place: one "Tsu Cwico"
+> entry in Add/Remove Programs, your data and logs kept. Nothing changed about
+> what the tool will or will not remove.
+
+From this release tags follow tsudev-standards `VERSIONING.md` 2.2:
+`v26.11.1901`, title `Tsu Cwico 26.11.1901`, files
+`tsucwico_26.11.1901_windows-x64-setup.exe` / `_windows-x64.msi` /
+`_windows-x64-cli.exe` (before: `tsudev-cwico-v26.11.10.2`,
+`tsudev-cwico_26.11.1002_x64-setup.exe`). Installed 26.8.1901 and 26.11.1002
+builds see this release as newer - tested with the `semver` crate their
+updater uses.
+
 ### Added
 
-- App: language picker with **Match system** (Theo hệ thống) next to
-  Tiếng Việt and English (tsudev-standards PRODUCT_POLICY 1.1). A first run
-  follows Windows' language (vi, en; anything else falls back to English) and
-  keeps following it live; picking a language stores it, picking Match system
-  goes back to the default.
-- Releases carry a keyless Sigstore signature of `SHA256SUMS.txt`
-  (`SHA256SUMS.txt.sigstore.json`), an SPDX SBOM, build provenance for every
-  file and a VirusTotal scan of the draft (tsudev-standards
-  `DISTRIBUTION_TRUST.md` 2-3); the command-line `cwico.exe` now carries
-  Windows version information (CompanyName TsuDEV).
-
-- Website `cwico.tsudev.com`: theme picker - Light, Dark or System, same as
-  tsudev.com (stored under `tsudev-theme`; an old `warm` value reads as Light),
-  as a radio group at the bottom of the footer next to `© tsudev`; Dark by
-  default. Applied by a synchronous `/js/theme.js` in `<head>` before the
-  stylesheet, so pages never flash the wrong colours; the strict CSP
-  (`script-src 'self'`) is unchanged.
+- Language picker with **Match system** (Theo hệ thống) next to Tiếng Việt
+  and English. A first run follows Windows' language (vi, en; anything else
+  falls back to English) and keeps following it; picking a language stores
+  it. The theme picker is Light / Dark / **System**, and System is the
+  default for a first run.
+- Own product logo (app icon, installer, website) and the display name
+  **TsuDEV** throughout.
+- Releases carry `SHA256SUMS.txt` signed keyless with Sigstore
+  (`SHA256SUMS.txt.sigstore.json`) and with the updater key, an SPDX SBOM,
+  build provenance for every file (`gh attestation verify`), and a VirusTotal
+  scan of the draft. The command-line `cwico.exe` carries Windows version
+  information (CompanyName TsuDEV).
+- Scoop: `scoop install tsudev/tsucwico` (command-line build).
 
 ### Changed
 
-- Release naming (tsudev-standards `VERSIONING.md` 2.2): tags `v26.11.1901`,
-  release title `Tsu Cwico 26.11.1901`, files
-  `tsucwico_26.11.1901_windows-x64-setup.exe` / `_windows-x64.msi` /
-  `_windows-x64-cli.exe`; the About screen and the update dialog show
-  `26.11.1901`. Installed 26.8.1901 and 26.11.1002 builds see the new release
-  as newer (tested with the updater's `semver` crate).
-
-- tsudev ecosystem look (ticket `20261110-05`): pure black + violet palette,
-  Supabase-style header, buttons and cards, one seamless page background, on
-  the website and in the app.
-- App: the theme toggle is now Light / Dark / System (Dark by default, System
-  follows Windows live); the primary button, progress bar, checkboxes and the
-  selected row use the `primary` token instead of the local blue
-  `--color-tsu-*` scale (QU-STD-1).
+- Renamed Tsu Cwico (repository `tsudev-org/tsucwico`, docs/adr/0001). The
+  MSI keeps the old UpgradeCode and the NSIS setup removes a tsudev-cwico
+  install silently first, so either installer upgrades in place. The winget
+  identifier `tsudev.cwico`, the command `cwico` and the updater key are
+  unchanged.
+- TsuDEV look: black and the logo's blue replace the earlier violet;
+  primary button, progress bar, checkboxes and the selected row use the
+  `primary` token. The About screen and the update dialog show the version as
+  `26.11.1901`.
+- "Support the project" points to `tsudev.com/ung-ho`.
 
 ### Fixed
 
@@ -64,6 +78,11 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
   registry backup taken before anything is removed. The plan was built as a
   dry run, which drops the preamble, so the person reviewing it never saw the
   two safety steps `remove --apply` performs first.
+
+### Security
+
+- rustls-webpki 0.103.17 and webpki-root-certs 1.0.12 (RUSTSEC-2026-0382,
+  RUSTSEC-2026-0383), used by the update check's HTTPS client.
 
 ## tsudev-cwico-v26.11.10.2 - 2026-11-10
 
