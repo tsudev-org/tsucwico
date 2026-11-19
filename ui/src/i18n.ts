@@ -194,6 +194,10 @@ const vi = {
   "theme.dark": "Tối",
   "theme.system": "Hệ thống",
   "locale.toggle": "Đổi ngôn ngữ",
+  "locale.group": "Ngôn ngữ",
+  "locale.system": "Theo hệ thống",
+  "locale.vi": "Tiếng Việt",
+  "locale.en": "English",
 } as const;
 
 export type TranslationKey = keyof typeof vi;
@@ -383,6 +387,10 @@ const en: Record<TranslationKey, string> = {
   "theme.dark": "Dark",
   "theme.system": "System",
   "locale.toggle": "Change language",
+  "locale.group": "Language",
+  "locale.system": "Match system",
+  "locale.vi": "Tiếng Việt",
+  "locale.en": "English",
 };
 
 const TABLES: Record<Locale, Record<TranslationKey, string>> = { vi, en };

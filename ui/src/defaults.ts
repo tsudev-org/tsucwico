@@ -10,15 +10,30 @@ export function initialTheme(saved: string | null): ThemeChoice {
   return THEME_CHOICES.includes(saved as ThemeChoice) ? (saved as ThemeChoice) : "system";
 }
 
-/**
- * Giá trị đã lưu hợp lệ thì dùng; không có ⇒ ngôn ngữ ưu tiên đầu tiên của hệ thống mà app hỗ trợ
- * (vi, en); hệ thống dùng ngôn ngữ chưa hỗ trợ ⇒ tiếng Anh.
- */
-export function initialLocale(saved: string | null, languages: readonly string[]): Locale {
-  if (saved === "vi" || saved === "en") return saved;
+/** "system" = theo ngôn ngữ của Windows (PRODUCT_POLICY 1.1: có lựa chọn "Theo hệ thống" để quay về mặc định). */
+export type LocaleChoice = "system" | Locale;
+export const LOCALE_CHOICES: LocaleChoice[] = ["system", "vi", "en"];
+
+/** Giá trị đã lưu hợp lệ thì dùng; không có hoặc lạ ⇒ "system". */
+export function initialLocaleChoice(saved: string | null): LocaleChoice {
+  return LOCALE_CHOICES.includes(saved as LocaleChoice) ? (saved as LocaleChoice) : "system";
+}
+
+/** Ngôn ngữ ưu tiên đầu tiên của hệ thống mà app hỗ trợ (vi, en); ngôn ngữ chưa hỗ trợ ⇒ tiếng Anh. */
+export function systemLocale(languages: readonly string[]): Locale {
   for (const tag of languages) {
     const base = tag.toLowerCase().split("-")[0];
     if (base === "vi" || base === "en") return base;
   }
   return "en";
+}
+
+/** Ngôn ngữ hiển thị cho một lựa chọn. */
+export function resolveLocale(choice: LocaleChoice, languages: readonly string[]): Locale {
+  return choice === "system" ? systemLocale(languages) : choice;
+}
+
+/** Lần khởi động: lựa chọn đã lưu (vi/en) thắng; không có hoặc "system" ⇒ theo hệ thống. */
+export function initialLocale(saved: string | null, languages: readonly string[]): Locale {
+  return resolveLocale(initialLocaleChoice(saved), languages);
 }

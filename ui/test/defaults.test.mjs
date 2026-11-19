@@ -2,7 +2,7 @@
 // trợ (ja) ⇒ đúng thứ tự vi/en → en; chưa chọn giao diện ⇒ Hệ thống. Chạy: npm --prefix ui test (Node 22, tự bỏ kiểu TS).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { initialLocale, initialTheme } from "../src/defaults.ts";
+import { initialLocale, initialLocaleChoice, initialTheme, resolveLocale } from "../src/defaults.ts";
 
 test("ngôn ngữ lần đầu theo hệ thống", () => {
   assert.equal(initialLocale(null, ["vi-VN", "en-US"]), "vi");
@@ -16,6 +16,16 @@ test("lựa chọn ngôn ngữ đã lưu thắng ngôn ngữ hệ thống", () =
   assert.equal(initialLocale("vi", ["en-US"]), "vi");
   assert.equal(initialLocale("en", ["vi-VN"]), "en");
   assert.equal(initialLocale("fr", ["vi-VN"]), "vi");
+});
+
+test("lựa chọn \"Theo hệ thống\" quay về ngôn ngữ của Windows", () => {
+  assert.equal(initialLocaleChoice(null), "system");
+  assert.equal(initialLocaleChoice("system"), "system");
+  assert.equal(initialLocaleChoice("vi"), "vi");
+  assert.equal(initialLocale("system", ["vi-VN"]), "vi");
+  assert.equal(initialLocale("system", ["ja-JP"]), "en");
+  assert.equal(resolveLocale("system", ["en-US", "vi"]), "en");
+  assert.equal(resolveLocale("vi", ["en-US"]), "vi");
 });
 
 test("giao diện lần đầu là Hệ thống; lựa chọn đã lưu giữ nguyên", () => {
