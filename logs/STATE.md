@@ -1,8 +1,9 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 bên dưới (Release `v26.11.1901` đang NHÁP, chờ 👤 thử nâng cấp + Publish).
-> Phiếu toàn hệ: `~/projects/logs/handover/20261117-P2_*` hàng 5 (P1 XONG phần mã 19/11; còn P2 MSIX, P4 ký) và
-> `20261119-01_ke-hoach-toan-he-v3.8.0.md` (T7 Pro/Ủng hộ, T8 website có hình/video, M4).
+> **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 bên dưới (Release `v26.11.1901` vẫn NHÁP 19/11 tối, chờ 👤 thử nâng cấp
+> + Publish; VirusTotal NSIS vẫn 3/71 - đọc lại theo phiếu VT1 mục 4). Phiếu toàn hệ: `20261119-01` - **T8 XONG** (#92,
+> deploy), **M4** phần agent xong (còn P4 ký = 👤); **T7 bị thay bằng PRO1** (phiếu `20261119-PRO1_*`, chờ PRO-A/B/D).
+> `20261117-P2_*` hàng 5: còn **P2 MSIX** - chờ 👤 tài khoản Partner Center (cần Identity Name/Publisher của Store).
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
@@ -10,6 +11,16 @@
 ## Hàng đợi task (làm từ trên xuống)
 
 - [ ] **REL-TSU-1** Bản đầu tiên mang tên Tsu Cwico + khuôn thẻ v3: **Release nháp [`v26.11.1901`](https://github.com/tsudev-org/tsucwico/releases/tag/v26.11.1901)** (19/11/2026, phiên tsucwico-ea, run 44531891240). Đã kiểm trên nháp: 10 tệp đúng khuôn (`tsucwico_26.11.1901_windows-x64-setup.exe`, `_windows-x64.msi`, `_windows-x64-cli.exe`, `_sbom.spdx.json`, `.sig`, `latest.json`, `SHA256SUMS.txt` + `.sig` + `.sigstore.json`); `sha256sum -c` 7/7; `tools/verify_update_signature.py` - bản đã cài chấp nhận 3 gói; `gh attestation verify` 4/4 (ký bởi `release.yml@refs/tags/v26.11.1901`); Sigstore `OK`; CLI có CompanyName TsuDEV / FileVersion 26.11.1901; `latest.json` cùng dạng URL với 26.11.10.2 (đã cập nhật thật được). **VirusTotal**: MSI + CLI 0/74; bộ cài NSIS 3/74 engine học máy (CrowdStrike, APEX, Trapmine) ⇒ báo nhầm theo phiếu `logs/handover/20261119-VT1_*` (SecureAge đã nộp; 👤 gửi 2 email soạn sẵn). **Còn 👤:** nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ một mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md` mục 5) ⇒ **Publish** (updater bắt buộc: Publish là đẩy tới mọi máy). Sau Publish: deploy website (trang tải về đọc `releases/latest` lúc build), `tools/apply_winget_manifest.py` (manifest trong artifact `installers`) + nộp winget (đợi #476024), Scoop tự lên nhờ scoop-bucket#24.
+- [ ] **PRO1** Lưu cục bộ mặc định; Pro mới có đồng bộ cài đặt (dịch vụ dùng chung PRO-D, crate `tsusync`); tài khoản chưa
+  Pro dùng ≥ 2 thiết bị ⇒ nhắc mỗi 30 ngày. Phiếu `logs/handover/20261119-PRO1_luu-cuc-bo-pro-dong-bo.md` (từ phiên
+  qulythuchi-b2, mục 5 "Đã chốt": Pro 49.000 ₫/tháng, 490.000 ₫/năm; HTTP 402 `pro_required`; `X-Tsu-Installation`;
+  TsuBadge; nội dung thông báo dùng nguyên văn phiếu gốc mục 9). THAY T7 của 20261119-01. **Chờ PRO-A (chuẩn v3.9.0),
+  PRO-B (máy chủ quyền lợi), PRO-D (dịch vụ đồng bộ)**; phần không phụ thuộc PRO-B/PRO-D làm được sau PRO-A.
+- [ ] **P2-MSIX** Đích MSIX (`Version` = `YY.M.DDNN.0`) + nộp Microsoft Store + nút Store trên website. Chờ 👤 tạo tài
+  khoản Partner Center cá nhân (phiếu P2 mục 4.1) - không đoán Identity Name/Publisher.
+- [x] **T8** ✅ 19/11/2026 (phiên tsucwico-c4): #92 gộp `20de2ab`, deploy Worker version `2fb094b0`; đo production: 1 video
+  (WebM phát được, 12 cue phụ đề), 9 `<picture>`, `media-src 'self'`, tệp video/AVIF/WebP 200 đúng content-type. Bộ ảnh
+  cửa hàng (`assets/store/`) làm cùng P2-MSIX.
 - [x] **SCOOP-1** ✅ 16/11/2026 (phiên tsudev-27): gói `tsucwico` có ở scoop-bucket (`dba0759`, cài thử đạt), `channels` có `scoop`; website deploy lại (Worker `2aa95bdf`) - `/tai-ve/` hiện `scoop install tsudev/tsucwico`. Mô tả gói chép nhầm của Swico ⇒ sửa ở scoop-bucket#14.
 - [x] **BP-1** ✅ 17/11/2026 (phiên tsudev-27): hồ sơ [16838](https://www.bestpractices.dev/projects/16838) passing 100% (`docs/best-practices.json`, giấy phép MIT; `dynamic_analysis` Unmet trung thực). Kèm #75 (ghim SHA 20 action, quyền token, SECURITY.md khớp mã: có updater + chữ ký minisign), CodeQL default setup, #76 (cảnh báo CodeQL high ở check-dist). Còn: P1.5 good first issue (phiếu 20261113-03).
 - [x] **LOCAL-DIR** ✅ 16/11/2026 (phiên tsudev-27): thư mục cục bộ đổi `~/projects/tsudev-cwico` -> `~/projects/tsucwico`.
@@ -27,6 +38,12 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 19/11/2026 - Phiên tsucwico-c4: **T8** website có hình + video (#92): hero cặp ảnh Sáng/Tối, 5 tính năng so le, video
+  86 giây MP4 + WebM + phụ đề vi tự lưu trữ, AVIF/WebP lúc build, khối Nền tảng, hiện dần khi cuộn; 5 ảnh preview cũ (tên
+  tsudev-cwico) chụp lại bằng `website/scripts/chup-anh.mjs`, video bằng `quay-demo.mjs` (`?preview=demo` trong fixtures);
+  deploy + đo production. VirusTotal NSIS đọc lại 2 lần: vẫn 3/71 (phiếu VT1 mục 4). Release vẫn nháp ⇒ bỏ qua bước
+  deploy-sau-Publish / winget / Scoop. Nhận phiếu PRO1.
 
 - 19/11/2026 - Phiên tsucwico-ea: **P1 phiếu P2 hàng 5** - khuôn VERSIONING v3 (#87: thẻ `v26.11.DDNN`, tiêu đề `Tsu Cwico <v>`, tệp `tsucwico_<v>_windows-x64-*`, test `updaterOrder` bằng crate `semver` của updater), SBOM + Sigstore + attestation + VirusTotal trong `release.yml`, CLI có thông tin phiên bản; scoop-bucket#24 (regex 2 khuôn, giấy phép MIT); **T3** lựa chọn ngôn ngữ "Theo hệ thống" (#88, thử thật trên Chromium); dependabot #79-#81; chuẩn v3.8.3 (#90); bản phát hành #89 + thẻ `v26.11.1901` (nháp). Phiếu V1 mục 6 ghi kết quả bước 2.
 - 16/11/2026 - Phiên tsudev-cwico-dd: **đổi tên sản phẩm Tsu Cwico, repo `tsudev-org/tsucwico`** (ADR-0001; bảo mật repo giữ nguyên, URL cũ 301, endpoint updater cũ 200); ghim MSI UpgradeCode + hook NSIS cho bản đã cài; SHA256SUMS + chữ ký + attestation trong `release.yml`, `SHA256SUMS.txt` tải lên Release 26.11.10.2; Ủng hộ -> `tsudev.com/ung-ho` (app, website, FUNDING.yml); khối "Cài bằng lệnh" sinh lúc build; sửa id trùng `/nhat-ky/`; Scorecard. PR #70. Đóng phiếu 20261111-01, 20261112-01, 20261113-02; 20261113-07, 20261114-02 xong sau deploy.
