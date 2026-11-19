@@ -20,7 +20,8 @@ fn main() {
                 .set("OriginalFilename", "cwico.exe")
                 .set("InternalName", "cwico")
                 .set("LegalCopyright", "Copyright (c) 2026 TsuDEV");
-            res.compile().expect("could not embed the Windows version resource");
+            res.compile()
+                .expect("could not embed the Windows version resource");
         }
     }
 }

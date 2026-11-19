@@ -294,13 +294,24 @@ mod tests {
         for case in cases().legacy_names {
             let release = Release::parse_name(&case.name).unwrap();
             assert_eq!(release.to_semver(), case.semver, "{}", case.name);
-            assert_eq!(release.to_name(), format!("v{}", release.display()), "{}", case.name);
+            assert_eq!(
+                release.to_name(),
+                format!("v{}", release.display()),
+                "{}",
+                case.name
+            );
         }
     }
 
     #[test]
     fn accepts_the_short_forms_a_maintainer_would_type() {
-        for input in ["v26.8.1901", "26.8.1901", "tsucwico-v26.8.19", "v26.8.19", "26.8.19"] {
+        for input in [
+            "v26.8.1901",
+            "26.8.1901",
+            "tsucwico-v26.8.19",
+            "v26.8.19",
+            "26.8.19",
+        ] {
             assert_eq!(Release::parse_name(input).unwrap().to_semver(), "26.8.1901");
         }
     }
@@ -343,7 +354,12 @@ mod tests {
             .map(|s| semver::Version::parse(s).unwrap())
             .collect();
         for pair in parsed.windows(2) {
-            assert!(pair[1] > pair[0], "{} must be newer than {}", pair[1], pair[0]);
+            assert!(
+                pair[1] > pair[0],
+                "{} must be newer than {}",
+                pair[1],
+                pair[0]
+            );
         }
         let next = Release::parse_semver(order.last().unwrap()).unwrap();
         assert_eq!(Release::parse_name(&next.to_name()).unwrap(), next);
