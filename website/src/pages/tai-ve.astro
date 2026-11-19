@@ -11,7 +11,7 @@ const TEN_LOAI = {
   cli: { t: 'Bản dòng lệnh (.exe)', d: 'Một tệp, không cần cài. Xem trang Dòng lệnh.' },
 } as const;
 const exe = ban.goi.find((g) => g.loai === 'exe');
-const tenExe = exe?.ten ?? `tsucwico_${ban.phienBan}_x64-setup.exe`;
+const tenExe = exe?.ten ?? `tsucwico_${ban.phienBan}_windows-x64-setup.exe`;
 ---
 <Trang tieuDe="Tải về" moTa="Tải Tsu Cwico cho Windows 10 và 11: bộ cài .exe, gói .msi hoặc winget; kèm mã SHA-256 để kiểm tra tệp và hướng dẫn chạy lần đầu an toàn." duongDan="/tai-ve/">
   <div class="khung tai-lieu">
@@ -30,7 +30,7 @@ const tenExe = exe?.ten ?? `tsucwico_${ban.phienBan}_x64-setup.exe`;
       <p>Phát hành ngày {ban.ngay}. Mọi gói được build tự động trên GitHub Actions từ mã nguồn công khai; trang này chỉ dẫn tới <a href={ban.url} target="_blank" rel="noopener noreferrer">trang phát hành trên GitHub</a>, không lưu bản sao.</p>
 
       <h2 id="cai-bang-lenh">Cài bằng lệnh</h2>
-      <p>Gói được ký - trình quản lý gói tự kiểm SHA-256 và chữ ký. Bấm <strong>Chép</strong> rồi dán vào Terminal hoặc PowerShell.</p>
+      <p>Trình quản lý gói tự so SHA-256 của tệp tải về với mã ghi trong kho gói trước khi cài. Bấm <strong>Chép</strong> rồi dán vào Terminal hoặc PowerShell.</p>
       {nhomHe.map((h) => (
         <div class="cai-lenh">
           <h3>{h}</h3>
@@ -65,8 +65,10 @@ const tenExe = exe?.ten ?? `tsucwico_${ban.phienBan}_x64-setup.exe`;
       <h2 id="kiem-tra">Kiểm tra tệp trước khi chạy</h2>
       <p>So mã SHA-256 của tệp tải về với mã ở trên. Trong PowerShell:</p>
       <pre tabindex="0"><code>Get-FileHash .\{tenExe} -Algorithm SHA256</code></pre>
+      <p>Từ bản 26.11.1901, mỗi bản phát hành còn kèm <code>SHA256SUMS.txt</code> ký không khóa bằng Sigstore (<code>SHA256SUMS.txt.sigstore.json</code>), chứng thực nguồn gốc build của GitHub và SBOM (danh sách thành phần, SPDX). Kiểm tệp được build từ đúng mã nguồn của dự án bằng <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">GitHub CLI</a>:</p>
+      <pre tabindex="0"><code>gh attestation verify .\{tenExe} --repo tsudev-org/tsucwico</code></pre>
       <div class="chu-y">
-        <p><strong>Bộ cài chưa có chữ ký Authenticode.</strong> Windows SmartScreen sẽ cảnh báo ở lần chạy đầu ("Windows protected your PC"). Hãy kiểm tra mã SHA-256 như trên trước, rồi mới chọn <em>More info → Run anyway</em>. Đăng ký chứng chỉ ký mã miễn phí cho dự án mã nguồn mở đang được chuẩn bị.</p>
+        <p><strong>Bộ cài chưa có chữ ký Authenticode.</strong> Windows SmartScreen sẽ cảnh báo ở lần chạy đầu ("Windows protected your PC"). Hãy kiểm tra mã SHA-256 như trên trước, rồi mới chọn <em>More info → Run anyway</em>. Dự án chưa có chứng chỉ ký mã; khi có, trang này sẽ ghi rõ.</p>
         <p><strong>Chỉ tải từ trang này, winget, hoặc <a href={`${REPO_URL}/releases`} target="_blank" rel="noopener noreferrer">GitHub của dự án</a>.</strong> Mọi trang khác tự xưng là "bản chính thức" đều không liên quan.</p>
       </div>
 

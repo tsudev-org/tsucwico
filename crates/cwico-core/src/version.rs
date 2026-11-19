@@ -1,22 +1,22 @@
 //! The release-name ⇄ semver mapping.
 //!
-//! Releases are named for the day they ship: `tsucwico-v26.8.19`, and
-//! `tsucwico-v26.8.19.2` for a second release the same day.
-//!
-//! That four-component name is not valid semver, and Cargo, the MSI bundler
-//! and the updater all require semver. The updater in particular *compares*
-//! versions to decide whether a user is out of date, so the encoding has to
-//! sort in release order. The name therefore maps to a semver whose patch
-//! field carries both the day and the release-of-day counter:
+//! From 19/11/2026 releases follow tsudev-standards VERSIONING.md 2.2 (v3):
+//! the version is `YY.M.DDNN` and the tag is `v` + that version. The semver
+//! Cargo, the MSI bundler and the updater use carries day and release-of-day
+//! counter in its patch field; semver forbids a leading zero, so days 1-9 drop
+//! it there and only there:
 //!
 //! ```text
 //! patch = day × 100 + n            (n starts at 1)
 //!
-//! tsucwico-v26.8.19     <->  26.8.1901
-//! tsucwico-v26.8.19.2   <->  26.8.1902
-//! tsucwico-v26.8.20     <->  26.8.2001
-//! tsucwico-v26.9.1      <->  26.9.101
+//! v26.11.1901   <->  26.11.1901     (shown to users as 26.11.1901)
+//! v26.11.1902   <->  26.11.1902
+//! v26.12.0301   <->  26.12.301      (shown to users as 26.12.0301)
 //! ```
+//!
+//! Older tags keep parsing - `tsudev-cwico-v26.8.19` (26.8.1901) and
+//! `tsudev-cwico-v26.11.10.2` (26.11.1002) are what installed copies were
+//! built from - but nothing new is named with them.
 //!
 //! `tools/version.py` implements the same mapping for the build tooling. Both
 //! are tested against the shared vectors in `data/version-cases.json`, so
@@ -49,8 +49,8 @@ pub struct Release {
 }
 
 impl Release {
-    /// Parse a release name. Accepts the full `tsucwico-v26.8.19`, the
-    /// short `v26.8.19`, and the bare `26.8.19`, because all three get typed.
+    /// Parse a release name: the tag `v26.11.1901`, the bare `26.11.1901`,
+    /// and every older form (`tsudev-cwico-v26.8.19`, `tsucwico-v26.11.10.2`).
     pub fn parse_name(name: &str) -> Result<Self> {
         let trimmed = name.trim();
         let rest = trimmed
@@ -62,7 +62,15 @@ impl Release {
         let parts: Vec<&str> = rest.split('.').collect();
         if parts.len() < 3 || parts.len() > 4 {
             return Err(Error::other(format!(
-                "`{name}` is not a release name; expected {PRODUCT}-vYY.M.D[.N]"
+                "`{name}` is not a release name; expected vYY.M.DDNN"
+            )));
+        }
+        // A 3-4 digit third field is the current DDNN form; a 1-2 digit one is
+        // the old day-only form, optionally followed by a counter.
+        let current = parts.len() == 3 && (3..=4).contains(&parts[2].len());
+        if parts.len() == 3 && parts[2].len() > 4 {
+            return Err(Error::other(format!(
+                "`{name}` is not a release name; expected vYY.M.DDNN"
             )));
         }
 
@@ -74,8 +82,12 @@ impl Release {
 
         let year = number(0)?;
         let month = number(1)?;
-        let day = number(2)?;
-        let counter = if parts.len() == 4 { number(3)? } else { 1 };
+        let (day, counter) = if current {
+            let patch = number(2)?;
+            (patch / 100, patch % 100)
+        } else {
+            (number(2)?, if parts.len() == 4 { number(3)? } else { 1 })
+        };
 
         Self::validate(year, month, day, counter, name)?;
         Ok(Self {
@@ -151,18 +163,18 @@ impl Release {
         )
     }
 
-    /// The full release name, as users see it.
+    /// The git tag: `v26.11.1901`.
     pub fn to_name(self) -> String {
-        format!("{PRODUCT}-v{}", self.short_name())
+        format!("v{}", self.display())
     }
 
-    /// Just the version part: `26.8.19` or `26.8.19.2`.
-    pub fn short_name(self) -> String {
-        if self.counter == 1 {
-            format!("{}.{}.{}", self.year, self.month, self.day)
-        } else {
-            format!("{}.{}.{}.{}", self.year, self.month, self.day, self.counter)
-        }
+    /// The version users see (About screen, release title, file names):
+    /// `26.11.1901`, `26.12.0301`.
+    pub fn display(self) -> String {
+        format!(
+            "{}.{}.{:02}{:02}",
+            self.year, self.month, self.day, self.counter
+        )
     }
 
     /// `2026-08-19`, for display next to a release.
@@ -171,17 +183,17 @@ impl Release {
     }
 }
 
-/// Convenience: semver string to the release name users recognise.
+/// Convenience: semver string to the version users see (`26.11.1901`).
 ///
 /// Falls back to the input unchanged when it was not produced by this scheme,
 /// so a stray version never turns into an error dialog in the UI.
 pub fn name_for_semver(semver: &str) -> String {
     Release::parse_semver(semver)
-        .map(Release::to_name)
-        .unwrap_or_else(|_| format!("{PRODUCT}-v{semver}"))
+        .map(Release::display)
+        .unwrap_or_else(|_| semver.to_string())
 }
 
-/// This build's release name.
+/// This build's version as users see it (`26.11.1901`).
 pub fn current_release_name() -> String {
     name_for_semver(crate::VERSION)
 }
@@ -199,6 +211,7 @@ mod tests {
         rejected_names: Vec<String>,
         rejected_semvers: Vec<String>,
         legacy_names: Vec<RoundTrip>,
+        updater_order: Vec<String>,
     }
 
     #[derive(Deserialize)]
@@ -254,8 +267,8 @@ mod tests {
     #[test]
     fn the_tenth_release_of_a_day_sorts_above_the_second() {
         // Naive string comparison gets this wrong: "…19.10" < "…19.2".
-        let tenth = Release::parse_name("tsucwico-v26.8.19.10").unwrap();
-        let second = Release::parse_name("tsucwico-v26.8.19.2").unwrap();
+        let tenth = Release::parse_name("v26.8.1910").unwrap();
+        let second = Release::parse_name("v26.8.1902").unwrap();
         assert!(tenth.to_semver() > second.to_semver() || tenth > second);
         assert!(tenth.day * 100 + tenth.counter > second.day * 100 + second.counter);
     }
@@ -281,13 +294,13 @@ mod tests {
         for case in cases().legacy_names {
             let release = Release::parse_name(&case.name).unwrap();
             assert_eq!(release.to_semver(), case.semver, "{}", case.name);
-            assert!(release.to_name().starts_with("tsucwico-v"), "{}", case.name);
+            assert_eq!(release.to_name(), format!("v{}", release.display()), "{}", case.name);
         }
     }
 
     #[test]
     fn accepts_the_short_forms_a_maintainer_would_type() {
-        for input in ["tsucwico-v26.8.19", "v26.8.19", "26.8.19"] {
+        for input in ["v26.8.1901", "26.8.1901", "tsucwico-v26.8.19", "v26.8.19", "26.8.19"] {
             assert_eq!(Release::parse_name(input).unwrap().to_semver(), "26.8.1901");
         }
     }
@@ -295,20 +308,44 @@ mod tests {
     #[test]
     fn an_unrecognised_version_degrades_instead_of_failing() {
         // A stray version must not become an error dialog in the UI.
-        assert_eq!(name_for_semver("1.0.0"), "tsucwico-v1.0.0");
+        assert_eq!(name_for_semver("1.0.0"), "1.0.0");
     }
 
     #[test]
     fn this_build_reports_a_valid_release_name() {
         let name = current_release_name();
-        assert!(name.starts_with(PRODUCT), "{name}");
         Release::parse_name(&name)
             .unwrap_or_else(|e| panic!("this build's own version does not parse: {e}"));
     }
 
     #[test]
     fn iso_date_is_rendered_for_display() {
-        let r = Release::parse_name("tsucwico-v26.8.19").unwrap();
+        let r = Release::parse_name("v26.8.1901").unwrap();
         assert_eq!(r.iso_date(), "2026-08-19");
+    }
+
+    #[test]
+    fn days_one_to_nine_keep_the_zero_users_see_but_not_in_semver() {
+        let r = Release::parse_name("v26.12.0301").unwrap();
+        assert_eq!(r.to_semver(), "26.12.301");
+        assert_eq!(r.display(), "26.12.0301");
+        assert_eq!(name_for_semver("26.12.301"), "26.12.0301");
+    }
+
+    #[test]
+    fn installed_builds_see_the_next_release_as_newer() {
+        // VERSIONING.md 2.4: the Tauri updater in 26.8.1901 and 26.11.1002
+        // compares `semver::Version`s. Each release must be strictly newer
+        // than everything before it, whatever its tag looks like.
+        let order = cases().updater_order;
+        let parsed: Vec<semver::Version> = order
+            .iter()
+            .map(|s| semver::Version::parse(s).unwrap())
+            .collect();
+        for pair in parsed.windows(2) {
+            assert!(pair[1] > pair[0], "{} must be newer than {}", pair[1], pair[0]);
+        }
+        let next = Release::parse_semver(order.last().unwrap()).unwrap();
+        assert_eq!(Release::parse_name(&next.to_name()).unwrap(), next);
     }
 }

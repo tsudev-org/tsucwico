@@ -13,6 +13,13 @@ license.workspace      = true
 name = "cwico"
 path = "src/main.rs"
 
+# Version information in cwico.exe (CompanyName = TsuDEV, FileVersion
+# YY.M.DDNN.0): DISTRIBUTION_TRUST.md 3 and VERSIONING.md 2.2. Antivirus
+# heuristics and Windows "Properties > Details" read it. The same crate
+# tauri-build uses for the desktop app, so no new dependency in the lock file.
+[target.'cfg(windows)'.build-dependencies]
+tauri-winres = "0.3"
+
 [dependencies]
 cwico-core = { workspace = true }
 serde_json = { workspace = true }

@@ -20,25 +20,33 @@ one that deserves care.
 
 ## Version naming
 
-Releases are named for the day they ship:
+Releases follow tsudev-standards `VERSIONING.md` 2.2 (v3, from 19 November
+2026): version `YY.M.DDNN`, tag `v` + version, release title
+`Tsu Cwico {version}`, files `tsucwico_{version}_windows-x64[-kind].ext`.
 
-| Situation | Release name |
-|---|---|
-| First release on 19 August 2026 | `tsucwico-v26.8.19` |
-| A second release the same day | `tsucwico-v26.8.19.2` |
-| A third | `tsucwico-v26.8.19.3` |
-| The next day | `tsucwico-v26.8.20` |
+| Situation | Tag | Semver in the manifests |
+|---|---|---|
+| First release on 19 November 2026 | `v26.11.1901` | `26.11.1901` |
+| A second release the same day | `v26.11.1902` | `26.11.1902` |
+| 3 December 2026 | `v26.12.0301` | `26.12.301` |
 
-Internally each maps to a semver whose patch field carries the day and the
-release counter (`26.8.1901`), because Cargo, the MSI bundler and the updater
-all require three components - and the updater *compares* that number to
-decide whether a user is out of date.
+Cargo, the MSI bundler and the updater need semver, which has no leading
+zeros: on days 1-9 the manifests (and the file names tauri-action derives from
+them) drop the day's zero; the tag, the title and the About screen keep it.
+The updater *compares* the semver, and `patch = day × 100 + n` sorts in
+release order either way.
+
+Tags up to 26.11.1002 (`tsudev-cwico-v26.8.19`, `tsudev-cwico-v26.11.10.2`)
+are immutable and stay; `tools/version.py` still parses them, and
+`data/version-cases.json` (`updaterOrder`, checked in Python and in Rust with
+the `semver` crate the updater uses) proves an installed 26.8.1901 or
+26.11.1002 sees the next release as newer.
 
 Never write a version by hand. `tools/version.py` owns the mapping:
 
 ```bash
 tools/version.py current      # what the project claims right now
-tools/version.py next         # the next release name for today
+tools/version.py next         # the next release tag for today (v26.11.1901)
 tools/version.py check        # do all three manifests agree?
 ```
 
@@ -105,8 +113,9 @@ Before publishing, confirm on the draft:
 
 - [ ] `latest.json` is attached - without it no update is ever delivered
 - [ ] The MSI and NSIS installers are attached and their sizes look sane
-- [ ] `tsucwico_<semver>_x64-cli.exe` is attached, and `cli.exe info` runs
-- [ ] `SHA256SUMS.txt` and `SHA256SUMS.txt.sig` are attached and list every `.exe`, `.msi`, `.sig` and `latest.json`
+- [ ] Title is `Tsu Cwico <version>`; files are `tsucwico_<semver>_windows-x64-setup.exe`, `..._windows-x64.msi`, `..._windows-x64-cli.exe` (`cli.exe info` runs), `..._sbom.spdx.json`
+- [ ] `SHA256SUMS.txt`, `SHA256SUMS.txt.sigstore.json` and `SHA256SUMS.txt.sig` are attached; the sums list every `.exe`, `.msi`, `.sig`, `latest.json` and the SBOM; the `cosign verify-blob` command in the notes passes
+- [ ] The `virustotal` job is green (or skipped without `VT_API_KEY`); a flagged file means a false-positive report first (DISTRIBUTION_TRUST.md 3)
 - [ ] **First release named Tsu Cwico only** (ADR-0001): on a Windows VM with a snapshot, install 26.11.1002 by MSI, launch, accept the update - one "Tsu Cwico" entry in Add/Remove Programs, none called tsudev-cwico; repeat with the 26.11.1002 NSIS setup
 - [ ] The release notes read the way you want them to, in a blocking dialog
 - [ ] **The signature verifies against the key this build carries:**
@@ -161,7 +170,7 @@ Because updates are mandatory, a broken release reaches everyone who opens the
 app. In order of preference:
 
 1. **Fix forward.** Cut the next release the same day -
-   `tsucwico-v26.8.19.2` - and publish it. Users who have not yet updated
+   `v26.11.1902` - and publish it. Users who have not yet updated
    go straight to the fixed build; users who did get the fix on next start.
    This is almost always the right answer, and it is what the same-day
    counter exists for.

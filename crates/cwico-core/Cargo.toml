@@ -22,6 +22,9 @@ regex       = { workspace = true }
 # transitively from cwico-cli, and testing this crate in isolation fails.
 [dev-dependencies]
 cwico-core = { path = ".", features = ["mock"] }
+# The crate the Tauri updater compares versions with - used to prove an
+# installed build sees the next release as newer (VERSIONING.md 2.4).
+semver = "1"
 
 [features]
 default = []

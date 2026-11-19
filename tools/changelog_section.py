@@ -9,7 +9,7 @@ experience than no blocking screen at all, so this is not cosmetic.
 
 Usage:
     tools/changelog_section.py                      # the current version
-    tools/changelog_section.py tsucwico-v26.8.19
+    tools/changelog_section.py v26.11.1901
 """
 from __future__ import annotations
 
@@ -26,14 +26,27 @@ version = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(version)
 
 
+def headings_for(semver: str) -> list[str]:
+    """Headings a release's section may carry: `v26.11.1901` since the v3
+    scheme, `tsucwico-v26.11.16[.N]` / `tsudev-cwico-v26.11.10.2` before it."""
+    year, month, day, n = version.parse_semver(semver)
+    old = f"{year}.{month}.{day}" + ("" if n == 1 else f".{n}")
+    return [version.to_name(semver), f"tsucwico-v{old}", f"tsudev-cwico-v{old}"]
+
+
 def section_for(release: str) -> str:
     """The body of `## <release> - ...`, up to the next `##` heading."""
     text = CHANGELOG.read_text(encoding="utf-8")
-    pattern = re.compile(
-        rf"^##\s+{re.escape(release)}\b.*?$(.*?)(?=^##\s|\Z)",
-        re.MULTILINE | re.DOTALL,
-    )
-    match = pattern.search(text)
+    match = None
+    for heading in headings_for(version.to_semver(release)):
+        pattern = re.compile(
+            rf"^##\s+{re.escape(heading)}(?![\w.]).*?$(.*?)(?=^##\s|\Z)",
+            re.MULTILINE | re.DOTALL,
+        )
+        match = pattern.search(text)
+        if match:
+            release = heading
+            break
     if not match:
         raise SystemExit(
             f"no `## {release}` section in CHANGELOG.md - "
@@ -51,7 +64,7 @@ def main(argv: list[str]) -> int:
         release = argv[0]
     else:
         release = version.to_name(version.read_cargo())
-    # Accept a bare tag, a full name, or a semver.
+    # Accept a tag (any scheme), a bare version, or a semver.
     release = version.to_name(version.to_semver(release))
     # The notes are bilingual; never let the console's code page decide.
     sys.stdout.reconfigure(encoding="utf-8")

@@ -10,28 +10,28 @@
   },
   "release": {
     "repo": "tsudev-org/tsucwico",
-    "tagRegex": "^(?:tsucwico|tsudev-cwico)-v(?<name>\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?)$",
+    "tagRegex": "^(?:(?:tsucwico|tsudev-cwico)-)?v(?<name>\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?)$",
     "sums": "SHA256SUMS.txt",
     "version": {
       "from": "tag",
-      "rule": "semver = YY.M.(D*100+N); N = 1 when the tag has 3 parts. tsucwico-v26.11.16 -> 26.11.1601, tsucwico-v26.11.10.2 -> 26.11.1002",
+      "rule": "VERSIONING.md 2.2 (v3): tag vYY.M.DDNN, version = tag without v (v26.11.1901 -> 26.11.1901); semver in manifests drops a leading zero on days 1-9 (v26.12.0301 -> 26.12.301). Tags up to 26.11.1002: semver = YY.M.(D*100+N), tsudev-cwico-v26.11.10.2 -> 26.11.1002",
       "tool": "tools/version.py to-semver <tag>"
     },
     "legacyTagPrefix": "tsudev-cwico"
   },
   "assets": {
     "windows-x64": {
-      "file": "tsucwico_{version}_x64-cli.exe",
+      "file": "tsucwico_{version}_windows-x64-cli.exe",
       "kind": "portable",
-      "bin": "tsucwico_{version}_x64-cli.exe"
+      "bin": "tsucwico_{version}_windows-x64-cli.exe"
     },
     "windows-x64-installer": {
-      "file": "tsucwico_{version}_x64-setup.exe",
+      "file": "tsucwico_{version}_windows-x64-setup.exe",
       "kind": "installer",
       "installer": "nullsoft"
     },
     "windows-x64-msi": {
-      "file": "tsucwico_{version}_x64_en-US.msi",
+      "file": "tsucwico_{version}_windows-x64.msi",
       "kind": "installer",
       "installer": "wix"
     }

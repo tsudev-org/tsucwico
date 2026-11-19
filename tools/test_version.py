@@ -58,19 +58,33 @@ def test_ordering() -> None:
     # which naive string comparison gets wrong.
     check(
         "the 10th release of a day sorts above the 2nd",
-        semver_key(version.to_semver("tsucwico-v26.8.19.10"))
-        > semver_key(version.to_semver("tsucwico-v26.8.19.2")),
+        semver_key(version.to_semver("v26.8.1910"))
+        > semver_key(version.to_semver("v26.8.1902")),
     )
     # And a new day must beat any number of same-day releases.
     check(
         "a new day beats the 99th release of the previous one",
-        semver_key(version.to_semver("tsucwico-v26.8.20"))
-        > semver_key(version.to_semver("tsucwico-v26.8.19.99")),
+        semver_key(version.to_semver("v26.8.2001"))
+        > semver_key(version.to_semver("v26.8.1999")),
+    )
+
+
+def test_installed_builds_see_the_next_release_as_newer() -> None:
+    """VERSIONING.md 2.4: builds already installed compare semvers - the new
+    tag scheme must not make the next release look older to them."""
+    order = CASES["updaterOrder"]
+    check(
+        f"updater order {' < '.join(order)}",
+        [semver_key(s) for s in order] == sorted(semver_key(s) for s in order),
+    )
+    check(
+        "the next release decodes from its v3 tag",
+        version.to_semver(version.to_name(order[-1])) == order[-1],
     )
 
 
 def test_accepted_input_forms() -> None:
-    for short in ["v26.8.19", "26.8.19", "tsucwico-v26.8.19"]:
+    for short in ["v26.8.1901", "26.8.1901", "v26.8.19", "26.8.19", "tsucwico-v26.8.19"]:
         check(f"accepts `{short}`", version.to_semver(short) == "26.8.1901")
 
 
@@ -79,9 +93,9 @@ def test_legacy_names() -> None:
     for case in CASES["legacyNames"]:
         name, semver = case["name"], case["semver"]
         check(
-            f"legacy {name} -> {semver} -> tsucwico-v...",
+            f"legacy {name} -> {semver} -> v...",
             version.to_semver(name) == semver
-            and version.to_name(semver).startswith("tsucwico-v"),
+            and version.to_name(semver) == "v" + version.display(semver),
         )
 
 
@@ -112,6 +126,7 @@ def main() -> int:
     for test in [
         test_round_trip,
         test_ordering,
+        test_installed_builds_see_the_next_release_as_newer,
         test_accepted_input_forms,
         test_legacy_names,
         test_rejected_names,

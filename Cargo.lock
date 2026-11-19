@@ -708,6 +708,7 @@ dependencies = [
  "cwico-core",
  "cwico-win",
  "serde_json",
+ "tauri-winres",
  "tracing",
  "tracing-subscriber",
 ]
@@ -718,6 +719,7 @@ version = "26.11.1002"
 dependencies = [
  "cwico-core",
  "regex",
+ "semver",
  "serde",
  "serde_json",
  "thiserror 2.0.21",

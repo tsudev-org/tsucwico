@@ -16,7 +16,8 @@
 .PARAMETER Tag
     The git tag the release was published under, used verbatim in the download
     URL. The tag and the version are *different strings* - the tag is
-    `tsucwico-v26.8.19` and the version is `26.8.1901` - and treating one
+    `v26.12.0301` and the version is `26.12.301` (days 1-9), and up to
+    26.11.1002 the tag was `tsudev-cwico-v26.11.10.2` - and treating one
     as the other produces a URL that 404s. Defaults to the tag this version
     would be published under.
 
@@ -27,7 +28,7 @@
     Where to write the manifest.
 
 .EXAMPLE
-    ./tools/winget-manifest.ps1 -Tag tsucwico-v26.8.19
+    ./tools/winget-manifest.ps1 -Tag v26.11.1901
 #>
 [CmdletBinding()]
 param(
@@ -74,15 +75,16 @@ $Version = $conf.version
 # The tag goes into the URL verbatim, because that is what the asset path
 # contains. On a manual run `github.ref_name` is a branch name, so derive the
 # tag this version would be published under instead.
-if (-not $Tag -or $Tag -notmatch '^(tsucwico|tsudev-cwico)-v') {
+if (-not $Tag -or $Tag -notmatch '^v\d') {
     if ($Tag) { Write-Host "ref '$Tag' is not a release tag; deriving it from the version" }
     $Tag = (python3 tools/version.py to-name $Version).Trim()
 }
 
 # The bundler names the MSI after productName ("Tsu Cwico_<v>_x64_en-US.msi");
-# release.yml uploads it as `tsucwico_<v>_x64.msi` (releaseAssetNamePattern),
+# release.yml uploads it as `tsucwico_<v>_windows-x64.msi` (releaseAssetNamePattern,
+# VERSIONING.md 2.2),
 # and the download URL has to use the uploaded name.
-$assetName = "tsucwico_$($Version)_x64.msi"
+$assetName = "tsucwico_$($Version)_windows-x64.msi"
 $url = "https://github.com/$Repository/releases/download/$Tag/$assetName"
 $today = Get-Date -Format 'yyyy-MM-dd'
 
