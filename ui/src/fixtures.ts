@@ -12,6 +12,7 @@
  * reaches for it when `__TAURI_INTERNALS__` is absent.
  */
 
+import pkg from "../package.json";
 import type {
   AboutInfo,
   PlanOptions,
@@ -32,6 +33,32 @@ import type {
 import { DEFAULT_PLAN_OPTIONS, DEFAULT_SCAN_OPTIONS } from "./types";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * `?preview=demo` is the state the product website records its screenshots and
+ * walkthrough video in (`website/scripts/quay-demo.mjs`): elevated, System
+ * Restore available, the real version number, no "browser preview" warning.
+ * Same fixture items - only the banners that would never show on a correctly
+ * started desktop session are switched off.
+ */
+const previewModes = (): string[] =>
+  typeof window === "undefined"
+    ? []
+    : (new URLSearchParams(window.location.search).get("preview") ?? "").split(",");
+const isDemo = (): boolean => previewModes().includes("demo");
+
+/**
+ * The CHANGELOG section of the version being built - real notes for the demo
+ * update screen. Imported lazily so the desktop bundle never carries it.
+ */
+async function releaseNotes(version: string): Promise<string> {
+  const { default: changelog } = await import("../../CHANGELOG.md?raw");
+  const start = changelog.indexOf(`## v${version} `);
+  if (start < 0) return "";
+  const body = changelog.slice(changelog.indexOf("\n", start) + 1);
+  const end = body.search(/^## /m);
+  return (end < 0 ? body : body.slice(0, end)).trim();
+}
 
 let emit: ((event: ProgressEvent) => void) | null = null;
 
@@ -274,15 +301,15 @@ const ITEMS: SoftwareItem[] = [
 
 export function about(): AboutInfo {
   return {
-    appVersion: "26.8.1901",
-    appRelease: "26.8.1901",
+    appVersion: isDemo() ? pkg.version : "26.8.1901",
+    appRelease: isDemo() ? pkg.version : "26.8.1901",
     productUrl: "https://tsudev.com",
     platform: {
       platform: "browser",
       osDescription: "Browser preview (no Windows backend)",
       arch: "x86_64",
-      elevated: false,
-      systemRestoreAvailable: false,
+      elevated: isDemo(),
+      systemRestoreAvailable: isDemo(),
     },
     safetyDbVersion: "1.0.2",
     safetyDbUpdated: "2026-08-19",
@@ -319,13 +346,15 @@ export async function scan(options?: ScanOptions): Promise<ScanReport> {
     startedAt: new Date().toISOString(),
     options: options ?? DEFAULT_SCAN_OPTIONS,
     items: ITEMS,
-    warnings: [
-      {
-        pass: "elevation",
-        message:
-          "browser preview: no Windows backend is attached, so this inventory is fixture data",
-      },
-    ],
+    warnings: isDemo()
+      ? []
+      : [
+          {
+            pass: "elevation",
+            message:
+              "browser preview: no Windows backend is attached, so this inventory is fixture data",
+          },
+        ],
     stats: {
       total: ITEMS.length,
       byKind,
@@ -334,7 +363,7 @@ export async function scan(options?: ScanOptions): Promise<ScanReport> {
       durationMs: 1100,
     },
     safetyDbVersion: "1.0.2",
-    elevated: false,
+    elevated: isDemo(),
   };
 }
 
@@ -540,17 +569,31 @@ export function onUpdateProgress(handler: (p: UpdateProgress) => void) {
  * Append `?preview=update` to the URL to exercise the blocking gate, or
  * `?preview=offline` to see the "could not check" state. Both are how those
  * screens get designed and screenshotted without waiting for a real release.
+ * `?preview=demo,update` shows the real upgrade path instead: the previous
+ * release (26.11.1002) offered the version being built, with its CHANGELOG notes.
  */
 export async function checkForUpdate(): Promise<UpdateStatus> {
   await sleep(500);
-  const mode = new URLSearchParams(window.location.search).get("preview");
+  const modes = previewModes();
 
+  const current = isDemo() ? (modes.includes("update") ? "26.11.1002" : pkg.version) : "26.8.1901";
   const base = {
-    currentRelease: "26.8.1901",
-    currentVersion: "26.8.1901",
+    currentRelease: current,
+    currentVersion: current,
   };
 
-  if (mode === "update") {
+  if (modes.includes("update") && isDemo()) {
+    return {
+      ...base,
+      available: true,
+      checked: true,
+      newRelease: pkg.version,
+      newVersion: pkg.version,
+      publishedAt: "2026-11-19T13:16:00Z",
+      notes: await releaseNotes(pkg.version),
+    };
+  }
+  if (modes.includes("update")) {
     return {
       ...base,
       available: true,
@@ -582,7 +625,7 @@ export async function checkForUpdate(): Promise<UpdateStatus> {
       ].join("\n"),
     };
   }
-  if (mode === "offline") {
+  if (modes.includes("offline")) {
     return {
       ...base,
       available: false,

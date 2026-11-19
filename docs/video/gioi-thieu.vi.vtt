@@ -1,0 +1,49 @@
+WEBVTT
+
+1
+00:00:02.770 --> 00:00:05.776
+Tsu Cwico - gỡ phần mềm thừa trên Windows mà không làm hỏng máy.
+
+2
+00:00:05.776 --> 00:00:10.526
+Một lượt quét đọc cả sáu nơi Windows giấu phần mềm: chương trình, UWP, gói nạp sẵn, dịch vụ, tác vụ, khởi động.
+
+3
+00:00:10.526 --> 00:00:17.594
+Mỗi mục có mức an toàn và lý do ngay trên dòng - không phải rê chuột mới biết.
+
+4
+00:00:17.597 --> 00:00:23.109
+Lọc theo mức: mục Trọng yếu bị chặn cứng, không cách nào đưa vào kế hoạch gỡ.
+
+5
+00:00:23.109 --> 00:00:26.804
+Chọn nhanh mọi mục An toàn.
+
+6
+00:00:26.804 --> 00:00:36.661
+Mục Cẩn trọng phải xác nhận riêng - đánh dấu ô chọn chưa đủ.
+
+7
+00:00:36.661 --> 00:00:44.791
+Kế hoạch gỡ: tạo điểm khôi phục và sao lưu Registry chạy trước mọi thay đổi.
+
+8
+00:00:44.791 --> 00:01:01.368
+Chạy thử trước nếu muốn - không thay đổi gì trên máy.
+
+9
+00:01:01.368 --> 00:01:10.488
+Tinh chỉnh hệ thống: chọn riêng từng mục, mục nào cũng hoàn tác được.
+
+10
+00:01:10.488 --> 00:01:15.525
+Giới thiệu: bao nhiêu quy tắc an toàn đang nạp, tệp hoàn tác nằm ở đâu.
+
+11
+00:01:15.525 --> 00:01:23.094
+Song ngữ Việt - Anh, giao diện Sáng / Tối / Theo hệ thống.
+
+12
+00:01:23.094 --> 00:01:26.596
+Miễn phí, mã nguồn mở MIT, không tài khoản. Tải tại cwico.tsudev.com

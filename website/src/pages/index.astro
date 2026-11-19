@@ -1,5 +1,6 @@
 ---
 import Trang from '../layouts/Trang.astro';
+import Anh from '../components/Anh.astro';
 import { banMoiNhat, CSDL, demLop, REPO_URL, TINH_CHINH, TEN_LOP } from '../lib/noi-dung';
 
 const ban = await banMoiNhat();
@@ -21,6 +22,46 @@ const buocGo = [
   { t: 'Gỡ gói cho mọi người dùng', d: 'Gỡ gói AppX cho tất cả tài khoản, rồi bỏ nạp sẵn để phần mềm không quay lại ở tài khoản mới.' },
   { t: 'Dọn tận gốc', d: 'Thư mục và khóa Registry còn sót - mỗi đường dẫn đều qua bộ chặn xóa ngay trước khi xóa.' },
 ];
+// Mỗi tính năng chính một ảnh (docs/screenshots/), bố cục so le chữ - ảnh. tweaks-dark-vi + ảnh hero chụp trên Windows 11
+// thật; các ảnh còn lại là giao diện thật với dữ liệu mẫu (website/scripts/chup-anh.mjs).
+const tinhNang = [
+  {
+    id: 'tn-ke-hoach',
+    t: 'Không có gì xảy ra trước khi bạn xem kế hoạch',
+    d: 'Kế hoạch gỡ liệt kê từng bước sẽ chạy cho từng mục: sao lưu đi trước, rồi tới tắt tiến trình, trình gỡ của hãng, dọn tàn dư. Mục bị bộ lọc an toàn loại ra vẫn hiện, kèm lý do.',
+    anh: 'plan-light-en', rong: 1280, cao: 940,
+    alt: 'Kế hoạch gỡ: các bước sao lưu chạy trước, các bước cụ thể cho từng mục, và những mục bị từ chối kèm lý do',
+  },
+  {
+    id: 'tn-can-trong',
+    t: 'Mục Cẩn trọng phải xác nhận riêng',
+    d: 'Đánh dấu ô chọn chưa đủ: mỗi mục Cẩn trọng mở một hộp thoại nói rõ bạn sẽ mất tính năng gì và khóa Registry nào bị chạm, rồi mới vào kế hoạch.',
+    anh: 'caution-dark-vi', rong: 1280, cao: 860,
+    alt: 'Hộp thoại xác nhận riêng cho một mục Cẩn trọng, ghi tính năng sẽ mất và khóa Registry liên quan',
+  },
+  {
+    id: 'tn-tinh-chinh',
+    t: `${TINH_CHINH.tweaks.length} tinh chỉnh, mục nào cũng hoàn tác được`,
+    d: 'Tắt thu thập dữ liệu chẩn đoán, ID quảng cáo, lịch sử hoạt động, nội dung gợi ý trên màn hình khóa… chọn riêng từng mục hoặc dùng bộ khuyến nghị. Mỗi tinh chỉnh ghi mức an toàn và đường hoàn tác.',
+    anh: 'tweaks-dark-vi', rong: 1274, cao: 851,
+    alt: 'Danh mục tinh chỉnh hệ thống, mỗi mục có mức an toàn và đường hoàn tác',
+  },
+  {
+    id: 'tn-cap-nhat',
+    t: 'Cập nhật có chữ ký, không đoán mò',
+    d: 'Lúc khởi động, app hỏi GitHub Releases xem có bản mới không - không gửi dữ liệu máy. Gói cập nhật phải khớp chữ ký minisign gắn trong app thì mới được cài.',
+    anh: 'update-gate-vi', rong: 1100, cao: 860,
+    alt: 'Màn hình cập nhật bắt buộc: đang dùng 26.11.1002, phiên bản mới 26.11.1901, ghi chú thay đổi và nút Cập nhật',
+  },
+  {
+    id: 'tn-gioi-thieu',
+    t: 'Biết chính xác lớp bảo vệ nào đang chạy',
+    d: 'Bảng Giới thiệu cho thấy phiên bản cơ sở dữ liệu an toàn, số quy tắc từng mức và thư mục chứa tệp .reg hoàn tác - để khi cần, bạn tự khôi phục được.',
+    anh: 'about-light-en', rong: 1280, cao: 860,
+    alt: 'Bảng Giới thiệu: số quy tắc an toàn đang nạp và nơi lưu tệp hoàn tác',
+  },
+];
+
 const lop = [
   { k: 'safe', so: dem.safe },
   { k: 'caution', so: dem.caution },
@@ -40,8 +81,10 @@ const lop = [
         </div>
         <p class="mo-dau__ghi-chu">Windows 10 và 11 · miễn phí, mã nguồn mở MIT · không tài khoản, không thu thập dữ liệu</p>
       </div>
-      <figure class="khung-anh">
-        <img src="/anh/scan-light-vi.png" alt="Kết quả quét thật trên Windows 11: mỗi dòng ghi mức an toàn và lý do, phân trang 10 mục" width="1274" height="851">
+      <figure class="khung-anh khung-may">
+        <div class="khung-may__thanh" aria-hidden="true"><span></span><span></span><span></span></div>
+        <Anh ten="scan-light-vi" toi="scan-dark-vi" hero rong={1274} cao={851}
+          alt="Kết quả quét thật trên Windows 11: mỗi dòng ghi mức an toàn và lý do, phân trang 10 mục" />
         <figcaption>Mỗi dòng có mức an toàn và <strong>lý do</strong> - không phải rê chuột mới biết.</figcaption>
       </figure>
     </div>
@@ -105,28 +148,61 @@ const lop = [
     </div>
   </section>
 
-  <section class="muc" aria-labelledby="anh-chup">
+  <section class="muc" aria-labelledby="video">
     <div class="khung">
-      <h2 id="anh-chup">Không có gì xảy ra trước khi bạn xem kế hoạch</h2>
-      <p class="muc__dan">Ứng dụng song ngữ Việt - Anh, ba chế độ nền theo hệ điều hành.</p>
-      <div class="anh-luoi">
-        <figure>
-          <img src="/anh/plan-light-en.png" alt="Kế hoạch gỡ: các bước sao lưu chạy trước, các bước cụ thể cho từng mục, và những mục bị từ chối kèm lý do" width="1280" height="940" loading="lazy">
-          <figcaption>Kế hoạch gỡ: sao lưu trước, từng bước cụ thể, mục bị từ chối có lý do</figcaption>
-        </figure>
-        <figure>
-          <img src="/anh/caution-dark-vi.png" alt="Hộp thoại xác nhận riêng cho một mục Cẩn trọng" width="1280" height="860" loading="lazy">
-          <figcaption>Mục Cẩn trọng phải xác nhận riêng - đánh dấu ô chọn chưa đủ</figcaption>
-        </figure>
-        <figure>
-          <img src="/anh/tweaks-dark-vi.png" alt="Danh mục tinh chỉnh hệ thống, mỗi mục có mức an toàn và đường hoàn tác" width="1274" height="851" loading="lazy">
-          <figcaption>{TINH_CHINH.tweaks.length} tinh chỉnh chọn riêng từng mục, mục nào cũng hoàn tác được</figcaption>
-        </figure>
-        <figure>
-          <img src="/anh/about-light-en.png" alt="Bảng Giới thiệu: số quy tắc an toàn đang nạp và nơi lưu tệp hoàn tác" width="1280" height="860" loading="lazy">
-          <figcaption>Biết chính xác bao nhiêu lớp bảo vệ đang nạp, tệp hoàn tác nằm ở đâu</figcaption>
-        </figure>
-      </div>
+      <h2 id="video">Xem Tsu Cwico chạy trong 90 giây</h2>
+      <p class="muc__dan">Quét, lọc theo mức an toàn, xác nhận mục Cẩn trọng, xem kế hoạch, chạy thử, tinh chỉnh - giao diện thật của app, dùng <strong>dữ liệu mẫu</strong> (không phải máy của ai). Có phụ đề tiếng Việt.</p>
+      <figure class="khung-video" data-hien>
+        <video controls preload="none" playsinline width="1280" height="800"
+          poster="/video/gioi-thieu-poster.webp" aria-describedby="video-mo-ta">
+          <source src="/video/gioi-thieu.webm" type="video/webm">
+          <source src="/video/gioi-thieu.mp4" type="video/mp4">
+          <track kind="captions" src="/video/gioi-thieu.vi.vtt" srclang="vi" label="Tiếng Việt" default>
+          <a href="/video/gioi-thieu.mp4">Tải video giới thiệu (MP4)</a>
+        </video>
+        <figcaption id="video-mo-ta">Không có tiếng; phụ đề mô tả từng bước. Video tự lưu trữ trên cwico.tsudev.com, không theo dõi người xem.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="muc" aria-labelledby="tinh-nang">
+    <div class="khung">
+      <h2 id="tinh-nang">Từng bước đều nhìn thấy được</h2>
+      <p class="muc__dan">Ảnh quét và tinh chỉnh chụp trên một máy Windows 11 thật; các màn còn lại là giao diện thật của app với dữ liệu mẫu. Ứng dụng song ngữ Việt - Anh, giao diện Sáng / Tối / Theo hệ thống.</p>
+      <ul class="so-le">
+        {tinhNang.map((x) => (
+          <li class="so-le__hang" data-hien aria-labelledby={x.id}>
+            <div class="so-le__chu">
+              <h3 id={x.id}>{x.t}</h3>
+              <p>{x.d}</p>
+            </div>
+            <figure class="khung-anh">
+              <Anh ten={x.anh} alt={x.alt} rong={x.rong} cao={x.cao} />
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="muc" aria-labelledby="nen-tang">
+    <div class="khung">
+      <h2 id="nen-tang">Nền tảng</h2>
+      <ul class="nen-tang">
+        <li class="the" data-hien>
+          <svg class="nen-tang__icon" viewBox="0 0 24 24" width="32" height="32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3 5.5 10.5 4.5v7H3zm8.5-1.1L21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zm8.5 0H21V21l-9.5-1.4z"/></svg>
+          <h3>Windows 10 và 11 (x64)</h3>
+          <p>Ứng dụng có giao diện (bộ cài .exe hoặc .msi) và công cụ dòng lệnh <code>cwico.exe</code> dùng chung một bộ máy quét và bộ lọc an toàn. Cài bằng winget, Scoop hoặc tải trực tiếp.</p>
+          <a href="/tai-ve/">Tải về và kiểm tra tệp</a>
+        </li>
+        <li class="the" data-hien>
+          <svg class="nen-tang__icon" viewBox="0 0 24 24" width="32" height="32" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M4 6h16v11H4zM2 19h20M9 9l-2 2.5L9 14m6-5 2 2.5-2 2.5"/></svg>
+          <h3>Dòng lệnh, tự động hóa</h3>
+          <p><code>cwico scan --json</code> xuất danh sách để kiểm toán, <code>cwico plan --safe-only</code> xem trước kế hoạch; mọi lệnh chỉ chạy thử cho tới khi có <code>--apply</code>, qua cùng các cổng an toàn như bản có giao diện.</p>
+          <a href="/dong-lenh/">Hướng dẫn dòng lệnh</a>
+        </li>
+      </ul>
+      <p class="muc__dan">Tsu Cwico chỉ dành cho Windows - macOS, Linux và điện thoại không có thứ để nó dọn.</p>
     </div>
   </section>
 

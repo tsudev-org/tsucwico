@@ -113,9 +113,6 @@ pre {
 .the:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
 .the h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
 .the p { margin: 0; color: var(--text-secondary); font-size: 0.96rem; }
-.anh-luoi { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr)); gap: 1.25rem; }
-.anh-luoi figure { margin: 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; }
-.anh-luoi figcaption { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem; text-align: center; }
 
 /* Tải về */
 .bang-tai { width: 100%; border-collapse: collapse; }
@@ -178,7 +175,6 @@ pre {
 .khung-anh { margin: 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; }
 .khung-anh img { display: block; border-radius: 8px; }
 .khung-anh figcaption { margin-top: 0.5rem; color: var(--text-muted); font-size: 0.88rem; text-align: center; }
-.anh-luoi img { display: block; border-radius: 8px; }
 
 .so-lieu { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr)); gap: 1rem; list-style: none; padding: 0; margin: 0 0 2rem; }
 .so-lieu li { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; display: grid; gap: 0.15rem; }
@@ -274,3 +270,35 @@ mark { background: color-mix(in srgb, var(--warning) 25%, var(--bg-surface)); co
   /* Logo và hai nút cùng hàng; điều hướng xuống hàng dưới */
   .dau-trang nav { order: 3; flex-basis: 100%; margin-left: 0; padding-bottom: 0.5rem; }
 }
+
+/* Hình và video (PRODUCT_POLICY mục 5) */
+/* Cặp ảnh Sáng/Tối của cùng một màn hình: chỉ hiện bản khớp giao diện đang chọn */
+[data-theme="dark"] .anh--sang, [data-theme="light"] .anh--toi { display: none; }
+picture { display: block; }
+.khung-may { width: 100%; max-width: 64rem; padding: 0; overflow: hidden; }
+.khung-may__thanh { display: flex; gap: 0.4rem; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); background: var(--bg-subtle); }
+.khung-may__thanh span { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--border-strong); }
+.khung-may img { border-radius: 0; }
+.khung-may figcaption { padding: 0 0.75rem 0.6rem; }
+
+.khung-video { margin: 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; max-width: 64rem; }
+.khung-video video { display: block; width: 100%; height: auto; border-radius: 6px; background: #000; }
+.khung-video figcaption { color: var(--text-muted); font-size: 0.88rem; margin-top: 0.5rem; }
+
+/* Tính năng so le chữ - ảnh: hàng chẵn đảo bên trên màn rộng, xếp dọc trên điện thoại */
+.so-le { list-style: none; padding: 0; margin: 0; display: grid; gap: 3.5rem; }
+.so-le__hang { display: grid; gap: 1.5rem; align-items: center; }
+.so-le__chu h3 { font-size: 1.3rem; margin: 0 0 0.6rem; letter-spacing: -0.01em; }
+.so-le__chu p { color: var(--text-secondary); margin: 0; }
+@media (min-width: 860px) {
+  .so-le__hang { grid-template-columns: 2fr 3fr; gap: 2.5rem; }
+  .so-le__hang:nth-child(even) .so-le__chu { order: 2; }
+}
+
+.nen-tang { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); gap: 1rem; }
+.nen-tang__icon { color: var(--text-link); margin-bottom: 0.6rem; }
+.nen-tang .the p { margin-bottom: 0.75rem; }
+
+/* Hiện dần khi cuộn: /js/hien-dan.js chỉ thêm .hien-cho khi có JS và KHÔNG giảm chuyển động */
+.hien-cho { opacity: 0; transform: translateY(14px); }
+.hien-ra { opacity: 1; transform: none; transition: opacity 0.5s ease, transform 0.5s ease; }

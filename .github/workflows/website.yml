@@ -5,10 +5,10 @@ name: Website
 on:
   push:
     branches: [main]
-    paths: ["website/**", "data/**", "docs/README.vi.md", "docs/screenshots/**", "CHANGELOG.md", "SECURITY.md", ".github/workflows/website.yml"]
+    paths: ["website/**", "data/**", "docs/README.vi.md", "docs/screenshots/**", "docs/video/**", "CHANGELOG.md", "SECURITY.md", ".github/workflows/website.yml"]
   pull_request:
     branches: [main]
-    paths: ["website/**", "data/**", "docs/README.vi.md", "docs/screenshots/**", "CHANGELOG.md", "SECURITY.md", ".github/workflows/website.yml"]
+    paths: ["website/**", "data/**", "docs/README.vi.md", "docs/screenshots/**", "docs/video/**", "CHANGELOG.md", "SECURITY.md", ".github/workflows/website.yml"]
   workflow_dispatch:
 
 permissions:

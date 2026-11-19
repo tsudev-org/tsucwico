@@ -2,5 +2,6 @@ node_modules/
 dist/
 .astro/
 .wrangler/
-# Sinh lúc build từ docs/screenshots/ (scripts/sync-content.mjs)
+# Sinh lúc build từ docs/screenshots/ và docs/video/ (scripts/sync-content.mjs)
 public/anh/
+public/video/
