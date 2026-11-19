@@ -1,0 +1,31 @@
+---
+// Ảnh chụp màn hình theo PRODUCT_POLICY mục 5: <picture> AVIF -> WebP -> PNG (sync-content.mjs sinh hai định dạng
+// đầu), luôn có width/height để không nhảy bố cục, lazy trừ ảnh hero.
+// `toi`: tên ảnh bản Tối của cùng màn hình - khi có, vẽ hai ảnh và CSS chỉ hiện ảnh khớp data-theme đang chọn
+// (theme.js đặt data-theme trước khung hình đầu; <source media> không đọc được lựa chọn của người dùng). Ảnh hero
+// tải cả hai bản (AVIF ~ vài chục KB) để đổi giao diện không phải chờ; ảnh lazy bị ẩn thì trình duyệt không tải.
+interface Props {
+  ten: string;
+  toi?: string;
+  alt: string;
+  rong: number;
+  cao: number;
+  hero?: boolean;
+}
+const { ten, toi, alt, rong, cao, hero = false } = Astro.props;
+const anh = toi ? [{ ten, lop: 'anh--sang' }, { ten: toi, lop: 'anh--toi' }] : [{ ten, lop: '' }];
+---
+{anh.map((a) => (
+  <picture class={a.lop || undefined}>
+    <source srcset={`/anh/${a.ten}.avif`} type="image/avif">
+    <source srcset={`/anh/${a.ten}.webp`} type="image/webp">
+    <img
+      src={`/anh/${a.ten}.png`}
+      alt={alt}
+      width={rong}
+      height={cao}
+      loading={hero ? 'eager' : 'lazy'}
+      decoding={hero ? undefined : 'async'}
+    >
+  </picture>
+))}

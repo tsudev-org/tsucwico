@@ -1,11 +1,13 @@
 // Kiểm tra bản build (chạy sau astro build, CI chặn khi lỗi):
 // - mọi trang có title đúng khuôn, og:site_name = TsuDEV, canonical, description 120-160 ký tự (ECOSYSTEM_IDENTITY mục 2.2);
-// - không có script/CSS nội tuyến (CSP chặn); script ngoài chỉ được là /js/loc.js và /js/theme.js; không có on*="...";
+// - không có script/CSS nội tuyến (CSP chặn); script ngoài chỉ được là /js/loc.js, /js/hien-dan.js và /js/theme.js; không có on*="...";
 // - /js/theme.js (chống nháy màu) nạp đồng bộ trong <head>, trước mọi stylesheet; _headers giữ script-src 'self';
 // - bộ chọn giao diện Sáng/Tối/Hệ thống là radiogroup ở chân trang, mặc định Hệ thống (PRODUCT_POLICY 1.2);
 // - liên kết ra ngoài mở tab mới có rel="noopener noreferrer";
 // - mọi liên kết nội bộ (kể cả #neo) trỏ tới trang và id có thật;
-// - đủ bộ tài sản nhận diện bắt buộc (BRAND_ASSETS mục 12).
+// - đủ bộ tài sản nhận diện bắt buộc (BRAND_ASSETS mục 12);
+// - hình/video (PRODUCT_POLICY mục 5): mọi src/srcset/poster có tệp thật, <img> có width/height, <video> có phụ đề
+//   tiếng Việt và không tự phát; _headers có media-src 'self'; trang chủ có video MP4 + WebM.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +16,7 @@ const dist = join(dirname(fileURLToPath(import.meta.url)), '../dist');
 const loi = [];
 const trang = new Map(); // "/duong-dan/" -> Set(id)
 const lienKet = [];      // [tep, href]
+const taiNguyen = [];    // [tep, đường dẫn] của src/srcset/poster
 
 function duyet(thuMuc) {
   for (const e of readdirSync(thuMuc, { withFileTypes: true })) {
@@ -40,7 +43,7 @@ function kiemTra(tep, html) {
     const attr = s[1];
     if (attr.includes('type="application/ld+json"')) continue;
     if (/\ssrc="\/js\/theme\.js"/.test(attr)) continue;
-    if (!/\ssrc="\/js\/loc\.js"/.test(attr)) loi.push(`${ten}: script không được phép: <script${attr}>`);
+    if (!/\ssrc="\/js\/(loc|hien-dan)\.js"/.test(attr)) loi.push(`${ten}: script không được phép: <script${attr}>`);
   }
   const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? '';
   const theme = head.match(/<script\b([^>]*)\ssrc="\/js\/theme\.js"([^>]*)>/);
@@ -62,6 +65,21 @@ function kiemTra(tep, html) {
     if (!a[0].includes('rel="noopener noreferrer"')) loi.push(`${ten}: thiếu rel noopener noreferrer: ${a[0]}`);
   }
   for (const a of html.matchAll(/<a [^>]*href="([^"]+)"/g)) lienKet.push([ten, duong, a[1]]);
+
+  for (const m of html.matchAll(/\s(?:src|poster)="(\/[^"]+)"/g)) taiNguyen.push([ten, m[1]]);
+  for (const m of html.matchAll(/\ssrcset="([^"]+)"/g)) {
+    for (const u of m[1].split(',')) taiNguyen.push([ten, u.trim().split(/\s+/)[0]]);
+  }
+  for (const img of html.matchAll(/<img\b[^>]*>/g)) {
+    if (!/\swidth="\d+"/.test(img[0]) || !/\sheight="\d+"/.test(img[0])) loi.push(`${ten}: <img> thiếu width/height: ${img[0].slice(0, 80)}`);
+    if (!/\salt="/.test(img[0])) loi.push(`${ten}: <img> thiếu alt`);
+  }
+  for (const v of html.matchAll(/<video\b([^>]*)>([\s\S]*?)<\/video>/g)) {
+    if (/\sautoplay\b/.test(v[1]) && !/\smuted\b/.test(v[1])) loi.push(`${ten}: video tự phát có tiếng`);
+    if (!/\spreload="(none|metadata)"/.test(v[1])) loi.push(`${ten}: video cần preload="none|metadata"`);
+    if (!/\sposter="/.test(v[1])) loi.push(`${ten}: video thiếu poster`);
+    if (!/<track\b[^>]*kind="captions"[^>]*srclang="vi"/.test(v[2])) loi.push(`${ten}: video thiếu phụ đề tiếng Việt`);
+  }
 }
 
 duyet(dist);
@@ -92,6 +110,15 @@ for (const f of ['favicon.ico', 'favicon-96x96.png', 'apple-touch-icon.png', 'og
   if (/unsafe-inline/.test(scriptSrc)) loi.push(`_headers: script-src không được có 'unsafe-inline'`);
 }
 if (!existsSync(join(dist, 'js/theme.js'))) loi.push('thiếu dist/js/theme.js');
+
+for (const [ten, u] of taiNguyen) {
+  if (!u.startsWith('/')) { loi.push(`${ten}: tài nguyên không cùng gốc hoặc tương đối: ${u}`); continue; }
+  if (!existsSync(join(dist, decodeURIComponent(u)))) loi.push(`${ten}: tài nguyên không tồn tại: ${u}`);
+}
+for (const f of ['video/gioi-thieu.mp4', 'video/gioi-thieu.webm', 'video/gioi-thieu.vi.vtt']) {
+  if (!existsSync(join(dist, f))) loi.push(`thiếu ${f} (PRODUCT_POLICY mục 5 - chạy scripts/quay-demo.mjs)`);
+}
+if (!/media-src 'self'/.test(readFileSync(join(dist, '_headers'), 'utf8'))) loi.push(`_headers: thiếu media-src 'self' - video sẽ bị chặn`);
 
 for (const l of loi) console.error('[check-dist] LỖI', l);
 console.log(`[check-dist] ${trang.size} trang, ${lienKet.length} liên kết, ${loi.length} lỗi`);
