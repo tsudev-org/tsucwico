@@ -35,6 +35,10 @@ Xem phiếu gốc mục 8 (giá Pro, ân hạn, nơi đặt dịch vụ đồng 
   ngày), `notice_due` (5 ca bắt buộc + 6 ca phụ), mã cài đặt 128 bit. Hộp thoại `ProNotice` nguyên văn 7.3 vi/en, chỉ
   hỏi lúc khởi động, lệnh `pro_notice` luôn `None` khi chưa có đăng nhập. Không đặt nút mua: `tsudev.com/pro` còn 404.
   Còn: **P2** (chờ client `tsucwico` ở tsudev + tsudev#336 + B3), **P3** (chờ PRO-D3).
+- 20/11/2026 - tsucwico-e7: #94 gộp (squash). Điều kiện P2: tsudev#336 ✅ gộp 19/11; client `tsucwico` ❌ (`/oidc/auth`
+  ⇒ 400) - `clientMetadata()` của tsudev chỉ dựng client web, redirect khớp tuyệt đối ⇒ loopback cổng ngẫu nhiên (RFC 8252)
+  cần sửa mã trước khi INSERT; viết phiếu tsudev `logs/handover/20261120-CW1_yeu-cau-client-oidc-tsucwico.md` + nhắn
+  phiên tsudev-f6. `/pro` ❌ 404 (B3 đang làm). P2 chưa bắt đầu.
 
 ## 5. Đã chốt (19/11/2026, bổ sung sau khi mở phiếu)
 
