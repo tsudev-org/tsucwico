@@ -44,3 +44,6 @@ Bản NSIS 26.11.1002 chưa từng lên VirusTotal nên không so được.
   hãng nào gỡ (mới vài giờ sau báo; SecureAge thường 1-3 ngày). Chưa rõ 👤 đã gửi 2 email mục 3.1 chưa. Phiên sau đọc
   lại sau 20/11. Ghi chú: `~/.config/tsudev/virustotal.env` chứa khóa trần (không dạng `VT_API_KEY=`) - đọc bằng
   `K=$(tr -d '[:space:]' < ~/.config/tsudev/virustotal.env)`, KHÔNG `sed`/`cat` để xem dạng tệp.
+- 20/11/2026 - phiên tsucwico-e7: đọc 00:39 UTC - lượt mới nhất vẫn 19/11 14:04:41, NSIS **3/71** cùng 3 engine
+  (CrowdStrike, Trapmine, APEX). Gửi `POST /analyse` (200) lúc 00:40 UTC; đọc lại 00:51 lượt mới chưa chạy xong.
+  Release vẫn nháp. Phiên sau đọc lại.
