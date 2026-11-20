@@ -2,7 +2,7 @@
 
 > **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 theo phiếu **`logs/handover/20261120-SB1_*`** (thử nâng cấp bằng
 > Windows Sandbox thay máy ảo - chờ 👤 bật Sandbox + restart; đọc `ketqua/` rồi gửi đề xuất Publish ngoại lệ, 👤 quyết).
-> VirusTotal NSIS vẫn 3/71 (phiếu VT1 mục 4). Client Neon `tsucwico` CHƯA có (lần chạy 20/11 lỗi cú pháp, SB1 mục 3.5). **PRO1 P1 đã gộp**
+> VirusTotal NSIS vẫn 3/71 (phiếu VT1 mục 4). Client Neon `tsucwico` ĐÃ chèn (👤 20/11 9:36); còn chờ tsudev deploy nhánh native loopback (SB1 mục 3.5). **PRO1 P1 đã gộp**
 > (#94). P2 chờ tsudev: phiếu **tsudev `20261120-CW1`** (client native loopback `tsucwico` - cần sửa mã `oidc.ts` + 👤
 > INSERT Neon; (a) đã làm ở nhánh tsudev `feat/oidc-client-native-loopback`, chờ 👤 duyệt push/PR - oidc-provider 9.14
 > tự coi client có mọi redirect `http://127.0.0.1/...`/`http://[::1]/...` không cổng là native, cổng bất kỳ; SQL (b) dùng
