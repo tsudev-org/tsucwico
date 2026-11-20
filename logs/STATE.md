@@ -1,14 +1,10 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 theo phiếu **`logs/handover/20261120-SB1_*`** (thử nâng cấp bằng
-> Windows Sandbox thay máy ảo - chờ 👤 bật Sandbox + restart; đọc `ketqua/` rồi gửi đề xuất Publish ngoại lệ, 👤 quyết).
-> VirusTotal NSIS vẫn 3/71 (phiếu VT1 mục 4). **PRO1 P2 HẾT bị chặn** (đo 20/11: `/oidc/auth?client_id=tsucwico` loopback 127.0.0.1 / [::1] cổng bất kỳ ⇒ 303,
-> `localhost` ⇒ 400; `/pro` ⇒ 200; tsudev#339) ⇒ việc thứ hai: bắt đầu P2 theo ADR-0002 mục 3. **PRO1 P1 đã gộp**
-> (#94). P2 chờ tsudev: phiếu **tsudev `20261120-CW1`** (client native loopback `tsucwico` - cần sửa mã `oidc.ts` + 👤
-> INSERT Neon; (a) đã làm ở nhánh tsudev `feat/oidc-client-native-loopback`, chờ 👤 duyệt push/PR - oidc-provider 9.14
-> tự coi client có mọi redirect `http://127.0.0.1/...`/`http://[::1]/...` không cổng là native, cổng bất kỳ; SQL (b) dùng
-> `ARRAY['http://127.0.0.1/callback','http://[::1]/callback']`) và B3 `/pro` (đang làm ở nhánh tsudev `feat/pro-b3-thanh-toan-vietqr`); tsudev#336 ĐÃ gộp 19/11. Đo lại:
-> `/oidc/auth?client_id=tsucwico` (20/11: 400) và `/pro` (20/11: 404). P3 chờ PRO-D3. Còn **P2 MSIX** - chờ 👤 Partner Center.
+> **Phiên kế tiếp:** việc đầu tiên là **PRO1 P2** (đăng nhập TsuDEV loopback PKCE + JWS quyền lợi + màn Pro) - hết bị
+> chặn 20/11; điểm bắt đầu + hợp đồng máy chủ đã đo ở phiếu `logs/handover/20261119-PRO1_*` **mục 6**, phạm vi ở
+> ADR-0002 mục 3. **REL-TSU-1** (phiếu `20261120-SB1`): 👤 hẹn làm SAU 21/11/2026 (bật Windows Sandbox cần restart
+> máy) ⇒ phiên trước ngày đó chỉ đọc lại VirusTotal (VT1 mục 4), KHÔNG nhắc 👤 restart; có `ketqua/` thì làm SB1 mục
+> 3.2. Còn **P2 MSIX** - chờ 👤 Partner Center.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
