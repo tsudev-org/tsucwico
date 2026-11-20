@@ -2,7 +2,8 @@
 
 > **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 theo phiếu **`logs/handover/20261120-SB1_*`** (thử nâng cấp bằng
 > Windows Sandbox thay máy ảo - chờ 👤 bật Sandbox + restart; đọc `ketqua/` rồi gửi đề xuất Publish ngoại lệ, 👤 quyết).
-> VirusTotal NSIS vẫn 3/71 (phiếu VT1 mục 4). Client Neon `tsucwico` ĐÃ chèn (👤 20/11 9:36); còn chờ tsudev deploy nhánh native loopback (SB1 mục 3.5). **PRO1 P1 đã gộp**
+> VirusTotal NSIS vẫn 3/71 (phiếu VT1 mục 4). **PRO1 P2 HẾT bị chặn** (đo 20/11: `/oidc/auth?client_id=tsucwico` loopback 127.0.0.1 / [::1] cổng bất kỳ ⇒ 303,
+> `localhost` ⇒ 400; `/pro` ⇒ 200; tsudev#339) ⇒ việc thứ hai: bắt đầu P2 theo ADR-0002 mục 3. **PRO1 P1 đã gộp**
 > (#94). P2 chờ tsudev: phiếu **tsudev `20261120-CW1`** (client native loopback `tsucwico` - cần sửa mã `oidc.ts` + 👤
 > INSERT Neon; (a) đã làm ở nhánh tsudev `feat/oidc-client-native-loopback`, chờ 👤 duyệt push/PR - oidc-provider 9.14
 > tự coi client có mọi redirect `http://127.0.0.1/...`/`http://[::1]/...` không cổng là native, cổng bất kỳ; SQL (b) dùng
@@ -17,9 +18,8 @@
 - [ ] **REL-TSU-1** Bản đầu tiên mang tên Tsu Cwico + khuôn thẻ v3: **Release nháp [`v26.11.1901`](https://github.com/tsudev-org/tsucwico/releases/tag/v26.11.1901)** (19/11/2026, phiên tsucwico-ea, run 44531891240). Đã kiểm trên nháp: 10 tệp đúng khuôn (`tsucwico_26.11.1901_windows-x64-setup.exe`, `_windows-x64.msi`, `_windows-x64-cli.exe`, `_sbom.spdx.json`, `.sig`, `latest.json`, `SHA256SUMS.txt` + `.sig` + `.sigstore.json`); `sha256sum -c` 7/7; `tools/verify_update_signature.py` - bản đã cài chấp nhận 3 gói; `gh attestation verify` 4/4 (ký bởi `release.yml@refs/tags/v26.11.1901`); Sigstore `OK`; CLI có CompanyName TsuDEV / FileVersion 26.11.1901; `latest.json` cùng dạng URL với 26.11.10.2 (đã cập nhật thật được). **VirusTotal**: MSI + CLI 0/74; bộ cài NSIS 3/74 engine học máy (CrowdStrike, APEX, Trapmine) ⇒ báo nhầm theo phiếu `logs/handover/20261119-VT1_*` (SecureAge đã nộp; 👤 gửi 2 email soạn sẵn). **Còn 👤:** nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ một mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md` mục 5) ⇒ **Publish** (updater bắt buộc: Publish là đẩy tới mọi máy). **20/11: thử nâng cấp chuyển sang Windows Sandbox, bộ kiểm `tools/sandbox/` - phiếu `20261120-SB1`.** Sau Publish: deploy website (trang tải về đọc `releases/latest` lúc build), `tools/apply_winget_manifest.py` (manifest trong artifact `installers`) + nộp winget (đợi #476024), Scoop tự lên nhờ scoop-bucket#24.
 - [ ] **PRO1** Lưu cục bộ mặc định; Pro = đồng bộ cài đặt (TsuDEV Sync, crate `tsusync`); nhắc nhiều thiết bị mỗi 30
   ngày. Phiếu `logs/handover/20261119-PRO1_luu-cuc-bo-pro-dong-bo.md`, kế hoạch phase ở **ADR-0002 mục 3**.
-  **P1 ✅** 20/11 (#94; kiểm kê 0 byte rời máy, chuẩn v3.9.1, `cwico_core::pro`, hộp thoại `ProNotice`). **P2** chờ tsudev:
-  phiếu tsudev `20261120-CW1` (client native loopback `tsucwico`, đã nhắn tsudev-f6), B3 `/pro` (404 ngày 20/11);
-  tsudev#336 đã gộp 19/11. **P3** chờ
+  **P1 ✅** 20/11 (#94; kiểm kê 0 byte rời máy, chuẩn v3.9.1, `cwico_core::pro`, hộp thoại `ProNotice`). **P2 sẵn sàng** (20/11: client `tsucwico` native
+  loopback trên production - phiếu tsudev CW1 đóng, tsudev#339; `/pro` 200; tsudev#336 gộp 19/11). **P3** chờ
   PRO-D3. Hợp đồng: PRODUCT_POLICY 7.4 bản v3.9.1 (KHÔNG theo mục 9.2 phiếu gốc - đã lỗi thời).
 - [ ] **P2-MSIX** Đích MSIX (`Version` = `YY.M.DDNN.0`) + nộp Microsoft Store + nút Store trên website. Chờ 👤 tạo tài
   khoản Partner Center cá nhân (phiếu P2 mục 4.1) - không đoán Identity Name/Publisher.
