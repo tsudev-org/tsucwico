@@ -58,6 +58,7 @@ pub mod error;
 pub mod guard;
 pub mod model;
 pub mod plan;
+pub mod pro;
 pub mod safety;
 pub mod scan;
 pub mod tweaks;
@@ -85,10 +86,10 @@ pub const PRODUCT_NAME: &str = "Tsu Cwico";
 /// Product homepage. The UI links its logo and wordmark here.
 pub const PRODUCT_URL: &str = "https://tsudev.com";
 
-/// The ecosystem's single donation page (decision 20261112-02). The desktop app
-/// only opens it in the browser: no account number or QR code is ever built in,
-/// and donating never unlocks anything.
-pub const DONATE_URL: &str = "https://tsudev.com/ung-ho";
+/// The ecosystem's single donation page (PRODUCT_POLICY 7.4), tagged with this
+/// product's `client_id`. The desktop app only opens it in the browser: no
+/// account number or QR code is ever built in, and donating unlocks nothing.
+pub const DONATE_URL: &str = "https://tsudev.com/ung-ho?app=tsucwico";
 
 /// Crate version, mirroring the workspace version.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

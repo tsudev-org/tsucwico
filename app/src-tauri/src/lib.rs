@@ -335,6 +335,28 @@ fn open_donate_page(app: AppHandle) -> ApiResult<()> {
 }
 
 /// Open the folder holding `.reg` backups and transaction logs.
+/// Whether to show the "several devices, no Pro" notice (PRODUCT_POLICY 7.3).
+/// The UI passes its stored `tsu.pro_notice.last_shown`; the rule lives in
+/// `cwico_core::pro`. No sign-in yet (ADR-0002, phase P2) means no cached
+/// entitlement, so this is always `None` today - and never touches the network.
+#[tauri::command]
+fn pro_notice(last_shown: Option<String>) -> Option<u32> {
+    use cwico_core::pro::{notice_due, parse_last_shown, EntitlementStatus};
+    let now = time::OffsetDateTime::now_utc();
+    let status = EntitlementStatus::from_cached(None, now);
+    notice_due(&status, parse_last_shown(last_shown.as_deref()), now)
+}
+
+/// Opens the TsuDEV Pro page. Takes no URL for the same reason as
+/// `open_product_site`.
+#[tauri::command]
+fn open_pro_page(app: AppHandle) -> ApiResult<()> {
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(cwico_core::pro::PRO_URL, None::<&str>)
+        .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
+}
+
 #[tauri::command]
 fn open_backup_dir(app: AppHandle, state: State<'_, AppState>) -> ApiResult<()> {
     use tauri_plugin_opener::OpenerExt;
@@ -422,6 +444,8 @@ pub fn run() {
             install_update,
             open_product_site,
             open_donate_page,
+            open_pro_page,
+            pro_notice,
             open_backup_dir,
             relaunch_as_admin,
         ])

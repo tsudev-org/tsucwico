@@ -47,6 +47,11 @@ const previewModes = (): string[] =>
     : (new URLSearchParams(window.location.search).get("preview") ?? "").split(",");
 const isDemo = (): boolean => previewModes().includes("demo");
 
+/** `?preview=pro-notice` shows the multi-device notice as if signed in on 2 devices. */
+export async function proNotice(): Promise<number | null> {
+  return previewModes().includes("pro-notice") ? 2 : null;
+}
+
 /**
  * The CHANGELOG section of the version being built - real notes for the demo
  * update screen. Imported lazily so the desktop bundle never carries it.

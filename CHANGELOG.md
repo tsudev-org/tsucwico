@@ -21,6 +21,20 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ## Unreleased
 
+### Added
+
+- About shows "Your data stays on this PC": no account, nothing sent to the
+  internet or the cloud; the only connection is the update check (ADR-0002).
+- Groundwork for TsuDEV Pro (settings sync across PCs, later, with optional
+  sign-in): entitlement rules and the "several devices, no Pro" notice from
+  tsudev-standards PRODUCT_POLICY 7.3, in Vietnamese and English. It cannot
+  appear yet - there is no sign-in.
+
+### Changed
+
+- The Support button opens `tsudev.com/ung-ho?app=tsucwico`.
+- tsudev-standards v3.9.1.
+
 ## v26.11.1901 - 2026-11-19
 
 > **Tên mới: Tsu Cwico.** Phần mềm đổi tên từ tsudev-cwico thành Tsu Cwico,

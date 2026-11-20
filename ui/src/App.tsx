@@ -42,6 +42,7 @@ import { Brand } from "./components/Brand";
 import { AboutView } from "./components/AboutView";
 import { ConfirmCaution } from "./components/ConfirmCaution";
 import { PlanDialog } from "./components/PlanDialog";
+import { ProNotice } from "./components/ProNotice";
 import { RunPanel, eventToLine, type LogLine } from "./components/RunPanel";
 import { SoftwareTable } from "./components/SoftwareTable";
 import { TweaksView } from "./components/TweaksView";
@@ -98,6 +99,8 @@ export default function App() {
   const [tweaks, setTweaks] = useState<Tweak[]>([]);
   const [tweakBusy, setTweakBusy] = useState(false);
   const [tweakOutcomes, setTweakOutcomes] = useState<TweakOutcome[]>([]);
+  // Device count for the "several devices, no Pro" notice, or null.
+  const [proDevices, setProDevices] = useState<number | null>(null);
 
   const t = translator(locale);
 
@@ -170,6 +173,29 @@ export default function App() {
     });
 
     return () => window.clearTimeout(timer);
+  }, []);
+
+  // Asked once at start-up only, so the notice never lands mid-task
+  // (PRODUCT_POLICY 7.3). Any failure simply means "no notice".
+  useEffect(() => {
+    let mark: string | null = null;
+    try {
+      mark = localStorage.getItem(api.PRO_NOTICE_KEY);
+    } catch {
+      /* storage unavailable: treat as never shown */
+    }
+    api
+      .proNotice(mark)
+      .then((devices) => {
+        if (devices === null) return;
+        setProDevices(devices);
+        try {
+          localStorage.setItem(api.PRO_NOTICE_KEY, new Date().toISOString());
+        } catch {
+          /* the notice may return next start; harmless */
+        }
+      })
+      .catch(() => setProDevices(null));
   }, []);
 
   useEffect(() => {
@@ -720,6 +746,20 @@ export default function App() {
         lines={lines}
         report={runReport}
         onClose={() => setRunOpen(false)}
+      />
+
+      <ProNotice
+        devices={proDevices}
+        locale={locale}
+        onPro={() => {
+          setProDevices(null);
+          void api.openProPage();
+        }}
+        onBackup={() => {
+          setProDevices(null);
+          void api.openBackupDir();
+        }}
+        onClose={() => setProDevices(null)}
       />
     </div>
   );

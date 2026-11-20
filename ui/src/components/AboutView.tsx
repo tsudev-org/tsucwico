@@ -59,6 +59,13 @@ export function AboutView({
       </Panel>
 
       <Panel>
+        <h3 className="mb-1 text-sm font-semibold">{t("about.localData")}</h3>
+        <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+          {t("about.localDataBody")}
+        </p>
+      </Panel>
+
+      <Panel>
         <h3 className="mb-3 text-sm font-semibold">{t("about.safetyDb")}</h3>
         <div className="grid grid-cols-3 gap-3">
           {[
