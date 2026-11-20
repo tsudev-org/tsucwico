@@ -39,6 +39,10 @@ Xem phiếu gốc mục 8 (giá Pro, ân hạn, nơi đặt dịch vụ đồng 
   ⇒ 400) - `clientMetadata()` của tsudev chỉ dựng client web, redirect khớp tuyệt đối ⇒ loopback cổng ngẫu nhiên (RFC 8252)
   cần sửa mã trước khi INSERT; viết phiếu tsudev `logs/handover/20261120-CW1_yeu-cau-client-oidc-tsucwico.md` + nhắn
   phiên tsudev-f6. `/pro` ❌ 404 (B3 đang làm). P2 chưa bắt đầu.
+- 20/11/2026 - tsucwico-e7 (sau): đủ điều kiện P2. tsudev#339 (client native: mọi redirect `http://127.0.0.1/...` /
+  `http://[::1]/...` không cổng ⇒ cổng bất kỳ) + 👤 INSERT Neon (`redirectUris` 127.0.0.1 và [::1] `/callback`, scope
+  `tsudev.entitlements`). Đo: 127.0.0.1:53682 và [::1]:49152 ⇒ 303; localhost ⇒ 400; `/pro` ⇒ 200. Tiêu chí 3 của
+  CW1 (token ⇒ `/api/me/entitlements`, `aud` = `tsucwico`) đo trong P2 khi đăng nhập thật.
 
 ## 5. Đã chốt (19/11/2026, bổ sung sau khi mở phiếu)
 
