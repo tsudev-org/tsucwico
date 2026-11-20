@@ -95,8 +95,8 @@ thường, không cần ngoại lệ.
 
 ### 3.5. Việc liên quan đang chờ (không chặn phiếu này)
 
-- **Neon (phiếu tsudev CW1 phần b)**: lần chạy 20/11 lỗi cú pháp (dán lẫn chữ hướng dẫn) ⇒ client `tsucwico` CHƯA
-  có; 👤 chạy lại theo `HUONG-DAN.md` Bước 1. Agent không có quyền đọc Neon ⇒ xác minh gián tiếp sau khi tsudev
+- **Neon (phiếu tsudev CW1 phần b)**: ✅ 👤 chèn client `tsucwico` 20/11 9:36 (giờ VN), "Statement executed
+  successfully" (lần 9:10 lỗi cú pháp, không ghi gì); đã báo tsudev-f6. Agent không có quyền đọc Neon ⇒ xác minh gián tiếp sau khi tsudev
   deploy nhánh `feat/oidc-client-native-loopback`: `/oidc/auth?client_id=tsucwico&redirect_uri=http://127.0.0.1:<cổng>/callback&...`
   ⇒ 303 (không phải 400).
 - Email báo nhầm CrowdStrike/Trapmine: phiếu VT1 mục 3.1 (👤).
