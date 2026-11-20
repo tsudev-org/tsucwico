@@ -3,7 +3,9 @@
 > **Phiên kế tiếp:** việc đầu tiên là REL-TSU-1 (Release `v26.11.1901` vẫn NHÁP 20/11 00:40 UTC, chờ 👤 thử nâng cấp +
 > Publish; VirusTotal NSIS vẫn 3/71 - đã gửi phân tích lại 20/11 00:40, đọc lại theo phiếu VT1 mục 4). **PRO1 P1 đã gộp**
 > (#94). P2 chờ tsudev: phiếu **tsudev `20261120-CW1`** (client native loopback `tsucwico` - cần sửa mã `oidc.ts` + 👤
-> INSERT Neon) và B3 `/pro` (đang làm ở nhánh tsudev `feat/pro-b3-thanh-toan-vietqr`); tsudev#336 ĐÃ gộp 19/11. Đo lại:
+> INSERT Neon; (a) đã làm ở nhánh tsudev `feat/oidc-client-native-loopback`, chờ 👤 duyệt push/PR - oidc-provider 9.14
+> tự coi client có mọi redirect `http://127.0.0.1/...`/`http://[::1]/...` không cổng là native, cổng bất kỳ; SQL (b) dùng
+> `ARRAY['http://127.0.0.1/callback','http://[::1]/callback']`) và B3 `/pro` (đang làm ở nhánh tsudev `feat/pro-b3-thanh-toan-vietqr`); tsudev#336 ĐÃ gộp 19/11. Đo lại:
 > `/oidc/auth?client_id=tsucwico` (20/11: 400) và `/pro` (20/11: 404). P3 chờ PRO-D3. Còn **P2 MSIX** - chờ 👤 Partner Center.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
