@@ -53,4 +53,9 @@ kiểm chống trùng phải xanh. KHÔNG ghi đè tại repo này.
   h1-h3 + số liệu lớn `--font-display` (Be Vietnam Pro 600/700 tự host, latin + vietnamese). Website: bỏ
   `src/styles/tokens.css` (bản cũ có `warm`) + `palette.css`, nạp thẳng `.standards/tokens/*`, `data-product`,
   bo góc theo token, `check-dist` canh `data-product`. Khối nhà làm dùng logo TsuDEV dạng ảnh ở PR LG1 (#103).
-  Ảnh chụp Sáng/Tối trước/sau đã kiểm bằng Playwright. **PR 2 (bố cục `trinh-dien` + `luoi-quet`)**: phiên kế tiếp. 
+  Ảnh chụp Sáng/Tối trước/sau đã kiểm bằng Playwright. **PR 2 (#105)**: hero website hai cột ≥ 64rem (ảnh app tràn mép phải), "Sáu nơi" thành bento 3 cột (ô 1, 4, 5 rộng
+  đôi); màn đầu app (chưa quét) hai cột: chữ + nút Quét trái, ô số quy tắc Trọng yếu/Cẩn trọng/An toàn phải; hoạ tiết
+  `luoi-quet` tĩnh (vạch 1px mỗi 8px = 12,5% diện tích, `accent` 18% + `glow`) ở hai hero và `og-image.png`
+  (`brand.json` `motif`, `ogAccent` = `#0EB5CE`, `name` = Tsu Cwico). Header/chân trang/bộ chọn giao diện không đổi.
+  **Còn:** chụp lại `docs/screenshots` + ảnh website (`chup-anh.mjs`, `quay-demo.mjs`) sau khi #103-#105 gộp - ảnh cũ
+  còn logo tsudev + xanh cũ. Phiếu ĐÓNG khi ảnh chụp lại xong. 

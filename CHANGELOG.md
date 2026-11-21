@@ -33,6 +33,12 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
   update and error screens, window favicon), matching cwico.tsudev.com; the
   TsuDEV logo stays in the "made by" block. Every image comes from the brand
   pipeline, checked in CI.
+- Signature layout `trinh-dien`: cwico.tsudev.com opens on a two-column hero
+  (words left, a large app screenshot running off the right edge) with a
+  bento grid for "six places Windows hides software"; the app's first screen
+  pairs the scan button with the safety rules that guard the machine. A
+  static scan-line motif (`luoi-quet`) sits behind both heroes and the
+  share image.
 
 ### Added
 

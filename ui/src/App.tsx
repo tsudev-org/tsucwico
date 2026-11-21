@@ -670,14 +670,45 @@ export default function App() {
             {scanning && <ProgressBar />}
 
             {!report && !scanning ? (
-              <Panel className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-                <Brand size="lg" />
-                <p className="max-w-md text-sm" style={{ color: "var(--text-secondary)" }}>
-                  {t("scan.empty")}
-                </p>
-                <Button variant="primary" onClick={() => void runScan()}>
-                  {t("scan.run")}
-                </Button>
+              // First screen, `trinh-dien` layout (DESIGN_SYSTEM 1.2.2): words and the
+              // action on the left, what protects the machine on the right; static
+              // `luoi-quet` motif behind (1.2.4).
+              <Panel className="motif-luoi-quet grid flex-1 content-center gap-8 overflow-hidden px-8 py-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:items-center">
+                <div className="flex flex-col items-start gap-4">
+                  <Brand size="lg" />
+                  <h2 className="text-2xl font-bold leading-tight tracking-tight">{t("app.subtitle")}</h2>
+                  <p className="max-w-md text-sm" style={{ color: "var(--text-secondary)" }}>
+                    {t("scan.empty")}
+                  </p>
+                  <Button variant="primary" onClick={() => void runScan()}>
+                    {t("scan.run")}
+                  </Button>
+                </div>
+                {about && (
+                  <ul className="grid grid-cols-2 gap-3" aria-label={t("about.safetyDb")}>
+                    {[
+                      { label: t("safety.critical"), value: about.criticalRules, colour: "var(--danger)", wide: true },
+                      { label: t("safety.caution"), value: about.cautionRules, colour: "var(--warning)", wide: false },
+                      { label: t("safety.safe"), value: about.safeRules, colour: "var(--success)", wide: false },
+                    ].map((cell) => (
+                      <li
+                        key={cell.label}
+                        className={`rounded-lg border px-4 py-4 ${cell.wide ? "col-span-2" : ""}`}
+                        style={{
+                          borderColor: `color-mix(in srgb, ${cell.colour} 30%, transparent)`,
+                          background: `color-mix(in srgb, ${cell.colour} 7%, var(--surface-panel))`,
+                        }}
+                      >
+                        <p className="font-display text-3xl font-bold tabular-nums" style={{ color: cell.colour }}>
+                          {cell.value}
+                        </p>
+                        <p className="text-[12px]" style={{ color: "var(--text-secondary)" }}>
+                          {cell.label} · {t("about.rules")}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </Panel>
             ) : (
               report && (

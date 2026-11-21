@@ -1,13 +1,13 @@
 {
   "_ghi_chu": "Cấu hình dây chuyền thương hiệu (website/scripts/brand-assets.mjs). Đổi logo: thay ảnh ở source/, sửa tệp này nếu cần, chạy `node website/scripts/brand-assets.mjs`. CI chạy với --check.",
   "id": "cwico",
-  "name": "cwico",
+  "name": "Tsu Cwico",
   "source": "source/logo-cwico.png",
   "mode": "no-white",
   "padding": 0.06,
   "solidBg": "#FFFFFF",
   "ogGlow": "#0f3b4a",
-  "ogAccent": "#2dd4bf",
+  "ogAccent": "#0EB5CE",
   "domain": "cwico.tsudev.com",
   "ogLines": [
     "Rà quét sâu và gỡ phần mềm thừa",
@@ -23,5 +23,7 @@
     256,
     512,
     1024
-  ]
+  ],
+  "motif": "luoi-quet",
+  "_ghi_chu_ban_sac": "ogAccent = màu chính Tối của products/cwico.json; motif = hoạ tiết chữ ký (tsudev-standards v5.0.0, DESIGN_SYSTEM 1.2.4)."
 }
