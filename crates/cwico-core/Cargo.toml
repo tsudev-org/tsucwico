@@ -17,6 +17,8 @@ tracing     = { workspace = true }
 time        = { workspace = true }
 regex       = { workspace = true }
 getrandom   = { workspace = true }
+p256        = { workspace = true }
+base64      = { workspace = true }
 
 # Self-referential, so `cargo test -p cwico-core` on its own has the fixture
 # backend its integration tests need. Without it the feature only arrives

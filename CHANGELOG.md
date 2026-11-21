@@ -23,6 +23,12 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ### Added
 
+- TsuDEV Pro engine pieces (PRO1 P2, PRO2): the entitlement token from
+  tsudev.com is checked offline against its published ES256 key (anything
+  but ES256 / `tsu-ent+jwt`, an unknown key or a tampered body is refused),
+  and the renewal rules of PRODUCT_POLICY 7.6 - a reminder at every app open
+  in the last 7 days of the 1-year term, an "expired" notice exactly once.
+
 - About shows "Your data stays on this PC": no account, nothing sent to the
   internet or the cloud; the only connection is the update check (ADR-0002).
 - Groundwork for TsuDEV Pro (settings sync across PCs, later, with optional
