@@ -30,8 +30,13 @@ test("lựa chọn \"Theo hệ thống\" quay về ngôn ngữ của Windows", (
 
 test("giao diện lần đầu là Hệ thống; lựa chọn đã lưu giữ nguyên", () => {
   assert.equal(initialTheme(null), "system");
-  assert.equal(initialTheme("warm"), "system");
   assert.equal(initialTheme("dark"), "dark");
   assert.equal(initialTheme("light"), "light");
   assert.equal(initialTheme("system"), "system");
+});
+
+test("giao diện Ấm đã lưu (bỏ ở v5.0.0) đọc thành Sáng", () => {
+  assert.equal(initialTheme("warm"), "light");
+  assert.equal(initialTheme("dark"), "dark");
+  assert.equal(initialTheme("tim"), "system");
 });

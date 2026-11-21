@@ -1,8 +1,9 @@
 ---
 // Khung chung: <head> theo ECOSYSTEM_IDENTITY mục 2.2, đầu trang, chân trang nối về tsudev.com (mục 4).
 import '../styles/fonts.css';
-import '../styles/tokens.css';
-import '../styles/palette.css';
+// Token chung rồi bản sắc sản phẩm (DESIGN_SYSTEM 1.2.1) - đọc thẳng bản sao chỉ-đọc của bộ quy ước.
+import '../../../.standards/tokens/tokens.css';
+import '../../../.standards/tokens/products.css';
 import '../styles/site.css';
 import { REPO_URL, SAN_PHAM, SITE, UNG_HO_URL } from '../lib/noi-dung';
 
@@ -47,7 +48,7 @@ const ld = {
 };
 ---
 <!doctype html>
-<html lang="vi" data-theme="dark">
+<html lang="vi" data-product="cwico" data-theme="dark">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

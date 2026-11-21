@@ -41,7 +41,7 @@ export function Panel({
 type ButtonVariant = "primary" | "danger" | "ghost" | "outline";
 
 const BUTTON_BASE =
-  "inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium " +
+  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] px-3.5 py-2 text-sm font-medium " +
   "transition-colors disabled:cursor-not-allowed disabled:opacity-45";
 
 export function Button({
@@ -63,7 +63,7 @@ export function Button({
 }) {
   const styles: Record<ButtonVariant, React.CSSProperties> = {
     primary: {
-      // Token primary + on-primary (QU-STD-1): Tối = xanh lơ #38BDF8 với mực đen, Sáng = #0868C4 với chữ trắng
+      // Token primary + on-primary: màu nhấn của sản phẩm (products.css, data-product="cwico")
       background: "var(--primary)",
       color: "var(--on-primary)",
       borderColor: "var(--primary-hover)",
@@ -202,7 +202,7 @@ export function Modal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-6"
-      style={{ background: "rgb(4 12 20 / 0.55)" }}
+      style={{ background: "var(--overlay)" }}
       onClick={onClose}
       role="presentation"
     >
@@ -281,7 +281,7 @@ export function Notice({
       <span
         aria-hidden="true"
         className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
-        style={{ background: accent, color: "#fff" }}
+        style={{ background: accent, color: "var(--on-status)" }}
       >
         {glyph}
       </span>

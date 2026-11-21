@@ -5,8 +5,12 @@ import type { Locale } from "./types";
 export type ThemeChoice = "light" | "dark" | "system";
 export const THEME_CHOICES: ThemeChoice[] = ["light", "dark", "system"];
 
-/** Giá trị đã lưu hợp lệ thì dùng; không có hoặc lạ ⇒ "system" (theo Windows, đổi ngay khi Windows đổi). */
+/**
+ * Giá trị đã lưu hợp lệ thì dùng; `warm` (chế độ Ấm đã bỏ, khối token gỡ ở v5.0.0) ⇒ "light";
+ * không có hoặc lạ ⇒ "system" (theo Windows, đổi ngay khi Windows đổi).
+ */
 export function initialTheme(saved: string | null): ThemeChoice {
+  if (saved === "warm") return "light";
   return THEME_CHOICES.includes(saved as ThemeChoice) ? (saved as ThemeChoice) : "system";
 }
 

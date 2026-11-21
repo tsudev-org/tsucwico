@@ -23,6 +23,12 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ### Changed
 
+- Tsu Cwico gets its own look, in the app and on cwico.tsudev.com: a petrol
+  blue accent taken from the logo's arrow (`#0EB5CE` dark / `#087485`
+  light), sharp 2-4 px corners, and Be Vietnam Pro for headings. Colours
+  now come straight from the ecosystem tokens; the old local palette, the
+  orange "dev" shades and the retired Warm theme (a saved Warm choice now
+  opens as Light) are gone.
 - The app now shows the Tsu Cwico logo and name (header, About, empty state,
   update and error screens, window favicon), matching cwico.tsudev.com; the
   TsuDEV logo stays in the "made by" block. Every image comes from the brand
