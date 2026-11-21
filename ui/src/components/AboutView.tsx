@@ -91,7 +91,7 @@ export function AboutView({
                 background: `color-mix(in srgb, ${cell.colour} 7%, transparent)`,
               }}
             >
-              <p className="text-2xl font-semibold tabular-nums" style={{ color: cell.colour }}>
+              <p className="font-display text-2xl font-semibold tabular-nums" style={{ color: cell.colour }}>
                 {cell.value}
               </p>
               <p className="text-[12px]" style={{ color: "var(--text-secondary)" }}>
