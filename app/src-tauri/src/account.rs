@@ -567,11 +567,16 @@ fn respond(stream: &mut TcpStream, ok: bool) {
             "Chưa đăng nhập được. Quay lại Tsu Cwico để thử lại.<br>Sign-in did not complete. Return to Tsu Cwico to try again.",
         )
     };
+    // Product favicon, embedded so the tab shows Tsu Cwico with nothing else
+    // fetched (ticket LG1; same bytes as cwico.tsudev.com's favicon).
+    use base64::Engine as _;
+    let icon = base64::engine::general_purpose::STANDARD
+        .encode(include_bytes!("../../../ui/public/brand/favicon-32.png"));
     let html = format!(
-        "<!doctype html><html lang=\"vi\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><title>{title}</title><body style=\"font-family:system-ui;max-width:32rem;margin:4rem auto;padding:0 1rem;line-height:1.6\"><p>{body}</p></body></html>"
+        "<!doctype html><html lang=\"vi\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><link rel=\"icon\" type=\"image/png\" href=\"data:image/png;base64,{icon}\"><title>{title}</title><body style=\"font-family:system-ui;max-width:32rem;margin:4rem auto;padding:0 1rem;line-height:1.6\"><p>{body}</p></body></html>"
     );
     let head = format!(
-        "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {}\r\nCache-Control: no-store\r\nContent-Security-Policy: default-src 'none'; style-src 'unsafe-inline'\r\nConnection: close\r\n\r\n",
+        "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {}\r\nCache-Control: no-store\r\nContent-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; img-src data:\r\nConnection: close\r\n\r\n",
         html.len()
     );
     let _ = stream.write_all(head.as_bytes());

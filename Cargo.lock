@@ -719,6 +719,7 @@ checksum = "914a755b7c2d4af2bdcff7ce1739e2db9a1b81a9b07123d8015786ae03c0980d"
 name = "cwico-app"
 version = "26.11.1901"
 dependencies = [
+ "base64 0.22.1",
  "cwico-core",
  "cwico-win",
  "keyring",

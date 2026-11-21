@@ -21,6 +21,13 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ## Unreleased
 
+### Changed
+
+- The app now shows the Tsu Cwico logo and name (header, About, empty state,
+  update and error screens, window favicon), matching cwico.tsudev.com; the
+  TsuDEV logo stays in the "made by" block. Every image comes from the brand
+  pipeline, checked in CI.
+
 ### Added
 
 - Optional "Sign in with TsuDEV" in About (never required, never prompted):

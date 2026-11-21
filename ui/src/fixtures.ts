@@ -337,7 +337,7 @@ export function about(): AboutInfo {
   return {
     appVersion: isDemo() ? pkg.version : "26.8.1901",
     appRelease: isDemo() ? pkg.version : "26.8.1901",
-    productUrl: "https://tsudev.com",
+    productUrl: "https://cwico.tsudev.com",
     platform: {
       platform: "browser",
       osDescription: "Browser preview (no Windows backend)",
