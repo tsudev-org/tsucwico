@@ -93,3 +93,14 @@ Làm được NGAY (không phụ thuộc PRO-B/PRO-D): kiểm kê, ADR, màn Pro
 trong test), tắt mọi đường gửi dữ liệu người dùng lên mạng ở bản miễn phí. Thứ tự toàn hệ: phiếu gốc mục 9.5.
 
 
+
+## 7. P2 - kết quả (21/11/2026, phiên tsucwico, PR #102)
+
+Bước 1-6 của mục 6 xong: `pro::jws` (ES256 + JWKS theo `kid`, `verify_id_token`), `pro::signin` (RFC 8252 + PKCE S256),
+`app/src-tauri/src/account.rs` (loopback `127.0.0.1:0`, refresh token ở Windows Credential Manager, access token trong bộ
+nhớ, `/api/me/entitlements` + `X-Tsu-Installation`, JWS đệm kiểm lại mỗi lần đọc, `pro_notice` nối `devices_30d` thật),
+UI Tài khoản + màn Pro + huy hiệu, `docs/THREAT_MODEL.md` + phiếu rà soát (mục 4 của tệp đó).
+
+**Còn lại (cần Windows thật + tài khoản 👤):** bước 7 - đăng nhập đầu cuối (JWS `aud` = `tsucwico`, tiêu chí 3 của
+phiếu tsudev CW1) và đo proxy "chưa đăng nhập ⇒ 0 byte tới tsudev.com" (THREAT_MODEL mục 3). Cách đo: cài bản build
+CI (artifact `installers` của PR/nhánh main), Giới thiệu → "Đăng nhập TsuDEV" → kiểm khối tài khoản hiện "Đã đăng nhập".
