@@ -1,10 +1,10 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** việc đầu tiên là **PRO1 P2** (đăng nhập TsuDEV loopback PKCE + JWS quyền lợi + màn Pro) - hết bị
-> chặn 20/11; điểm bắt đầu + hợp đồng máy chủ đã đo ở phiếu `logs/handover/20261119-PRO1_*` **mục 6**, phạm vi ở
-> ADR-0002 mục 3. **REL-TSU-1** (phiếu `20261120-SB1`): 👤 hẹn làm SAU 21/11/2026 (bật Windows Sandbox cần restart
-> máy) ⇒ phiên trước ngày đó chỉ đọc lại VirusTotal (VT1 mục 4), KHÔNG nhắc 👤 restart; có `ketqua/` thì làm SB1 mục
-> 3.2. Còn **P2 MSIX** - chờ 👤 Partner Center.
+> **Phiên kế tiếp:** (1) **REL-TSU-1** - 👤 hẹn SAU 21/11/2026 (Windows Sandbox cần restart): có `tools/sandbox/ketqua/`
+> thì làm phiếu `20261120-SB1` mục 3.2, chưa có thì chỉ đọc lại VirusTotal (VT1 mục 4). (2) Việc cần **Windows thật**:
+> PRO1 P2 bước 7 (đăng nhập đầu cuối + đo proxy 0 byte, `docs/THREAT_MODEL.md` mục 3-4), chụp lại ảnh `scan-*-vi` +
+> `tweaks-dark-vi` + quay lại video demo (ảnh cũ còn logo tsudev - phiếu STD50) rồi ĐÓNG STD50. (3) **PRO1 P3** chờ
+> crate `tsusync` (PRO-D3). Còn **P2 MSIX** - chờ 👤 Partner Center.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
@@ -12,11 +12,18 @@
 ## Hàng đợi task (làm từ trên xuống)
 
 - [ ] **REL-TSU-1** Bản đầu tiên mang tên Tsu Cwico + khuôn thẻ v3: **Release nháp [`v26.11.1901`](https://github.com/tsudev-org/tsucwico/releases/tag/v26.11.1901)** (19/11/2026, phiên tsucwico-ea, run 44531891240). Đã kiểm trên nháp: 10 tệp đúng khuôn (`tsucwico_26.11.1901_windows-x64-setup.exe`, `_windows-x64.msi`, `_windows-x64-cli.exe`, `_sbom.spdx.json`, `.sig`, `latest.json`, `SHA256SUMS.txt` + `.sig` + `.sigstore.json`); `sha256sum -c` 7/7; `tools/verify_update_signature.py` - bản đã cài chấp nhận 3 gói; `gh attestation verify` 4/4 (ký bởi `release.yml@refs/tags/v26.11.1901`); Sigstore `OK`; CLI có CompanyName TsuDEV / FileVersion 26.11.1901; `latest.json` cùng dạng URL với 26.11.10.2 (đã cập nhật thật được). **VirusTotal**: MSI + CLI 0/74; bộ cài NSIS 3/74 engine học máy (CrowdStrike, APEX, Trapmine) ⇒ báo nhầm theo phiếu `logs/handover/20261119-VT1_*` (SecureAge đã nộp; 👤 gửi 2 email soạn sẵn). **Còn 👤:** nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ một mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md` mục 5) ⇒ **Publish** (updater bắt buộc: Publish là đẩy tới mọi máy). **20/11: thử nâng cấp chuyển sang Windows Sandbox, bộ kiểm `tools/sandbox/` - phiếu `20261120-SB1`.** Sau Publish: deploy website (trang tải về đọc `releases/latest` lúc build), `tools/apply_winget_manifest.py` (manifest trong artifact `installers`) + nộp winget (đợi #476024), Scoop tự lên nhờ scoop-bucket#24.
+- [ ] **STD50** Bản sắc v5.0.0: **PR 1 ✅** #104 (sync v5.0.0, `products.css`, màu hue 212, bo góc `sac`, Be Vietnam Pro,
+  xoá dải tsu/dev - TS-8), **PR 2 ✅** #105 (`trinh-dien` + `luoi-quet`, og-image). Còn: ảnh chụp trên Windows thật
+  (`scan-*-vi`, `tweaks-dark-vi`) + video demo quay lại ⇒ đóng phiếu `20261121-STD50`.
+- [x] **LG1** ✅ 21/11/2026 #103: logo Tsu Cwico trong app (header, Giới thiệu, màn trống, cập nhật, lỗi, favicon trùng byte
+  website), khối nhà làm logo TsuDEV; trang "Đã đăng nhập" nhúng favicon. Phiếu `20261120-LG1` ĐÓNG.
+- [ ] **PRO2** Pro kỳ 1 năm: **2.1 ✅** #102 (nhắc gia hạn 7 ngày + báo hết kỳ, 6 test 7.6). 2.2 (đồng bộ qua TsuDEV Sync)
+  làm cùng PRO1 P3. Phiếu `20261120-PRO2`.
 - [ ] **PRO1** Lưu cục bộ mặc định; Pro = đồng bộ cài đặt (TsuDEV Sync, crate `tsusync`); nhắc nhiều thiết bị mỗi 30
   ngày. Phiếu `logs/handover/20261119-PRO1_luu-cuc-bo-pro-dong-bo.md`, kế hoạch phase ở **ADR-0002 mục 3**.
-  **P1 ✅** 20/11 (#94; kiểm kê 0 byte rời máy, chuẩn v3.9.1, `cwico_core::pro`, hộp thoại `ProNotice`). **P2 sẵn sàng** (20/11: client `tsucwico` native
-  loopback trên production - phiếu tsudev CW1 đóng, tsudev#339; `/pro` 200; tsudev#336 gộp 19/11). **P3** chờ
-  PRO-D3. Hợp đồng: PRODUCT_POLICY 7.4 bản v3.9.1 (KHÔNG theo mục 9.2 phiếu gốc - đã lỗi thời).
+  **P1 ✅** 20/11 (#94; kiểm kê 0 byte rời máy, chuẩn v3.9.1, `cwico_core::pro`, hộp thoại `ProNotice`). **P2 ✅ mã** 21/11 (#102: đăng nhập loopback PKCE, refresh token ở
+  Credential Manager, kiểm JWS ES256, màn Pro, huy hiệu, THREAT_MODEL) - còn bước 7 trên Windows thật (phiếu PRO1 mục 7).
+  **P3** chờ PRO-D3. Hợp đồng: PRODUCT_POLICY 7.4 bản v3.9.1 (KHÔNG theo mục 9.2 phiếu gốc - đã lỗi thời).
 - [ ] **P2-MSIX** Đích MSIX (`Version` = `YY.M.DDNN.0`) + nộp Microsoft Store + nút Store trên website. Chờ 👤 tạo tài
   khoản Partner Center cá nhân (phiếu P2 mục 4.1) - không đoán Identity Name/Publisher.
 - [x] **T8** ✅ 19/11/2026 (phiên tsucwico-c4): #92 gộp `20de2ab`, deploy Worker version `2fb094b0`; đo production: 1 video
@@ -39,6 +46,10 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 21/11/2026 - Phiên tsucwico-ea (tiếp sau khi bị tắt): gộp #102 (PRO1 P2 + PRO2 2.1), #103 (LG1), #104 (STD50 PR 1,
+  chuẩn v5.0.0), #105 (STD50 PR 2); #106 chụp lại 5 ảnh `docs/screenshots` không cần Windows; deploy website (Worker version `babc50d9`, đo production: `data-product="cwico"`, hero `luoi-quet`, og-image 200). VirusTotal NSIS đọc lại
+  16:04 UTC: vẫn 3/74 (lượt 20/11 00:39, CrowdStrike/APEX/Trapmine), gửi `analyse` lại (200). Release vẫn nháp.
 
 - 20/11/2026 - Phiên tsucwico-e7: #94 (PRO1 P1) đỏ do README ghi 143 test (thực tế 154) ⇒ sửa, CI xanh, gộp squash.
   Release vẫn nháp ⇒ bỏ qua deploy/winget; VirusTotal NSIS đọc lại 00:39 UTC vẫn 3/71 (lượt 19/11 14:04), gửi
