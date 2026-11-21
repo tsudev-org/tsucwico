@@ -312,7 +312,7 @@ async fn install_update(app: AppHandle) -> ApiResult<()> {
     })
 }
 
-/// Open a URL in the user's browser. Used by the tsudev logo and wordmark.
+/// Open the product site in the user's browser. Used by the product logo.
 ///
 /// Restricted to the product's own site: a command that opens any URL is a
 /// phishing primitive if the web view is ever compromised.
@@ -321,6 +321,16 @@ fn open_product_site(app: AppHandle) -> ApiResult<()> {
     use tauri_plugin_opener::OpenerExt;
     app.opener()
         .open_url(cwico_core::PRODUCT_URL, None::<&str>)
+        .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
+}
+
+/// Open tsudev.com (the "made by" block and About's website button).
+/// Fixed URL for the same reason as `open_product_site`.
+#[tauri::command]
+fn open_maker_site(app: AppHandle) -> ApiResult<()> {
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(cwico_core::MAKER_URL, None::<&str>)
         .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
 }
 
@@ -517,6 +527,7 @@ pub fn run() {
             check_for_update,
             install_update,
             open_product_site,
+            open_maker_site,
             open_donate_page,
             open_pro_page,
             pro_notice,

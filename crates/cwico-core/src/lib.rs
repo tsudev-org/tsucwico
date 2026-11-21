@@ -83,8 +83,12 @@ pub use version::{current_release_name, name_for_semver, Release};
 /// Product name, used in restore-point descriptions and log headers.
 pub const PRODUCT_NAME: &str = "Tsu Cwico";
 
-/// Product homepage. The UI links its logo and wordmark here.
-pub const PRODUCT_URL: &str = "https://tsudev.com";
+/// Product homepage. The UI links the product logo and name here.
+pub const PRODUCT_URL: &str = "https://cwico.tsudev.com";
+
+/// The maker, TsuDEV. The "made by" block and "Visit tsudev.com" link here
+/// (BRAND_ASSETS 15.5).
+pub const MAKER_URL: &str = "https://tsudev.com";
 
 /// The ecosystem's single donation page (PRODUCT_POLICY 7.4), tagged with this
 /// product's `client_id`. The desktop app only opens it in the browser: no

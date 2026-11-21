@@ -115,10 +115,18 @@ export async function applyTweaks(
  */
 export async function openProductSite(): Promise<void> {
   if (!isDesktop()) {
-    window.open("https://tsudev.com", "_blank", "noopener,noreferrer");
+    window.open("https://cwico.tsudev.com", "_blank", "noopener,noreferrer");
     return;
   }
   return call<void>("open_product_site");
+}
+
+export async function openMakerSite(): Promise<void> {
+  if (!isDesktop()) {
+    window.open("https://tsudev.com", "_blank", "noopener,noreferrer");
+    return;
+  }
+  return call<void>("open_maker_site");
 }
 
 /** The ecosystem donation page; the app never embeds account details (PRODUCT_POLICY 7.4). */

@@ -39,7 +39,7 @@ import type {
 } from "./types";
 import type { AccountView, RenewalNotice as RenewalNoticeData } from "./types";
 import { DEFAULT_PLAN_OPTIONS, DEFAULT_SCAN_OPTIONS } from "./types";
-import { Brand } from "./components/Brand";
+import { Brand, MakerBrand } from "./components/Brand";
 import { AboutView } from "./components/AboutView";
 import { ConfirmCaution } from "./components/ConfirmCaution";
 import { PlanDialog } from "./components/PlanDialog";
@@ -764,7 +764,7 @@ export default function App() {
           color: "var(--text-muted)",
         }}
       >
-        <Brand size="sm" />
+        <MakerBrand size="sm" />
         <span className="selectable">
           {about?.appRelease ?? update.currentRelease}
           {about && ` · ${t("about.safetyDb")} v${about.safetyDbVersion}`}

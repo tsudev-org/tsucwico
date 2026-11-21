@@ -42,6 +42,7 @@ const outputs = new Map(); // đường dẫn tuyệt đối -> Buffer
 const emit = (abs, buf) => outputs.set(abs, buf);
 const pub = (rel) => path.join(WEB, 'public', rel);
 const app = (rel) => path.join(ROOT, 'assets/brand/app', rel);
+const ui = (rel) => path.join(ROOT, 'ui/public/brand', rel);
 const hex = (h) => ({
   r: parseInt(h.slice(1, 3), 16),
   g: parseInt(h.slice(3, 5), 16),
@@ -214,6 +215,21 @@ async function main() {
   // Cỡ theo `appSizes` (mặc định tới 512; Tauri cần thêm 1024 làm đầu vào `tauri icon`).
   for (const s of CFG.appSizes ?? [16, 24, 32, 48, 64, 128, 256, 512]) emit(app(`icon-${s}.png`), await at(s));
   emit(app('app.ico'), await ico(rounded));
+
+  // --- Giao diện app (Tauri, `ui/public/brand/`) - phiếu LG1, BRAND_ASSETS mục 15.
+  // Favicon trùng byte với website; logo sản phẩm cho header/Giới thiệu (tới 128 px
+  // hiển thị, 2x); logo TsuDEV cho khối "nhà làm" lấy từ bản website đã nhận của
+  // dây chuyền tsudev (15.5) - không cắt tay, không chép PNG rời.
+  emit(ui('favicon-32.png'), outputs.get(pub('favicon-32x32.png')));
+  emit(ui('favicon.ico'), outputs.get(pub('favicon.ico')));
+  emit(ui(`logo-${CFG.id}-256.png`), await png(256));
+  emit(
+    ui('logo-tsudev-96.png'),
+    await sharp(fs.readFileSync(pub('brand/logo-tsudev-144.webp')))
+      .resize(96, 96, { fit: 'contain', background: CLEAR, kernel: 'lanczos3' })
+      .png({ palette: true, quality: 92, effort: 10, compressionLevel: 9 })
+      .toBuffer()
+  );
 
   // --- Ghi hoặc kiểm.
   const bad = [];

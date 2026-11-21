@@ -1,17 +1,18 @@
 /**
- * The tsudev logo and wordmark.
+ * Brand marks (tsudev-standards BRAND_ASSETS.md section 15, ticket LG1).
  *
- * One component, used everywhere a brand mark belongs - the header, the about
- * panel, the empty state and the footer - so the mark is identical in all of
- * them and there is exactly one place that knows how to open tsudev.com.
+ * - `Brand`: the PRODUCT - the Tsu Cwico logo and name, as in the header of
+ *   cwico.tsudev.com. Used wherever the app identifies itself: header, About,
+ *   empty state, update and error screens. Opens the product site.
+ * - `MakerBrand`: the "made by" block - the current TsuDEV logo (as in the
+ *   website footer, 15.5), opening tsudev.com.
  *
- * The wordmark is two coloured spans rather than an image: `tsu` in the brand
- * blue and `dev` in the brand orange, both taken from the logo itself. Text
- * scales with the user's font size, stays crisp at any DPI, and remains
- * selectable and searchable - none of which a baked-in PNG would give.
+ * Images come from the brand pipeline (`website/scripts/brand-assets.mjs`
+ * writes `ui/public/brand/`; CI runs it with `--check`). The name is text,
+ * so it scales with the user's font size and stays selectable.
  */
 
-import { openProductSite } from "../api";
+import { openMakerSite, openProductSite } from "../api";
 
 export type BrandSize = "sm" | "md" | "lg";
 
@@ -23,50 +24,77 @@ const SIZES: Record<BrandSize, { logo: string; word: string; gap: string }> = {
 
 interface BrandProps {
   size?: BrandSize;
-  /** Show the product name under the wordmark. */
+  /** Shown next to the name from `sm` screens up. */
   tagline?: string;
   className?: string;
 }
 
-export function Brand({ size = "md", tagline, className = "" }: BrandProps) {
+function Mark({
+  href,
+  label,
+  logo,
+  name,
+  onOpen,
+  size = "md",
+  tagline,
+  className = "",
+}: BrandProps & { href: string; label: string; logo: string; name: string; onOpen: () => Promise<void> }) {
   const scale = SIZES[size];
-
   const open = (event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault();
-    void openProductSite();
+    void onOpen();
   };
-
   return (
     <a
-      href="https://tsudev.com"
+      href={href}
       onClick={open}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") open(event);
       }}
-      title="tsudev.com"
-      aria-label="TsuDEV - mở tsudev.com / open tsudev.com"
+      title={href.replace("https://", "")}
+      aria-label={label}
       className={`group inline-flex items-center ${scale.gap} rounded-lg px-1 py-0.5 no-underline transition-opacity hover:opacity-85 ${className}`}
     >
       <img
-        src="./brand/tsudev-logo.png"
+        src={logo}
         alt=""
         aria-hidden="true"
-        width={512}
-        height={512}
-        className={`${scale.logo} shrink-0 object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105`}
+        className={`${scale.logo} shrink-0 object-contain transition-transform duration-200 group-hover:scale-105`}
       />
-      <span className={`${scale.word} font-semibold leading-none tracking-tight`}>
-        <span style={{ color: "var(--tsu-word)" }}>tsu</span>
-        <span style={{ color: "var(--dev-word)" }}>dev</span>
+      <span className={`${scale.word} font-semibold leading-none tracking-tight`} style={{ color: "var(--text-primary)" }}>
+        {name}
       </span>
       {tagline && (
-        <span
-          className="ml-1 hidden text-[13px] font-normal sm:inline"
-          style={{ color: "var(--text-muted)" }}
-        >
+        <span className="ml-1 hidden text-[13px] font-normal sm:inline" style={{ color: "var(--text-muted)" }}>
           {tagline}
         </span>
       )}
     </a>
+  );
+}
+
+export function Brand(props: BrandProps) {
+  return (
+    <Mark
+      {...props}
+      href="https://cwico.tsudev.com"
+      label="Tsu Cwico - mở cwico.tsudev.com / open cwico.tsudev.com"
+      logo="./brand/logo-cwico-256.png"
+      name="Tsu Cwico"
+      onOpen={openProductSite}
+    />
+  );
+}
+
+export function MakerBrand(props: BrandProps) {
+  return (
+    <Mark
+      {...props}
+      href="https://tsudev.com"
+      label="TsuDEV - mở tsudev.com / open tsudev.com"
+      logo="./brand/logo-tsudev-96.png"
+      name="TsuDEV"
+      onOpen={openMakerSite}
+    />
   );
 }

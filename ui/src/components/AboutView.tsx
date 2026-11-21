@@ -10,7 +10,7 @@
 import type { AboutInfo, AccountView, Locale } from "../types";
 import { formatDate, translator } from "../i18n";
 import { AccountPanel } from "./AccountPanel";
-import { Brand } from "./Brand";
+import { Brand, MakerBrand } from "./Brand";
 import { Button, Notice, Panel } from "./primitives";
 import { openBackupDir, openDonatePage, openProductSite } from "../api";
 
@@ -60,6 +60,9 @@ export function AboutView({
         </div>
         <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>
           {t("about.donateNote")}
+        </p>
+        <p className="flex items-center gap-1.5 text-[12px]" style={{ color: "var(--text-muted)" }}>
+          {t("about.madeBy")} <MakerBrand size="sm" />
         </p>
       </Panel>
 
