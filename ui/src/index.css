@@ -186,3 +186,15 @@ body {
 .animate-sweep {
   animation: cwico-sweep 1.4s ease-in-out infinite;
 }
+
+/* Supporter badge (tsudev-standards assets/badges/tsu-badge-donor-*.svg). */
+.tsu-badge-donor {
+  background: #ccfbf1;
+  border-color: #0f766e;
+  color: #134e4a;
+}
+:root[data-theme="dark"] .tsu-badge-donor {
+  background: #042f2e;
+  border-color: #2dd4bf;
+  color: #99f6e4;
+}

@@ -11,6 +11,7 @@ use cwico_core::{
     Engine, PlanOptions, RemovalPlan, RunReport, SafetyDatabase, ScanOptions, ScanReport,
     Selection, TweakCatalog,
 };
+pub mod account;
 pub mod update;
 
 use serde::Serialize;
@@ -334,17 +335,84 @@ fn open_donate_page(app: AppHandle) -> ApiResult<()> {
         .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
 }
 
-/// Open the folder holding `.reg` backups and transaction logs.
 /// Whether to show the "several devices, no Pro" notice (PRODUCT_POLICY 7.3).
 /// The UI passes its stored `tsu.pro_notice.last_shown`; the rule lives in
-/// `cwico_core::pro`. No sign-in yet (ADR-0002, phase P2) means no cached
-/// entitlement, so this is always `None` today - and never touches the network.
+/// `cwico_core::pro`, the status comes from the cached, re-verified JWS.
+/// Signed out ⇒ always `None`, and never touches the network.
 #[tauri::command]
-fn pro_notice(last_shown: Option<String>) -> Option<u32> {
-    use cwico_core::pro::{notice_due, parse_last_shown, EntitlementStatus};
-    let now = time::OffsetDateTime::now_utc();
-    let status = EntitlementStatus::from_cached(None, now);
-    notice_due(&status, parse_last_shown(last_shown.as_deref()), now)
+async fn pro_notice(
+    account: State<'_, account::Account>,
+    last_shown: Option<String>,
+) -> Result<Option<u32>, ()> {
+    use cwico_core::pro::{notice_due, parse_last_shown};
+    let status = account.status().await;
+    Ok(notice_due(
+        &status,
+        parse_last_shown(last_shown.as_deref()),
+        time::OffsetDateTime::now_utc(),
+    ))
+}
+
+/// Renewal reminder / expiry notice of PRODUCT_POLICY 7.6. `last_active_ms`
+/// is when the window last went to the background (`None` on a cold start).
+#[tauri::command]
+async fn pro_renewal_notice(
+    account: State<'_, account::Account>,
+    last_active_ms: Option<i64>,
+) -> Result<Option<cwico_core::pro::renewal::RenewalNotice>, ()> {
+    Ok(account.renewal_notice(last_active_ms).await)
+}
+
+impl From<account::AccountError> for ApiError {
+    fn from(e: account::AccountError) -> Self {
+        Self {
+            code: e.code().into(),
+            message: e.message(),
+        }
+    }
+}
+
+/// The account as cached - offline, instant.
+#[tauri::command]
+async fn account_status(account: State<'_, account::Account>) -> Result<account::AccountView, ()> {
+    Ok(account.view().await)
+}
+
+/// Re-reads the entitlement if signed in and the cache is stale (or
+/// `force`). Signed out ⇒ no network at all.
+#[tauri::command]
+async fn account_refresh(
+    account: State<'_, account::Account>,
+    force: Option<bool>,
+) -> ApiResult<account::AccountView> {
+    Ok(account.refresh(force.unwrap_or(false)).await?)
+}
+
+/// Opens the system browser on tsudev.com and waits for it to come back.
+#[tauri::command]
+async fn account_sign_in(
+    app: AppHandle,
+    account: State<'_, account::Account>,
+) -> ApiResult<account::AccountView> {
+    use tauri_plugin_opener::OpenerExt;
+    let opener = app.opener();
+    Ok(account
+        .sign_in(|url| {
+            opener
+                .open_url(url, None::<&str>)
+                .map_err(|e| format!("could not open the browser: {e}"))
+        })
+        .await?)
+}
+
+#[tauri::command]
+fn account_sign_in_cancel(account: State<'_, account::Account>) {
+    account.cancel_sign_in();
+}
+
+#[tauri::command]
+async fn account_sign_out(account: State<'_, account::Account>) -> ApiResult<account::AccountView> {
+    Ok(account.sign_out().await?)
 }
 
 /// Opens the TsuDEV Pro page. Takes no URL for the same reason as
@@ -357,6 +425,7 @@ fn open_pro_page(app: AppHandle) -> ApiResult<()> {
         .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
 }
 
+/// Open the folder holding `.reg` backups and transaction logs.
 #[tauri::command]
 fn open_backup_dir(app: AppHandle, state: State<'_, AppState>) -> ApiResult<()> {
     use tauri_plugin_opener::OpenerExt;
@@ -431,6 +500,11 @@ pub fn run() {
                 "Tsu Cwico starting"
             );
             app.manage(state);
+            let data = app
+                .path()
+                .app_local_data_dir()
+                .unwrap_or_else(|_| std::env::temp_dir().join("tsucwico"));
+            app.manage(account::Account::load(data));
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -446,6 +520,12 @@ pub fn run() {
             open_donate_page,
             open_pro_page,
             pro_notice,
+            pro_renewal_notice,
+            account_status,
+            account_refresh,
+            account_sign_in,
+            account_sign_in_cancel,
+            account_sign_out,
             open_backup_dir,
             relaunch_as_admin,
         ])

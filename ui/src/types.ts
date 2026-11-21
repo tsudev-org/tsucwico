@@ -347,3 +347,24 @@ export interface UpdateProgress {
   total?: number;
   installing: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// TsuDEV account (optional sign-in, ADR-0002 P2) - mirrors account.rs
+// ---------------------------------------------------------------------------
+
+export type Badge = "pro" | "donor" | "both" | "none";
+
+/** `AccountView` of the Tauri shell. Carries no token. */
+export interface AccountView {
+  signedIn: boolean;
+  proActive: boolean;
+  /** Unix seconds; 0 when the account never had Pro. */
+  proUntil: number;
+  badge: Badge;
+  devices30d: number;
+}
+
+/** `cwico_core::pro::renewal::RenewalNotice` (PRODUCT_POLICY 7.6). */
+export type RenewalNotice =
+  | { kind: "renew"; daysLeft: number; proUntil: number }
+  | { kind: "expired"; proUntil: number; cloudDeleteAt: number | null };

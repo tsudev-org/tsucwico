@@ -8,7 +8,7 @@
 //!
 //! Pure: the caller fetches the JWKS and the token; this module only decides.
 
-use super::{ClaimsRejected, EntitlementClaims, EntitlementStatus};
+use super::{ClaimsRejected, EntitlementClaims, EntitlementStatus, CLIENT_ID, ISSUER};
 use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use base64::Engine as _;
 use p256::ecdsa::signature::Verifier;
@@ -98,7 +98,19 @@ pub fn verify_entitlement(
 /// read a cached token that may have expired (which still tells the app the
 /// device once saw Pro), never to grant anything.
 pub fn verify_signature(compact: &str, jwks: &Jwks) -> Result<EntitlementClaims, JwsRejected> {
-    let mut parts = compact.trim().split('.');
+    verify_es256(compact, jwks, Some(TYP))
+}
+
+/// ES256 check against `jwks`, then the payload parsed as `T`. `typ` is
+/// required to equal `want_typ` when given (entitlement tokens); an
+/// `id_token` is checked with `None`, since OIDC sets no `typ` for it.
+pub fn verify_es256<T: for<'de> Deserialize<'de>>(
+    compact: &str,
+    jwks: &Jwks,
+    want_typ: Option<&str>,
+) -> Result<T, JwsRejected> {
+    let compact = compact.trim();
+    let mut parts = compact.split('.');
     let (Some(h64), Some(p64), Some(s64), None) =
         (parts.next(), parts.next(), parts.next(), parts.next())
     else {
@@ -108,7 +120,7 @@ pub fn verify_signature(compact: &str, jwks: &Jwks) -> Result<EntitlementClaims,
     if header.alg != ALG {
         return Err(JwsRejected::WrongAlgorithm);
     }
-    if header.typ.as_deref() != Some(TYP) {
+    if want_typ.is_some_and(|t| header.typ.as_deref() != Some(t)) {
         return Err(JwsRejected::WrongType);
     }
     let key = header
@@ -122,10 +134,65 @@ pub fn verify_signature(compact: &str, jwks: &Jwks) -> Result<EntitlementClaims,
         .map_err(|_| JwsRejected::Malformed)?;
     // JWS carries the raw r||s form (RFC 7518 3.4), never DER.
     let sig = Signature::from_slice(&sig).map_err(|_| JwsRejected::BadSignature)?;
-    let signing_input = &compact.trim()[..h64.len() + 1 + p64.len()];
+    let signing_input = &compact[..h64.len() + 1 + p64.len()];
     key.verify(signing_input.as_bytes(), &sig)
         .map_err(|_| JwsRejected::BadSignature)?;
     decode_json(p64)
+}
+
+/// Why an `id_token` was refused (OIDC Core 3.1.3.7).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum IdTokenRejected {
+    Jws(JwsRejected),
+    WrongIssuer,
+    WrongAudience,
+    /// The `nonce` sent with the authorisation request did not come back.
+    WrongNonce,
+    Expired,
+}
+
+#[derive(Deserialize)]
+struct IdTokenClaims {
+    iss: String,
+    sub: String,
+    aud: Audience,
+    exp: i64,
+    #[serde(default)]
+    nonce: Option<String>,
+}
+
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum Audience {
+    One(String),
+    Many(Vec<String>),
+}
+
+/// Verifies the `id_token` of a sign-in and returns its `sub`.
+pub fn verify_id_token(
+    compact: &str,
+    jwks: &Jwks,
+    nonce: &str,
+    now: OffsetDateTime,
+) -> Result<String, IdTokenRejected> {
+    let c: IdTokenClaims = verify_es256(compact, jwks, None).map_err(IdTokenRejected::Jws)?;
+    if c.iss != ISSUER {
+        return Err(IdTokenRejected::WrongIssuer);
+    }
+    let for_us = match &c.aud {
+        Audience::One(a) => a == CLIENT_ID,
+        Audience::Many(v) => v.len() == 1 && v[0] == CLIENT_ID,
+    };
+    if !for_us {
+        return Err(IdTokenRejected::WrongAudience);
+    }
+    if c.nonce.as_deref() != Some(nonce) {
+        return Err(IdTokenRejected::WrongNonce);
+    }
+    if c.exp + 60 <= now.unix_timestamp() {
+        return Err(IdTokenRejected::Expired);
+    }
+    Ok(c.sub)
 }
 
 fn verifying_key(jwk: &Jwk) -> Result<VerifyingKey, JwsRejected> {
@@ -163,7 +230,7 @@ fn decode_json<T: for<'de> Deserialize<'de>>(part: &str) -> Result<T, JwsRejecte
 #[cfg(test)]
 pub(crate) mod tests {
     use super::*;
-    use crate::pro::{Badge, CLIENT_ID, ISSUER};
+    use crate::pro::Badge;
     use p256::ecdsa::signature::Signer;
     use p256::ecdsa::SigningKey;
     use time::Duration;
@@ -309,6 +376,46 @@ pub(crate) mod tests {
         assert_eq!(
             verify_entitlement(&jws, &jwks, now()),
             Err(JwsRejected::UnknownKey)
+        );
+    }
+
+    #[test]
+    fn id_token_checks_issuer_audience_nonce_and_expiry() {
+        let k = key(9);
+        let jwks = jwks_for(&k, "k1");
+        let h = r#"{"alg":"ES256","kid":"k1"}"#;
+        let tok = |iss: &str, aud: serde_json::Value, nonce: &str, exp: i64| {
+            let p = serde_json::json!({"iss": iss, "sub": "s1", "aud": aud, "exp": exp, "iat": 0, "nonce": nonce});
+            sign(&k, h, &p.to_string())
+        };
+        let exp = now().unix_timestamp() + 600;
+        let ok = tok(ISSUER, CLIENT_ID.into(), "n1", exp);
+        assert_eq!(verify_id_token(&ok, &jwks, "n1", now()), Ok("s1".into()));
+        assert_eq!(
+            verify_id_token(&ok, &jwks, "n2", now()),
+            Err(IdTokenRejected::WrongNonce)
+        );
+        let list = tok(ISSUER, serde_json::json!([CLIENT_ID]), "n1", exp);
+        assert!(verify_id_token(&list, &jwks, "n1", now()).is_ok());
+        let other = tok(ISSUER, serde_json::json!([CLIENT_ID, "x"]), "n1", exp);
+        assert_eq!(
+            verify_id_token(&other, &jwks, "n1", now()),
+            Err(IdTokenRejected::WrongAudience)
+        );
+        let iss = tok("https://evil.example", CLIENT_ID.into(), "n1", exp);
+        assert_eq!(
+            verify_id_token(&iss, &jwks, "n1", now()),
+            Err(IdTokenRejected::WrongIssuer)
+        );
+        let old = tok(ISSUER, CLIENT_ID.into(), "n1", now().unix_timestamp() - 120);
+        assert_eq!(
+            verify_id_token(&old, &jwks, "n1", now()),
+            Err(IdTokenRejected::Expired)
+        );
+        let none = sign(&k, r#"{"alg":"none","kid":"k1"}"#, "{}");
+        assert_eq!(
+            verify_id_token(&none, &jwks, "n1", now()),
+            Err(IdTokenRejected::Jws(JwsRejected::WrongAlgorithm))
         );
     }
 

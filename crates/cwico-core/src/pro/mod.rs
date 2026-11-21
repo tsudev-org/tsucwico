@@ -16,6 +16,7 @@ use time::{Duration, OffsetDateTime};
 
 pub mod jws;
 pub mod renewal;
+pub mod signin;
 
 /// OIDC `client_id` of this product at tsudev.com - also the `app` parameter
 /// of the Pro and donation pages (PRODUCT_POLICY 7.4).

@@ -7,8 +7,9 @@
  * the rollback artefacts for their last run were written.
  */
 
-import type { AboutInfo, Locale } from "../types";
+import type { AboutInfo, AccountView, Locale } from "../types";
 import { formatDate, translator } from "../i18n";
+import { AccountPanel } from "./AccountPanel";
 import { Brand } from "./Brand";
 import { Button, Notice, Panel } from "./primitives";
 import { openBackupDir, openDonatePage, openProductSite } from "../api";
@@ -16,9 +17,13 @@ import { openBackupDir, openDonatePage, openProductSite } from "../api";
 export function AboutView({
   info,
   locale,
+  account,
+  onAccountChange,
 }: {
   info: AboutInfo | null;
   locale: Locale;
+  account: AccountView;
+  onAccountChange: (next: AccountView) => void;
 }) {
   const t = translator(locale);
   if (!info) return null;
@@ -57,6 +62,8 @@ export function AboutView({
           {t("about.donateNote")}
         </p>
       </Panel>
+
+      <AccountPanel account={account} locale={locale} onChange={onAccountChange} />
 
       <Panel>
         <h3 className="mb-1 text-sm font-semibold">{t("about.localData")}</h3>

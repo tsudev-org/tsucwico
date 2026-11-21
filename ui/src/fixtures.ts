@@ -15,6 +15,8 @@
 import pkg from "../package.json";
 import type {
   AboutInfo,
+  AccountView,
+  RenewalNotice,
   PlanOptions,
   PlannedItem,
   ProgressEvent,
@@ -50,6 +52,33 @@ const isDemo = (): boolean => previewModes().includes("demo");
 /** `?preview=pro-notice` shows the multi-device notice as if signed in on 2 devices. */
 export async function proNotice(): Promise<number | null> {
   return previewModes().includes("pro-notice") ? 2 : null;
+}
+
+const DAY = 86_400;
+const nowSec = () => Math.floor(Date.now() / 1000);
+
+export function signedOut(): AccountView {
+  return { signedIn: false, proActive: false, proUntil: 0, badge: "none", devices30d: 0 };
+}
+
+/**
+ * `?preview=signed-in` (free, donor), `?preview=pro` (Pro, 120 days left),
+ * `?preview=pro-renew` (Pro, 5 days left), `?preview=pro-expired`.
+ */
+export async function account(): Promise<AccountView> {
+  const m = previewModes();
+  if (m.includes("pro")) return { signedIn: true, proActive: true, proUntil: nowSec() + 120 * DAY, badge: "both", devices30d: 2 };
+  if (m.includes("pro-renew")) return { signedIn: true, proActive: true, proUntil: nowSec() + 5 * DAY, badge: "pro", devices30d: 1 };
+  if (m.includes("pro-expired")) return { signedIn: true, proActive: false, proUntil: nowSec() - 2 * DAY, badge: "none", devices30d: 1 };
+  if (m.includes("signed-in")) return { signedIn: true, proActive: false, proUntil: 0, badge: "donor", devices30d: 1 };
+  return signedOut();
+}
+
+export async function proRenewalNotice(): Promise<RenewalNotice | null> {
+  const m = previewModes();
+  if (m.includes("pro-renew")) return { kind: "renew", daysLeft: 5, proUntil: nowSec() + 5 * DAY };
+  if (m.includes("pro-expired")) return { kind: "expired", proUntil: nowSec() - 2 * DAY, cloudDeleteAt: null };
+  return null;
 }
 
 /**

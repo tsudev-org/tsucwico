@@ -29,12 +29,18 @@ serde_json = { workspace = true }
 time       = { workspace = true }
 tracing    = { workspace = true }
 tracing-subscriber = { workspace = true }
+# Optional TsuDEV sign-in (ADR-0002 P2): same reqwest/rustls(ring) stack the
+# updater already ships, so no second TLS library lands in the binary.
+reqwest    = { version = "0.13", default-features = false, features = ["json", "form", "rustls-no-provider", "system-proxy"] }
+rustls     = { version = "0.23", default-features = false, features = ["ring"] }
 
 [target.'cfg(windows)'.dependencies]
 cwico-win = { workspace = true }
 # There is nothing to update on a fixture build, and the plugin pulls in a
 # download and process-spawning stack a Linux dev build has no use for.
 tauri-plugin-updater = "2"
+# Refresh token in Windows Credential Manager (DPAPI), never a plain file.
+keyring = { version = "3", features = ["windows-native"] }
 
 # See cwico-cli: a non-Windows build always uses the fixture backend.
 [target.'cfg(not(windows))'.dependencies]
