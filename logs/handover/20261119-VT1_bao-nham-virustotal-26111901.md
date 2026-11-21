@@ -47,3 +47,5 @@ Bản NSIS 26.11.1002 chưa từng lên VirusTotal nên không so được.
 - 20/11/2026 - phiên tsucwico-e7: đọc 00:39 UTC - lượt mới nhất vẫn 19/11 14:04:41, NSIS **3/71** cùng 3 engine
   (CrowdStrike, Trapmine, APEX). Gửi `POST /analyse` (200) lúc 00:40 UTC; đọc lại 00:51 lượt mới chưa chạy xong.
   Release vẫn nháp. Phiên sau đọc lại.
+- 21/11/2026 - phiên tsucwico-ea: đọc 16:04 UTC - lượt mới nhất vẫn 20/11 00:39, NSIS **3/74** cùng 3 engine
+  (CrowdStrike, APEX, Trapmine). Gửi `POST /analyse` (200) lúc 16:04 UTC. Release vẫn nháp.
