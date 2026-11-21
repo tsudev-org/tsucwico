@@ -69,7 +69,7 @@ const lop = [
 ] as const;
 ---
 <Trang moTa="cwico: rà quét sâu và gỡ phần mềm thừa trên Windows - chặn cứng thành phần hệ thống, tạo điểm khôi phục và sao lưu Registry trước mỗi lần chạy." duongDan="/">
-  <section class="mo-dau">
+  <section class="mo-dau motif-luoi-quet">
     <div class="khung mo-dau__luoi">
       <div>
         <span class="nhan">Phiên bản {ban.phienBan} · {ban.ngay}</span>
@@ -132,7 +132,7 @@ const lop = [
     <div class="khung">
       <h2 id="sau-noi">Sáu nơi Windows giấu phần mềm</h2>
       <p class="muc__dan">Trình "Ứng dụng đã cài" của Windows chỉ cho bạn thấy một phần. Tsu Cwico đọc trực tiếp bằng API Win32 và WinRT, không qua PowerShell.</p>
-      <ul class="the-luoi">
+      <ul class="the-luoi bento">
         {sauNoi.map((x) => <li class="the"><h3>{x.t}</h3><p>{x.d}</p></li>)}
       </ul>
     </div>

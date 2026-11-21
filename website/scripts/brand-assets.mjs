@@ -197,8 +197,12 @@ async function main() {
   const H = 630;
   const L = 300;
   const back = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
-    <defs><radialGradient id="g" cx="0.28" cy="0.5" r="0.75"><stop offset="0%" stop-color="${CFG.ogGlow}"/><stop offset="100%" stop-color="#0a0a0a"/></radialGradient></defs>
+    <defs><radialGradient id="g" cx="0.28" cy="0.5" r="0.75"><stop offset="0%" stop-color="${CFG.ogGlow}"/><stop offset="100%" stop-color="#0a0a0a"/></radialGradient>
+      <pattern id="quet" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="1" fill="${CFG.ogAccent}" fill-opacity="0.16"/></pattern>
+      <linearGradient id="mo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.3" stop-color="#fff"/><stop offset="0.75" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <mask id="m"><rect width="${W}" height="${H}" fill="url(#mo)"/></mask></defs>
     <rect width="${W}" height="${H}" fill="url(#g)"/>
+    ${CFG.motif === 'luoi-quet' ? `<rect width="${W}" height="${H}" fill="url(#quet)" mask="url(#m)"/>` : ''}
     <text x="500" y="270" font-family="DejaVu Sans, Verdana, sans-serif" font-size="68" font-weight="700" fill="#ededed">${esc(CFG.name)}</text>
     ${CFG.ogLines.map((l, i) => `<text x="500" y="${340 + i * 44}" font-family="DejaVu Sans, Verdana, sans-serif" font-size="30" fill="#b4b4b4">${esc(l)}</text>`).join('')}
     <text x="500" y="${360 + CFG.ogLines.length * 44 + 20}" font-family="DejaVu Sans, Verdana, sans-serif" font-size="26" fill="${CFG.ogAccent}">${esc(CFG.domain)}</text>

@@ -82,8 +82,25 @@ pre {
 
 
 /* Trang chủ: hero canh giữa */
-.mo-dau { padding: 5rem 0 3rem; text-align: center; }
+/* Bố cục chữ ký `trinh-dien` (DESIGN_SYSTEM 1.2.2): hero hai cột - chữ trái, ảnh chụp app lớn tràn ra mép phải. */
+.mo-dau { padding: 5rem 0 3rem; text-align: center; overflow-x: clip; }
 .mo-dau__luoi { display: grid; gap: 3rem; justify-items: center; }
+/* Hoạ tiết `luoi-quet` (1.2.4): vạch quét ngang tĩnh, vẽ bằng accent/glow, phủ 1/8 diện tích (12,5% ≤ 15%), mờ dần hai bên. */
+.motif-luoi-quet { position: relative; isolation: isolate; }
+.motif-luoi-quet::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--accent) 18%, transparent) 0 1px, transparent 1px 8px),
+    radial-gradient(ellipse 60% 70% at 70% 45%, var(--glow), transparent 70%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 70%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 70%, transparent);
+}
+/* Khối tính năng dạng bento: 3 cột, ô 1, 4, 5 rộng gấp đôi - 3 hàng kín. */
+@media (min-width: 56rem) {
+  .bento { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .bento > :nth-child(1), .bento > :nth-child(4), .bento > :nth-child(5) { grid-column: span 2; }
+  .bento > :nth-child(1) h3 { font-size: 1.3rem; }
+}
 .mo-dau h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.12; margin: 0 auto 1.1rem; letter-spacing: -0.025em; max-width: 46rem; }
 .chu-tim {
   background: linear-gradient(90deg, var(--primary), var(--accent));
@@ -303,3 +320,17 @@ picture { display: block; }
 /* Hiện dần khi cuộn: /js/hien-dan.js chỉ thêm .hien-cho khi có JS và KHÔNG giảm chuyển động */
 .hien-cho { opacity: 0; transform: translateY(14px); }
 .hien-ra { opacity: 1; transform: none; transition: opacity 0.5s ease, transform 0.5s ease; }
+
+/* trinh-dien ở màn rộng - đặt cuối tệp để thắng các luật nền của .mo-dau / .khung-may. */
+@media (min-width: 64rem) {
+  .mo-dau { text-align: left; padding: 5.5rem 0 4rem; }
+  .mo-dau__luoi { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; justify-items: stretch; }
+  .mo-dau h1, .mo-dau__phu { margin-left: 0; }
+  .mo-dau__nut { justify-content: flex-start; }
+  .mo-dau h1 { font-size: clamp(2.2rem, 3.6vw, 3.1rem); }
+  .mo-dau .khung-may {
+    width: auto; max-width: none;
+    margin-right: calc(-1 * (max(0px, (100vw - var(--khung)) / 2) + 1.25rem));
+    border-right: 0; border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+}
