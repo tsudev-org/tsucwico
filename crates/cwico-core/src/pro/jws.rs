@@ -388,33 +388,37 @@ pub(crate) mod tests {
             let p = serde_json::json!({"iss": iss, "sub": "s1", "aud": aud, "exp": exp, "iat": 0, "nonce": nonce});
             sign(&k, h, &p.to_string())
         };
+        // Fresh random nonces, as the app makes them (SignInRequest::new).
+        let n1 = crate::pro::new_installation_id().unwrap();
+        let n2 = crate::pro::new_installation_id().unwrap();
+        let (n1, n2) = (n1.as_str(), n2.as_str());
         let exp = now().unix_timestamp() + 600;
-        let ok = tok(ISSUER, CLIENT_ID.into(), "n1", exp);
-        assert_eq!(verify_id_token(&ok, &jwks, "n1", now()), Ok("s1".into()));
+        let ok = tok(ISSUER, CLIENT_ID.into(), n1, exp);
+        assert_eq!(verify_id_token(&ok, &jwks, n1, now()), Ok("s1".into()));
         assert_eq!(
-            verify_id_token(&ok, &jwks, "n2", now()),
+            verify_id_token(&ok, &jwks, n2, now()),
             Err(IdTokenRejected::WrongNonce)
         );
-        let list = tok(ISSUER, serde_json::json!([CLIENT_ID]), "n1", exp);
-        assert!(verify_id_token(&list, &jwks, "n1", now()).is_ok());
-        let other = tok(ISSUER, serde_json::json!([CLIENT_ID, "x"]), "n1", exp);
+        let list = tok(ISSUER, serde_json::json!([CLIENT_ID]), n1, exp);
+        assert!(verify_id_token(&list, &jwks, n1, now()).is_ok());
+        let other = tok(ISSUER, serde_json::json!([CLIENT_ID, "x"]), n1, exp);
         assert_eq!(
-            verify_id_token(&other, &jwks, "n1", now()),
+            verify_id_token(&other, &jwks, n1, now()),
             Err(IdTokenRejected::WrongAudience)
         );
-        let iss = tok("https://evil.example", CLIENT_ID.into(), "n1", exp);
+        let iss = tok("https://evil.example", CLIENT_ID.into(), n1, exp);
         assert_eq!(
-            verify_id_token(&iss, &jwks, "n1", now()),
+            verify_id_token(&iss, &jwks, n1, now()),
             Err(IdTokenRejected::WrongIssuer)
         );
-        let old = tok(ISSUER, CLIENT_ID.into(), "n1", now().unix_timestamp() - 120);
+        let old = tok(ISSUER, CLIENT_ID.into(), n1, now().unix_timestamp() - 120);
         assert_eq!(
-            verify_id_token(&old, &jwks, "n1", now()),
+            verify_id_token(&old, &jwks, n1, now()),
             Err(IdTokenRejected::Expired)
         );
         let none = sign(&k, r#"{"alg":"none","kid":"k1"}"#, "{}");
         assert_eq!(
-            verify_id_token(&none, &jwks, "n1", now()),
+            verify_id_token(&none, &jwks, n1, now()),
             Err(IdTokenRejected::Jws(JwsRejected::WrongAlgorithm))
         );
     }
