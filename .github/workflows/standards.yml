@@ -35,7 +35,7 @@ jobs:
                    app/src-tauri/installer/nsis-header.bmp app/src-tauri/installer/nsis-sidebar.bmp \
                    app/src-tauri/installer/wix-banner.bmp app/src-tauri/installer/wix-dialog.bmp \
                    ui/public/brand/logo-cwico-256.png ui/public/brand/logo-tsudev-96.png \
-         ui/public/brand/favicon.ico ui/public/brand/favicon-32.png; do
+                   ui/public/brand/favicon.ico ui/public/brand/favicon-32.png; do
             test -s "$f" || { echo "Thiếu tài sản bắt buộc: $f (BRAND_ASSETS.md mục 12)"; exit 1; }
           done
           python3 - <<'PY'
