@@ -2,9 +2,10 @@
 //!
 //! Pure logic only - nothing here touches the network or the disk, so every
 //! rule of PRODUCT_POLICY.md section 7 is unit-tested on any host
-//! (ADR-0002). Fetching and signature-checking the entitlement JWS arrives
-//! with the optional sign-in (phase P2); until then the app has no account
-//! and [`EntitlementStatus::free`] is the only state it can be in.
+//! (ADR-0002). [`jws`] checks the ES256 signature of the entitlement token,
+//! [`renewal`] decides the renewal reminder and expiry notice of 7.6. The
+//! network and the credential store live in the app (sign-in is optional:
+//! without an account [`EntitlementStatus::free`] is the only state).
 //!
 //! What the free build guarantees (N2): no user data leaves the machine. The
 //! only outbound request is the update check, which sends nothing about the
@@ -13,15 +14,19 @@
 use serde::{Deserialize, Serialize};
 use time::{Duration, OffsetDateTime};
 
+pub mod jws;
+pub mod renewal;
+pub mod signin;
+
 /// OIDC `client_id` of this product at tsudev.com - also the `app` parameter
 /// of the Pro and donation pages (PRODUCT_POLICY 7.4).
 pub const CLIENT_ID: &str = "tsucwico";
 
-/// Issuer every entitlement JWS must carry (PRODUCT_POLICY 7.4, v3.9.1).
+/// Issuer every entitlement JWS must carry (PRODUCT_POLICY 7.4).
 pub const ISSUER: &str = "https://tsudev.com/oidc";
 
-/// Pro plans page for builds outside an app store. Not linked from the UI
-/// until the page exists (tsudev phase B3) - a button to a 404 sells nothing.
+/// Pro plans page for builds outside an app store (PRODUCT_POLICY 7.4) -
+/// also the target of the "Renew" button (7.6).
 pub const PRO_URL: &str = "https://tsudev.com/pro?app=tsucwico";
 
 /// Longest lifetime an entitlement token may claim (`exp` <= `iat` + 7 days).
@@ -43,6 +48,7 @@ pub struct EntitlementClaims {
     pub exp: i64,
     /// Unix seconds; 0 means the account never had Pro.
     pub pro_until: i64,
+    #[serde(default)]
     pub pro_source: Option<String>,
     pub donor: bool,
     /// `pro` | `donor` | `both` | `none`, already filtered by `badge_display`.

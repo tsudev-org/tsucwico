@@ -49,6 +49,12 @@ walkdir     = "2"
 regex       = "1"
 # OS CSPRNG for the 128-bit installation id (AUTH_AND_ACCOUNT 14.3).
 getrandom   = "0.3"
+# ES256 check of the TsuDEV entitlement JWS (PRODUCT_POLICY 7.4) - RustCrypto,
+# pure Rust, verify only.
+p256        = { version = "0.13", default-features = false, features = ["ecdsa", "std"] }
+base64      = "0.22"
+sha2        = "0.10"
+url         = "2"
 
 [profile.release]
 opt-level     = "z"

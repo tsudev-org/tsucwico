@@ -12,6 +12,8 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type {
   AboutInfo,
+  AccountView,
+  RenewalNotice,
   ApiError,
   PlanOptions,
   ProgressEvent,
@@ -133,6 +135,44 @@ export const PRO_NOTICE_KEY = "tsu.pro_notice.last_shown";
 export async function proNotice(lastShown: string | null): Promise<number | null> {
   if (!isDesktop()) return fixtures.proNotice();
   return call<number | null>("pro_notice", { lastShown });
+}
+
+/**
+ * Renewal reminder or expiry notice due now (PRODUCT_POLICY 7.6), decided in
+ * `cwico_core::pro::renewal`. `lastActiveMs` = when the window last went to
+ * the background, null on a cold start.
+ */
+export async function proRenewalNotice(lastActiveMs: number | null): Promise<RenewalNotice | null> {
+  if (!isDesktop()) return fixtures.proRenewalNotice();
+  return call<RenewalNotice | null>("pro_renewal_notice", { lastActiveMs });
+}
+
+/** The account as cached: offline, instant. */
+export async function accountStatus(): Promise<AccountView> {
+  if (!isDesktop()) return fixtures.account();
+  return call<AccountView>("account_status");
+}
+
+/** Re-reads the entitlement when signed in; signed out = no network at all. */
+export async function accountRefresh(force = false): Promise<AccountView> {
+  if (!isDesktop()) return fixtures.account();
+  return call<AccountView>("account_refresh", { force });
+}
+
+/** Opens the system browser on tsudev.com; resolves once the user is back. */
+export async function accountSignIn(): Promise<AccountView> {
+  if (!isDesktop()) return fixtures.account();
+  return call<AccountView>("account_sign_in");
+}
+
+export async function accountSignInCancel(): Promise<void> {
+  if (!isDesktop()) return;
+  return call<void>("account_sign_in_cancel");
+}
+
+export async function accountSignOut(): Promise<AccountView> {
+  if (!isDesktop()) return fixtures.signedOut();
+  return call<AccountView>("account_sign_out");
 }
 
 export async function openProPage(): Promise<void> {

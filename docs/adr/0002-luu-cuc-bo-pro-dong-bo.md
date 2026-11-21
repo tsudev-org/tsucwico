@@ -51,7 +51,7 @@ miễn phí, không có đường đồng bộ miễn phí nào phải tắt. Đ
 | Phase | Việc | Chờ |
 | --- | --- | --- |
 | **P1** ✅ | Kiểm kê, ADR này, chuẩn v3.9.1, `cwico_core::pro` (claims, trạng thái, nhắc 30 ngày, mã cài đặt), hộp thoại + i18n vi/en, khối "Dữ liệu chỉ ở máy này" ở Giới thiệu, `DONATE_URL` có `?app=tsucwico` | - |
-| **P2** | Đăng nhập loopback PKCE + DPAPI, kiểm JWS ES256 (RustCrypto `p256`), lưu mã cài đặt, nút Đăng nhập/Đăng xuất + huy hiệu vẽ từ `assets/badges/`, màn Pro (điều khoản PRODUCT_POLICY 7.5 trước nút), phiếu rà soát bảo mật + `docs/THREAT_MODEL.md` (giả mạo quyền lợi, token bị đánh cắp, cổng loopback bị chiếm), đo proxy 0 byte | tsudev đăng ký client `tsucwico` (redirect loopback) + PRO-B gộp (tsudev#336) + B3 (`/pro`) |
+| **P2** ✅ 21/11 (#102; còn đo đầu cuối trên Windows) | Đăng nhập loopback PKCE + DPAPI, kiểm JWS ES256 (RustCrypto `p256`), lưu mã cài đặt, nút Đăng nhập/Đăng xuất + huy hiệu vẽ từ `assets/badges/`, màn Pro (điều khoản PRODUCT_POLICY 7.5 trước nút), phiếu rà soát bảo mật + `docs/THREAT_MODEL.md` (giả mạo quyền lợi, token bị đánh cắp, cổng loopback bị chiếm), đo proxy 0 byte | tsudev đăng ký client `tsucwico` (redirect loopback) + PRO-B gộp (tsudev#336) + B3 (`/pro`) |
 | **P3** | Đồng bộ cài đặt qua crate `tsusync`; 402 ⇒ màn Pro, không thử lại; "Chưa đồng bộ" khi 429/5xx; đo < 100 ms | PRO-D3 (crate Rust `tsusync`) |
 
 ## 4. Hệ quả

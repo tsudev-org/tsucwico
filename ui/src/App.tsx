@@ -10,7 +10,7 @@
  * so the front end cannot invent a shortcut around the safety gate.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as api from "./api";
 import { CwicoError } from "./api";
 import { formatDateTime, translator } from "./i18n";
@@ -37,12 +37,14 @@ import type {
   Tweak,
   TweakOutcome,
 } from "./types";
+import type { AccountView, RenewalNotice as RenewalNoticeData } from "./types";
 import { DEFAULT_PLAN_OPTIONS, DEFAULT_SCAN_OPTIONS } from "./types";
 import { Brand } from "./components/Brand";
 import { AboutView } from "./components/AboutView";
 import { ConfirmCaution } from "./components/ConfirmCaution";
 import { PlanDialog } from "./components/PlanDialog";
 import { ProNotice } from "./components/ProNotice";
+import { RenewalNotice } from "./components/RenewalNotice";
 import { RunPanel, eventToLine, type LogLine } from "./components/RunPanel";
 import { SoftwareTable } from "./components/SoftwareTable";
 import { TweaksView } from "./components/TweaksView";
@@ -101,6 +103,16 @@ export default function App() {
   const [tweakOutcomes, setTweakOutcomes] = useState<TweakOutcome[]>([]);
   // Device count for the "several devices, no Pro" notice, or null.
   const [proDevices, setProDevices] = useState<number | null>(null);
+  const [account, setAccount] = useState<AccountView>({
+    signedIn: false,
+    proActive: false,
+    proUntil: 0,
+    badge: "none",
+    devices30d: 0,
+  });
+  const [renewal, setRenewal] = useState<RenewalNoticeData | null>(null);
+  const busyRef = useRef(false);
+  busyRef.current = running;
 
   const t = translator(locale);
 
@@ -175,8 +187,10 @@ export default function App() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  // Asked once at start-up only, so the notice never lands mid-task
-  // (PRODUCT_POLICY 7.3). Any failure simply means "no notice".
+  // Start-up: the cached account, then a refresh (signed out = no network),
+  // then at most one notice. The renewal reminder / expiry notice of
+  // PRODUCT_POLICY 7.6 wins over the "several devices" one of 7.3; both are
+  // decided in `cwico_core::pro`. Any failure simply means "no notice".
   useEffect(() => {
     let mark: string | null = null;
     try {
@@ -184,18 +198,52 @@ export default function App() {
     } catch {
       /* storage unavailable: treat as never shown */
     }
-    api
-      .proNotice(mark)
-      .then((devices) => {
-        if (devices === null) return;
-        setProDevices(devices);
-        try {
-          localStorage.setItem(api.PRO_NOTICE_KEY, new Date().toISOString());
-        } catch {
-          /* the notice may return next start; harmless */
-        }
-      })
-      .catch(() => setProDevices(null));
+    void (async () => {
+      const cached = await api.accountStatus().catch(() => null);
+      if (cached) setAccount(cached);
+      const fresh = await api.accountRefresh().catch(() => api.accountStatus().catch(() => null));
+      if (fresh) setAccount(fresh);
+      const due = await api.proRenewalNotice(null).catch(() => null);
+      if (due) {
+        setRenewal(due);
+        return;
+      }
+      const devices = await api.proNotice(mark).catch(() => null);
+      if (devices === null) return;
+      setProDevices(devices);
+      try {
+        localStorage.setItem(api.PRO_NOTICE_KEY, new Date().toISOString());
+      } catch {
+        /* the notice may return next start; harmless */
+      }
+    })();
+  }, []);
+
+  // Coming back after >= 30 minutes in the background is a new "open" for
+  // 7.6; the 30-minute rule itself lives in Rust. Never mid-task: skipped
+  // while a run is going or the user is typing.
+  useEffect(() => {
+    let hiddenAt: number | null = null;
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        hiddenAt = Date.now();
+        return;
+      }
+      if (hiddenAt === null) return;
+      const since = hiddenAt;
+      hiddenAt = null;
+      const typing = document.activeElement?.matches("input, textarea, select") ?? false;
+      if (busyRef.current || typing) return;
+      void api
+        .accountRefresh()
+        .then(setAccount)
+        .catch(() => undefined)
+        .then(() => api.proRenewalNotice(since))
+        .then((due) => due && setRenewal(due))
+        .catch(() => undefined);
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
   useEffect(() => {
@@ -674,7 +722,9 @@ export default function App() {
           </Panel>
         )}
 
-        {tab === "about" && <AboutView info={about} locale={locale} />}
+        {tab === "about" && (
+          <AboutView info={about} locale={locale} account={account} onAccountChange={setAccount} />
+        )}
       </main>
 
       {/* ---------------------------------------------------- action bar */}
@@ -746,6 +796,16 @@ export default function App() {
         lines={lines}
         report={runReport}
         onClose={() => setRunOpen(false)}
+      />
+
+      <RenewalNotice
+        notice={renewal}
+        locale={locale}
+        onRenew={() => {
+          setRenewal(null);
+          void api.openProPage();
+        }}
+        onClose={() => setRenewal(null)}
       />
 
       <ProNotice
