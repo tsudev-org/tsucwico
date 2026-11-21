@@ -49,7 +49,7 @@
    "TsuDEV" → tsudev.com (chân trang app, dòng "Một sản phẩm của" ở Giới thiệu). Lệnh Tauri mới `open_maker_site`
    (URL cố định); `PRODUCT_URL` = `https://cwico.tsudev.com`, `MAKER_URL` = `https://tsudev.com`.
 3. Tệp xuất: nhật ký giao dịch JSON, `.reg` ⇒ **không áp dụng**. Trang "Đã đăng nhập" của luồng đăng nhập (#102) nhúng
-   favicon data URI - làm sau khi #102 gộp.
+   favicon data URI (`include_bytes!` cùng tệp `ui/public/brand/favicon-32.png`, CSP `img-src data:`).
 4. Ảnh app sinh từ `brand-assets.mjs` (thêm đích `ui/public/brand/`), CI `--check` phủ (33 tệp khớp).
 5. Đã xoá `ui/public/brand/tsudev-logo*.png`, `apple-touch-icon.png`; thêm `assets/brand/README.md`; CHANGELOG.
 6. Ảnh chụp Sáng/Tối (header + Giới thiệu) bằng Playwright trên bản build `?preview=demo`; app thật trên Windows: phiên

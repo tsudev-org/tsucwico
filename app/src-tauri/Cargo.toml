@@ -32,6 +32,7 @@ tracing-subscriber = { workspace = true }
 # Optional TsuDEV sign-in (ADR-0002 P2): same reqwest/rustls(ring) stack the
 # updater already ships, so no second TLS library lands in the binary.
 reqwest    = { version = "0.13", default-features = false, features = ["json", "form", "rustls-no-provider", "system-proxy"] }
+base64     = { workspace = true }
 rustls     = { version = "0.23", default-features = false, features = ["ring"] }
 
 [target.'cfg(windows)'.dependencies]
