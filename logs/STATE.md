@@ -1,10 +1,10 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** (1) **REL-TSU-1** - 👤 hẹn SAU 21/11/2026 (Windows Sandbox cần restart): có `tools/sandbox/ketqua/`
-> thì làm phiếu `20261120-SB1` mục 3.2, chưa có thì chỉ đọc lại VirusTotal (VT1 mục 4). (2) Việc cần **Windows thật**:
-> PRO1 P2 bước 7 (đăng nhập đầu cuối + đo proxy 0 byte, `docs/THREAT_MODEL.md` mục 3-4), chụp lại ảnh `scan-*-vi` +
-> `tweaks-dark-vi` + quay lại video demo (ảnh cũ còn logo tsudev - phiếu STD50) rồi ĐÓNG STD50. (3) **PRO1 P3** chờ
-> crate `tsusync` (PRO-D3). Còn **P2 MSIX** - chờ 👤 Partner Center.
+> **Phiên kế tiếp:** (1) **REL-TSU-1** - Sandbox ĐÃ bật nhưng agent mở `.wsb` từ WSL không chạy được (22/11, phiếu
+> `20261120-SB1` mục 5) ⇒ 👤 tự bấm đúp `kiem-thu-msi.wsb` / `kiem-thu-nsis.wsb`; có `ketqua/` thì làm mục 3.2-3.3
+> (VirusTotal vẫn 3/74 ⇒ đề xuất Publish theo ngoại lệ, chờ 👤 đồng ý). (2) Việc cần **Windows thật**: PRO1 P2 bước 7,
+> chụp lại `scan-*-vi` + `tweaks-dark-vi` + video demo rồi ĐÓNG STD50. (3) **PRO1 P3** chờ crate `tsusync` (PRO-D3);
+> `tsudev.com/oidc/*` đang 503 (22/11) - phía tsudev. Còn **P2 MSIX** - chờ 👤 Partner Center.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
@@ -33,7 +33,7 @@
 - [x] **BP-1** ✅ 17/11/2026 (phiên tsudev-27): hồ sơ [16838](https://www.bestpractices.dev/projects/16838) passing 100% (`docs/best-practices.json`, giấy phép MIT; `dynamic_analysis` Unmet trung thực). Kèm #75 (ghim SHA 20 action, quyền token, SECURITY.md khớp mã: có updater + chữ ký minisign), CodeQL default setup, #76 (cảnh báo CodeQL high ở check-dist). Còn: P1.5 good first issue (phiếu 20261113-03).
 - [x] **LOCAL-DIR** ✅ 16/11/2026 (phiên tsudev-27): thư mục cục bộ đổi `~/projects/tsudev-cwico` -> `~/projects/tsucwico`.
 - [x] **TSUDEV-276** ✅ tsudev#276 đã MERGE (chủ dự án duyệt 16/11/2026).
-- [ ] **WINGET-2** Manifest 26.11.1002 đã nộp: [microsoft/winget-pkgs#476024](https://github.com/microsoft/winget-pkgs/pull/476024) (10/11/2026, fork `tsudev-tsudev/winget-pkgs`). Theo dõi kiểm định tự động và CLA; gộp xong thì `winget install tsudev.cwico` ra bản mới. 10/11 phiên 06: 01-07, 09, 10 + CLA xanh; bước 08 (cài thử) NEUTRAL, nhãn **`Validation-Executable-Error`** (bộ kiểm không chạy được exe sau cài). Đã đối chiếu: SHA-256, ProductCode `{09A40823-...}`, ProductVersion khớp MSI; `cwico.exe` vào INSTALLDIR; app không đổi gì ở phần khởi động so với 26.8.19 (bản đó qua bước 08). Nhãn chỉ quản trị viên winget gỡ được - chủ dự án bình luận giải thích trên PR (GUI Tauri cần WebView2, không cần tham số), rồi chờ.
+- [x] **WINGET-2** ✅ [microsoft/winget-pkgs#476024](https://github.com/microsoft/winget-pkgs/pull/476024) (manifest 26.11.1002) đã MERGE 21/11/2026 06:04 UTC (`Moderator-Approved`, `Publish-Pipeline-Succeeded`). Manifest 26.11.1901 nộp sau khi Publish (REL-TSU-1).
 - [ ] **QA-WIN-1** Chạy thử phần GHI trên Windows thật, có quyền Admin: `cwico plan --safe-only` (không đổi gì), rồi gỡ một mục An toàn trên máy ảo có snapshot - kiểm điểm khôi phục, `.reg`, nhật ký giao dịch. Chưa phiên bản nào làm việc này. Phiên 06 (10/11/2026) đã làm phần CHỈ ĐỌC trên Windows 11 25H2 của chủ dự án, không Admin, bằng CLI tải từ bản phát hành 26.11.1002 (SHA-256 khớp): `info`, `plan --safe-only` -> 30 mục / 63 bước trong 2,8 giây, không bị từ chối mục nào. Phát hiện `plan` giấu bước điểm khôi phục + sao lưu registry - sửa ở PR #55. Còn lại: phần GHI trên máy ảo có Admin.
 - [x] **QU-STD-1** XONG 10/11/2026 (phiếu `20261110-05`): chế độ Warm BỎ theo quyết định chủ dự án (chỉ Sáng/Tối/Hệ thống); nút chính, thanh tiến trình, ô chọn, hàng đang chọn dùng token `primary`. Màu chữ "tsu/dev" của wordmark vẫn theo QU-STD-BRAND/TS-8.
 - [ ] **QU-STD-BRAND (phần còn lại)** Màu chữ "dev" ở `ui/src/components/Brand.tsx` (cam, 4,18:1 - hai lỗi axe duy nhất còn lại) lệch website (xanh) - chờ TS-8 ở `tsudev-standards`, chưa tự đổi. Ảnh đại diện tổ chức GitHub là việc cấp tổ chức `tsudev-org`.
@@ -46,6 +46,10 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 22/11/2026 - Phiên tsucwico (tiếp sau khi bị tắt): winget-pkgs#476024 đã gộp ⇒ đóng WINGET-2. Sandbox đã bật nhưng
+  tự chạy `kiem-thu-msi.wsb` từ WSL không ra kết quả (phiếu SB1 mục 5) ⇒ chờ 👤. VirusTotal NSIS vẫn 3/74.
+  `tsudev.com/oidc/auth` 503 `temporarily_unavailable`. Release vẫn nháp.
 
 - 21/11/2026 - Phiên tsucwico-ea (tiếp sau khi bị tắt): gộp #102 (PRO1 P2 + PRO2 2.1), #103 (LG1), #104 (STD50 PR 1,
   chuẩn v5.0.0), #105 (STD50 PR 2); #106 chụp lại 5 ảnh `docs/screenshots` không cần Windows; deploy website (Worker version `babc50d9`, đo production: `data-product="cwico"`, hero `luoi-quet`, og-image 200). VirusTotal NSIS đọc lại

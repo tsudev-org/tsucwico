@@ -108,4 +108,15 @@ mục 3.4 bước 1-5 xong.
 
 ## 5. Kết quả xử lý (phiên nhận điền)
 
-- (chưa)
+- 22/11/2026 (phiên tsucwico, agent): `WindowsSandbox.exe` ĐÃ có (bật 21/11), RAM trống 4,8/15,9 GB; bộ kit ngày 20/11
+  còn đúng (`kiem-thu.ps1` trùng byte bản repo, 4 bộ cài còn nguyên). Agent tự mở `kiem-thu-msi.wsb` từ WSL 2 lần:
+  lần 1 (`cmd.exe /c start`) không lên tiến trình nào; lần 2 (`Start-Process WindowsSandbox.exe <wsb>`) lên
+  `WindowsSandbox` rồi tự tắt, chỉ còn `WindowsSandboxServer`; sau 20 phút `ketqua\msi\` KHÔNG được tạo ⇒ LogonCommand
+  chưa chạy (Sandbox không khởi động xong hoặc thư mục ánh xạ lỗi). Không đọc được nhật ký Hyper-V (cần Admin).
+  ⇒ **Chưa có kết quả MSI/NSIS. Cần 👤**: bấm đúp `kiem-thu-msi.wsb` trên Windows, nhìn cửa sổ Sandbox có báo lỗi gì
+  (chụp lại nếu có), rồi làm tiếp mục 3.1 bước 3. Nếu Sandbox báo lỗi, gửi nguyên văn cho phiên kế tiếp.
+- VirusTotal NSIS đọc lại 22/11: vẫn 3/74 (lượt 21/11 16:04 UTC; CrowdStrike, APEX, Trapmine) ⇒ nếu Sandbox ĐẠT vẫn
+  cần đề xuất Publish theo ngoại lệ (mục 3.3).
+- Neon/OIDC (mục 3.5): `GET https://tsudev.com/oidc/auth?client_id=tsucwico&redirect_uri=http://127.0.0.1:51234/callback...`
+  ⇒ **503** `temporarily_unavailable` ("Dịch vụ đăng nhập tạm bận"), discovery cũng 503; `/pro` 200. Lỗi phía tsudev,
+  chưa xác minh được client `tsucwico`.
