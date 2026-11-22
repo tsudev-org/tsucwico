@@ -146,6 +146,9 @@ export function UpdateGate({
                 {t("update.notes")}
               </p>
               <div
+                tabIndex={0}
+                role="region"
+                aria-label={t("update.notes")}
                 className="selectable max-h-40 space-y-2 overflow-y-auto pr-1 text-[13px]"
                 style={{ color: "var(--text-secondary)" }}
               >

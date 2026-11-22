@@ -52,7 +52,6 @@ function Mark({
         if (event.key === "Enter" || event.key === " ") open(event);
       }}
       title={href.replace("https://", "")}
-      aria-label={label}
       className={`group inline-flex items-center ${scale.gap} rounded-lg px-1 py-0.5 no-underline transition-opacity hover:opacity-85 ${className}`}
     >
       <img
@@ -69,6 +68,8 @@ function Mark({
           {tagline}
         </span>
       )}
+      {/* Accessible name = visible text + this hint (WCAG 2.5.3 label in name; an aria-label dropped the tagline). */}
+      <span className="sr-only"> - {label}</span>
     </a>
   );
 }
@@ -78,7 +79,7 @@ export function Brand(props: BrandProps) {
     <Mark
       {...props}
       href="https://cwico.tsudev.com"
-      label="Tsu Cwico - mở cwico.tsudev.com / open cwico.tsudev.com"
+      label="mở cwico.tsudev.com / open cwico.tsudev.com"
       logo="./brand/logo-cwico-256.png"
       name="Tsu Cwico"
       onOpen={openProductSite}
@@ -91,7 +92,7 @@ export function MakerBrand(props: BrandProps) {
     <Mark
       {...props}
       href="https://tsudev.com"
-      label="TsuDEV - mở tsudev.com / open tsudev.com"
+      label="mở tsudev.com / open tsudev.com"
       logo="./brand/logo-tsudev-96.png"
       name="TsuDEV"
       onOpen={openMakerSite}

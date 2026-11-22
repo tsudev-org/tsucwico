@@ -36,8 +36,8 @@
 - [x] **WINGET-2** ✅ [microsoft/winget-pkgs#476024](https://github.com/microsoft/winget-pkgs/pull/476024) (manifest 26.11.1002) đã MERGE 21/11/2026 06:04 UTC (`Moderator-Approved`, `Publish-Pipeline-Succeeded`). Manifest 26.11.1901 nộp sau khi Publish (REL-TSU-1).
 - [ ] **QA-WIN-1** Chạy thử phần GHI trên Windows thật, có quyền Admin: `cwico plan --safe-only` (không đổi gì), rồi gỡ một mục An toàn trên máy ảo có snapshot - kiểm điểm khôi phục, `.reg`, nhật ký giao dịch. Chưa phiên bản nào làm việc này. Phiên 06 (10/11/2026) đã làm phần CHỈ ĐỌC trên Windows 11 25H2 của chủ dự án, không Admin, bằng CLI tải từ bản phát hành 26.11.1002 (SHA-256 khớp): `info`, `plan --safe-only` -> 30 mục / 63 bước trong 2,8 giây, không bị từ chối mục nào. Phát hiện `plan` giấu bước điểm khôi phục + sao lưu registry - sửa ở PR #55. Còn lại: phần GHI trên máy ảo có Admin.
 - [x] **QU-STD-1** XONG 10/11/2026 (phiếu `20261110-05`): chế độ Warm BỎ theo quyết định chủ dự án (chỉ Sáng/Tối/Hệ thống); nút chính, thanh tiến trình, ô chọn, hàng đang chọn dùng token `primary`. Màu chữ "tsu/dev" của wordmark vẫn theo QU-STD-BRAND/TS-8.
-- [ ] **QU-STD-BRAND (phần còn lại)** Màu chữ "dev" ở `ui/src/components/Brand.tsx` (cam, 4,18:1 - hai lỗi axe duy nhất còn lại) lệch website (xanh) - chờ TS-8 ở `tsudev-standards`, chưa tự đổi. Ảnh đại diện tổ chức GitHub là việc cấp tổ chức `tsudev-org`.
-- [ ] **DEP-1 (phần còn lại)** Mọi PR dependabot đã gộp/đóng (#22 thay bằng #59, đóng 10/11/2026). Chỉ còn cảnh báo bảo mật #1 `glib < 0.20` (GHSA-wrw7-89jp-8q8g): phụ thuộc gtk3 của tauri trên Linux, chưa có bản vá, không vào bản Windows - chủ dự án đóng dạng "tolerable risk" hoặc chờ tauri lên gtk4.
+- [x] **QU-STD-BRAND** ✅ 22/11/2026 (phiên tsucwico-86): wordmark "tsu/dev" cam đã bỏ ở #103/#104 (TS-8). Đo lại axe-core trên app (`?preview=demo|demo,update|empty`, Sáng/Tối, vi/en): còn 2 lỗi khác - tên truy cập logo thiếu dòng phụ đề (2.5.3) và ghi chú cập nhật cuộn được nhưng không lấy được tiêu điểm (2.1.1) ⇒ sửa ở PR a11y, đo lại 0/12. Ảnh đại diện tổ chức GitHub là việc cấp tổ chức `tsudev-org`.
+- [x] **DEP-1** ✅ cảnh báo #1 `glib < 0.20` đã đóng dạng `tolerable_risk` (đọc lại API 22/11/2026: 0 cảnh báo mở; 2-15 `fixed`).
 - [x] **CF-ZONE-1** ✅ JS Detections tắt ở vùng tsudev.com (16/11/2026, tsudev#280); đo 16/11 23:10: HTML `cwico.tsudev.com` không còn `challenge-platform` / `__CF$cv`.
 
 ## Đang thực hiện
@@ -46,6 +46,9 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 22/11/2026 - Phiên tsucwico-86: vẫn chặn ở 👤 - `ketqua/` Sandbox trống, VirusTotal NSIS 3/74 (lượt 21/11 16:04 UTC),
+  `tsudev.com/oidc/*` vẫn 503, Release nháp. Sửa 2 lỗi axe trong app (PR a11y), đóng QU-STD-BRAND + DEP-1 (mục cũ).
 
 - 22/11/2026 - Phiên tsucwico (tiếp sau khi bị tắt): winget-pkgs#476024 đã gộp ⇒ đóng WINGET-2. Sandbox đã bật nhưng
   tự chạy `kiem-thu-msi.wsb` từ WSL không ra kết quả (phiếu SB1 mục 5) ⇒ chờ 👤. VirusTotal NSIS vẫn 3/74.
