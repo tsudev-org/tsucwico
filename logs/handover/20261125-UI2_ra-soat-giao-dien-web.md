@@ -18,3 +18,12 @@
 ## Kết quả xử lý
 
 - 25/11/2026 - tsudev-3e: mở phiếu.
+- 26/11/2026 - tsucwico (SES-20261126-2316-6da2): **phần A đợt 1** (Playwright headless, bản build cục bộ qua
+  `scripts/may-chu-tinh.mjs` = cùng CSP production). Mục 0: nguyên nhân 1 KHÔNG có (màn đầu không opacity 0), nguyên nhân 3
+  KHÔNG có (`hien-dan.js` đo trước rồi mới ẩn, chỉ khối dưới màn đầu), **nguyên nhân 2 CÓ**: Be Vietnam Pro không preload,
+  không font dự phòng đo số ⇒ quay khung hình tải lạnh (chặn cache, 150 ms/4 Mbps): 1366 px tiêu đề 5 → 4 dòng, 360 px
+  đầu trang 2 → 1 hàng khi font tới; CLS trang chủ 0,087 (360) / 0,14 (1366), production 0,035. Sửa (PR UI2-font):
+  preload 400 + 600 (`latin`, `vietnamese`), `@font-face 'Be Vietnam Pro Fallback'` (số đo của tsudev.com) chèn vào
+  `--font-family` ⇒ CLS **0** ở 360/1366 × Sáng/Tối, khung vẽ đầu tiên đã đúng font. Quét 9 trang × 360/768/1366 ×
+  Sáng/Tối (54 tổ hợp): 0 lỗi (cuộn ngang, tràn, ảnh vỡ, h1, tên truy cập, console, HTTP); soi ảnh 360 bằng mắt ổn.
+  Còn: đo lại trên production sau deploy (token CF), Lighthouse/INP, phần B.
