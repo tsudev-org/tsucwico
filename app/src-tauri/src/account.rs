@@ -169,14 +169,6 @@ impl Account {
         }
     }
 
-    /// The cached status for the "several devices" notice (7.3).
-    pub async fn status(&self) -> EntitlementStatus {
-        let store = self.store.lock().await;
-        valid_claims(&store, OffsetDateTime::now_utc())
-            .map(|(_, s)| s)
-            .unwrap_or_else(EntitlementStatus::free)
-    }
-
     /// Re-fetches the entitlement when signed in and the cache is old (or
     /// `force`). Signed out ⇒ returns at once, no network.
     pub async fn refresh(&self, force: bool) -> Result<AccountView> {

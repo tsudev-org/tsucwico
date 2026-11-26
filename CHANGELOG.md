@@ -23,6 +23,14 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ### Changed
 
+- No more notices that open by themselves to ask for something
+  (tsudev-standards PRODUCT_POLICY 3.8, AUTH_AND_ACCOUNT 14.4, v8.0.0): the
+  "several devices, no Pro" notice (PRODUCT_POLICY 7.3) is gone, and its local
+  mark plus the shared sign-in reminder keys are deleted at start-up. Signing
+  in, Pro and Donate only open when you click them (Account, About). The one
+  notice kept is the Pro renewal / expiry reminder of 7.6, shown only to
+  people who bought Pro.
+
 - Tsu Cwico gets its own look, in the app and on cwico.tsudev.com: a petrol
   blue accent taken from the logo's arrow (`#0EB5CE` dark / `#087485`
   light), sharp 2-4 px corners, and Be Vietnam Pro for headings. Colours

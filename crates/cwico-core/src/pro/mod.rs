@@ -32,11 +32,15 @@ pub const PRO_URL: &str = "https://tsudev.com/pro?app=tsucwico";
 /// Longest lifetime an entitlement token may claim (`exp` <= `iat` + 7 days).
 pub const MAX_TOKEN_LIFETIME: Duration = Duration::days(7);
 
-/// The notice comes back at most this often on one device (PRODUCT_POLICY 7.3).
-pub const NOTICE_INTERVAL: Duration = Duration::days(30);
-
-/// Local storage key of the last time the notice was shown (ISO 8601, UTC).
-pub const NOTICE_LAST_SHOWN_KEY: &str = "tsu.pro_notice.last_shown";
+/// Local storage keys left by notices that no longer exist: the "several
+/// devices, no Pro" notice (PRODUCT_POLICY 7.3, removed in v2.0.0) and the
+/// sign-in reminder of tsudev_ui LG3 (AUTH_AND_ACCOUNT 14.4, v4.0.0). The UI
+/// deletes them at start-up; nothing reads them any more.
+pub const LEGACY_LOCAL_KEYS: [&str; 3] = [
+    "tsu.pro_notice.last_shown",
+    "tsu.signin_reminder.next_at",
+    "tsu.signin_reminder.dismiss_count",
+];
 
 /// Claims of the entitlement JWS, exactly as PRODUCT_POLICY 7.4 defines them.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -135,32 +139,6 @@ impl EntitlementStatus {
     }
 }
 
-/// Whether to show the "several devices, no Pro" notice now (PRODUCT_POLICY
-/// 7.3). Returns the device count to put in the text, or `None`.
-///
-/// `last_shown` is this device's own mark; a malformed or future mark counts
-/// as "never shown" so a clock change cannot silence the notice for good.
-pub fn notice_due(
-    status: &EntitlementStatus,
-    last_shown: Option<OffsetDateTime>,
-    now: OffsetDateTime,
-) -> Option<u32> {
-    if !status.signed_in || status.pro_active || status.devices_30d < 2 {
-        return None;
-    }
-    match last_shown {
-        Some(at) if at <= now && now - at < NOTICE_INTERVAL => None,
-        _ => Some(status.devices_30d),
-    }
-}
-
-/// Parses the stored `tsu.pro_notice.last_shown` value (RFC 3339).
-pub fn parse_last_shown(raw: Option<&str>) -> Option<OffsetDateTime> {
-    raw.and_then(|s| {
-        OffsetDateTime::parse(s.trim(), &time::format_description::well_known::Rfc3339).ok()
-    })
-}
-
 /// A fresh installation id: 128 random bits from the OS CSPRNG, base64url
 /// without padding - 22 characters (AUTH_AND_ACCOUNT 14.3). Never derived
 /// from hardware, and only ever sent once the user has signed in.
@@ -219,41 +197,11 @@ mod tests {
         }
     }
 
-    fn status(now: OffsetDateTime, devices: u32, pro_until: i64) -> EntitlementStatus {
-        EntitlementStatus::from_claims(&claims(now, devices, pro_until), now).unwrap()
-    }
-
-    // The five mandatory cases of PRODUCT_POLICY 7.3.
-
     #[test]
-    fn one_device_never_shows() {
-        assert_eq!(notice_due(&status(day(0), 1, 0), None, day(0)), None);
-    }
-
-    #[test]
-    fn two_devices_show() {
-        assert_eq!(notice_due(&status(day(0), 2, 0), None, day(0)), Some(2));
-    }
-
-    #[test]
-    fn shown_on_day_0_hidden_on_day_29_back_on_day_30() {
-        let shown = Some(day(0));
-        assert_eq!(notice_due(&status(day(29), 3, 0), shown, day(29)), None);
-        assert_eq!(notice_due(&status(day(30), 3, 0), shown, day(30)), Some(3));
-    }
-
-    #[test]
-    fn pro_never_shows() {
-        let until = day(31).unix_timestamp();
-        assert_eq!(notice_due(&status(day(0), 4, until), None, day(0)), None);
-    }
-
-    #[test]
-    fn offline_with_expired_cache_does_not_show_and_does_not_fail() {
+    fn offline_with_expired_cache_is_free_and_does_not_fail() {
         let cached = claims(day(0), 2, 0);
         let s = EntitlementStatus::from_cached(Some(&cached), day(8));
         assert_eq!(s, EntitlementStatus::free());
-        assert_eq!(notice_due(&s, None, day(8)), None);
     }
 
     // Claim checks.
@@ -300,17 +248,6 @@ mod tests {
             !EntitlementStatus::from_claims(&c, day(2))
                 .unwrap()
                 .pro_active
-        );
-    }
-
-    #[test]
-    fn future_or_garbage_mark_counts_as_never_shown() {
-        let s = status(day(0), 2, 0);
-        assert_eq!(notice_due(&s, Some(day(5)), day(0)), Some(2));
-        assert_eq!(parse_last_shown(Some("hôm qua")), None);
-        assert_eq!(
-            parse_last_shown(Some("2026-11-20T03:04:05Z")).map(|t| t.year()),
-            Some(2026)
         );
     }
 

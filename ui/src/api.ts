@@ -133,17 +133,17 @@ export async function openMakerSite(): Promise<void> {
 export const DONATE_URL = "https://tsudev.com/ung-ho?app=tsucwico";
 export const PRO_URL = "https://tsudev.com/pro?app=tsucwico";
 
-/** Local mark of the last "several devices, no Pro" notice (PRODUCT_POLICY 7.3). */
-export const PRO_NOTICE_KEY = "tsu.pro_notice.last_shown";
-
 /**
- * Device count to show the multi-device notice with, or null. The rule is in
- * `cwico_core::pro`; this only hands it the stored mark.
+ * Local keys of notices that no longer exist - the "several devices, no Pro"
+ * notice (PRODUCT_POLICY 7.3, removed) and the LG3 sign-in reminder
+ * (AUTH_AND_ACCOUNT 14.4). Deleted at start-up; mirrors
+ * `cwico_core::pro::LEGACY_LOCAL_KEYS`.
  */
-export async function proNotice(lastShown: string | null): Promise<number | null> {
-  if (!isDesktop()) return fixtures.proNotice();
-  return call<number | null>("pro_notice", { lastShown });
-}
+export const LEGACY_LOCAL_KEYS = [
+  "tsu.pro_notice.last_shown",
+  "tsu.signin_reminder.next_at",
+  "tsu.signin_reminder.dismiss_count",
+] as const;
 
 /**
  * Renewal reminder or expiry notice due now (PRODUCT_POLICY 7.6), decided in

@@ -37,9 +37,11 @@ miễn phí, không có đường đồng bộ miễn phí nào phải tắt. Đ
    miễn phí, không báo lỗi. Gate Pro thật nằm ở máy chủ TsuDEV Sync (`402 pro_required`); gate trong app chỉ ẩn/hiện.
 5. **Mã cài đặt** 128 bit (`cwico_core::pro::new_installation_id`) sinh và lưu ở thư mục dữ liệu app lần đầu chạy
    bản có đăng nhập; chỉ gửi khi đã đăng nhập.
-6. **Thông báo nhiều thiết bị**: quy tắc ở `cwico_core::pro::notice_due` (5 ca test bắt buộc + ca phụ), hộp thoại
-   `ui/src/components/ProNotice.tsx` nguyên văn PRODUCT_POLICY 7.3; chỉ hỏi lúc khởi động. Liên kết "Sao lưu ra tệp
-   (miễn phí)" mở thư mục sao lưu cục bộ của app.
+6. ~~**Thông báo nhiều thiết bị**~~ - **GỠ 26/11/2026** (PRODUCT_POLICY v2.0.0 bỏ mục 7.3; v3.0.0 mục 3.8 + AUTH 14.4
+   cấm mọi lời mời tự hiện - phiếu `20261125-SYN1`, `20261126-LG4`): bỏ `notice_due`, lệnh `pro_notice`,
+   `ProNotice.tsx`; khoá `tsu.pro_notice.last_shown` + `tsu.signin_reminder.*` xoá lúc khởi động
+   (`cwico_core::pro::LEGACY_LOCAL_KEYS`). `devices_30d` trong JWS vẫn đọc, không hiện thành lời mời. Bề mặt tự hiện duy
+   nhất còn lại là nhắc gia hạn/hết kỳ 7.6 (chỉ người đã mua Pro); test `free_user_sees_no_notice_over_five_opens_and_thirty_days`.
 7. **Kênh thanh toán**: bản tải trực tiếp/winget/Scoop ⇒ `https://tsudev.com/pro?app=tsucwico`, Ủng hộ ⇒
    `https://tsudev.com/ung-ho?app=tsucwico` (PRODUCT_POLICY 3.3, 7.4). Bản Microsoft Store (P2-MSIX) đọc lại 4.3 trước
    khi nộp. **Không đặt nút mua trong app khi `tsudev.com/pro` chưa có** (20/11/2026 trả 404 - phase B3 của tsudev).
@@ -57,5 +59,4 @@ miễn phí, không có đường đồng bộ miễn phí nào phải tắt. Đ
 ## 4. Hệ quả
 
 - Không thêm phụ thuộc mật mã ở P1 (chỉ `getrandom` đã có sẵn trong cây phụ thuộc); `p256` vào ở P2 khi có chỗ dùng.
-- Hộp thoại đã nối vào app nhưng lệnh `pro_notice` luôn trả `None` tới khi có đăng nhập; xem trước bằng
-  `?preview=pro-notice` trong trình duyệt.
+- (26/11/2026) Hộp thoại nhiều thiết bị đã gỡ - xem mục 2.6.
