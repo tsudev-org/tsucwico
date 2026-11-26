@@ -27,3 +27,6 @@
   `--font-family` ⇒ CLS **0** ở 360/1366 × Sáng/Tối, khung vẽ đầu tiên đã đúng font. Quét 9 trang × 360/768/1366 ×
   Sáng/Tối (54 tổ hợp): 0 lỗi (cuộn ngang, tràn, ảnh vỡ, h1, tên truy cập, console, HTTP); soi ảnh 360 bằng mắt ổn.
   Còn: đo lại trên production sau deploy (token CF), Lighthouse/INP, phần B.
+- 27/11/2026 - tsucwico-6da2: deploy `b64df5cd`; đo production (context mới, mạng 150 ms/4 Mbps) 8 lần: 1366 px CLS 0-0,035,
+  360 px CLS 0 hoặc 0,257 (~50%) - lần vẽ đầu trước khi font preload tới, máy đo chỉ có DejaVu nên font dự phòng đo số
+  không áp dụng. Đề xuất `font-display: optional` cho 400/600 - chờ chủ dự án chốt.
