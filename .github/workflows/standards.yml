@@ -24,6 +24,10 @@ jobs:
       - name: Đối chiếu với bộ quy ước trung tâm
         run: ./scripts/sync-standards.sh --check
 
+      # AUTH_AND_ACCOUNT.md mục 2.1: không ô mật khẩu, SDK nhà cung cấp hay trang đăng nhập riêng.
+      - name: Một cổng đăng nhập
+        run: bash .standards/scripts/check-central-login.sh --strict
+
       # BRAND_ASSETS.md mục 12.2, bản cho desktop: thiếu icon hay ảnh bản cài thì chặn,
       # và mọi đường dẫn ảnh trong tauri.conf.json phải trỏ tới tệp có thật.
       - name: Kiểm tra tài sản nhận diện (desktop)

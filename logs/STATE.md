@@ -1,7 +1,7 @@
 # STATE.md - Trạng thái project
 
 > **Phiên kế tiếp:** (1) **REL-TSU-1** vẫn chờ 👤 (Sandbox chưa có `ketqua/`, VT 26.11.1901 NSIS 3/51). (2) Phiếu MỞ:
-> **STD90** (đồng bộ chuẩn v9.0.0, phiếu `20261127-STD90`), **INT1** (Opus), **UI2** (còn Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (3) 👤: co VHDX (phiếu DD1
+> **LOGIN1** (một cổng đăng nhập V1-V7, Opus, PR riêng), **INT1** (Opus), **UI2** (còn Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (3) 👤: co VHDX (phiếu DD1
 > mục 3). Deploy: OAuth wrangler do 👤 đăng nhập 27/11; `~/.config/tsudev/cloudflare.env` vẫn là token đã thu hồi.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
@@ -9,6 +9,10 @@
 
 ## Hàng đợi task (làm từ trên xuống)
 
+- [ ] **LOGIN1** Phiếu `20261127-LOGIN1`: sửa V1-V7 (discovery, nút Mở trang tài khoản + Xoá tài khoản, nhãn nút, liên kết
+  "Vì sao nên đăng nhập?", dòng phiên hết hạn, trạng thái tài khoản). Chạm xác thực ⇒ Opus; PR riêng sau PR STD90.
+- [x] **STD90** ✅ 27/11/2026: chuẩn v9.0.0 + cổng `check-central-login.sh --strict` trong CI (nhánh
+  `chore/std90-sync-v9.0.0`, chưa push - chờ 👤).
 - [ ] **INT1** Toàn vẹn ứng dụng (phiếu `20261125-INT1`, chuẩn v8.3.0 `APP_INTEGRITY.md`): cổng phiên bản đọc
   `https://tsudev.com/.well-known/tsudev/versions.json` + `.sig` Ed25519, modal khoá toàn màn (Cập nhật + Xuất dữ liệu),
   gửi `X-Tsu-App`, xử lý `426`. Cần Opus (mật mã). Chờ tsudev phát hành bản kê (đợt 1).
@@ -55,6 +59,8 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 27/11/2026 - **STD90**: đồng bộ v9.0.0, quét đăng nhập 0 nghi vấn, rà mã ra V1-V7 (phiếu LOGIN1).
 
 - 27/11/2026 - Phiên tsucwico-6da2 (tiếp): chủ dự án ủy quyền làm phương án tối ưu ⇒ #123 `font-display: optional`
   (gộp `1e15801`), deploy Worker `6ed55d62`; production 16/16 lần CLS 0 (360/1366 x Sáng/Tối). Đánh đổi đo được: lần đầu
