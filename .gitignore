@@ -306,3 +306,6 @@ dist-ssr/
 /logs/*.tmp
 /logs/*.log
 /logs/*.tmp
+
+# Cache cục bộ của wrangler (mã tài khoản Cloudflare) - không commit
+.wrangler/

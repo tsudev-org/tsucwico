@@ -1,29 +1,38 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** (1) **REL-TSU-1** - Sandbox ĐÃ bật nhưng agent mở `.wsb` từ WSL không chạy được (22/11, phiếu
-> `20261120-SB1` mục 5) ⇒ 👤 tự bấm đúp `kiem-thu-msi.wsb` / `kiem-thu-nsis.wsb`; có `ketqua/` thì làm mục 3.2-3.3
-> (VirusTotal vẫn 3/74 ⇒ đề xuất Publish theo ngoại lệ, chờ 👤 đồng ý). (2) Việc cần **Windows thật**: PRO1 P2 bước 7,
-> chụp lại `scan-*-vi` + `tweaks-dark-vi` + video demo rồi ĐÓNG STD50. (3) **PRO1 P3** chờ crate `tsusync` (PRO-D3);
-> `tsudev.com/oidc/*` đang 503 (22/11) - phía tsudev. Còn **P2 MSIX** - chờ 👤 Partner Center.
+> **Phiên kế tiếp:** (1) Nếu #117 (màn Pro PRO3/SYN1) chưa gộp: CI xanh ⇒ gộp. (2) **Deploy website** (`main` đã có màu
+> nền Sáng `#EEF1F5` của chuẩn v8.3.0, #116): token `~/.config/tsudev/cloudflare.env` đã bị thu hồi, OAuth wrangler hết hạn
+> ⇒ nhận token mới qua clipboard (`tsu-nhan-bi-mat`, phiếu SEC1) hoặc 👤 `npx wrangler login`. (3) **REL-TSU-1** vẫn chờ
+> 👤: Sandbox `kiem-thu-*.wsb` (chưa có `ketqua/`), VirusTotal NSIS 3/74 (25/11) ⇒ đề xuất Publish theo ngoại lệ, chờ 👤.
+> (4) Phiếu mới còn MỞ, mỗi phiên một việc: **INT1** (cổng `versions.json` + modal khoá - cần Opus, mật mã), **SEC2**
+> (`/security`, security.txt), **UI2** (rà website bằng trình duyệt), **QR1** (QR4/UI1). (5) 👤: co VHDX (phiếu DD1 mục 3).
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
 
 ## Hàng đợi task (làm từ trên xuống)
 
+- [ ] **INT1** Toàn vẹn ứng dụng (phiếu `20261125-INT1`, chuẩn v8.3.0 `APP_INTEGRITY.md`): cổng phiên bản đọc
+  `https://tsudev.com/.well-known/tsudev/versions.json` + `.sig` Ed25519, modal khoá toàn màn (Cập nhật + Xuất dữ liệu),
+  gửi `X-Tsu-App`, xử lý `426`. Cần Opus (mật mã). Chờ tsudev phát hành bản kê (đợt 1).
+- [ ] **SEC2** Trang `/security` + `security.txt` (E4-E6, E8 SignPath) - phiếu `20261125-SEC2`.
+- [ ] **UI2** Rà website bằng trình duyệt (A) + hiện đại hoá (B) - phiếu `20261125-UI2`.
+- [ ] **QR1** QR4 + UI1 (tương phản biểu tượng ≥ 3:1, test chặn tái phát) - phiếu `20261124-QR1`.
+- [ ] **AV1** 👤 gửi thư CrowdStrike/Trapmine (sổ `docs/store/antivirus.md`); đo lại VT 3-7 ngày sau.
 - [ ] **REL-TSU-1** Bản đầu tiên mang tên Tsu Cwico + khuôn thẻ v3: **Release nháp [`v26.11.1901`](https://github.com/tsudev-org/tsucwico/releases/tag/v26.11.1901)** (19/11/2026, phiên tsucwico-ea, run 44531891240). Đã kiểm trên nháp: 10 tệp đúng khuôn (`tsucwico_26.11.1901_windows-x64-setup.exe`, `_windows-x64.msi`, `_windows-x64-cli.exe`, `_sbom.spdx.json`, `.sig`, `latest.json`, `SHA256SUMS.txt` + `.sig` + `.sigstore.json`); `sha256sum -c` 7/7; `tools/verify_update_signature.py` - bản đã cài chấp nhận 3 gói; `gh attestation verify` 4/4 (ký bởi `release.yml@refs/tags/v26.11.1901`); Sigstore `OK`; CLI có CompanyName TsuDEV / FileVersion 26.11.1901; `latest.json` cùng dạng URL với 26.11.10.2 (đã cập nhật thật được). **VirusTotal**: MSI + CLI 0/74; bộ cài NSIS 3/74 engine học máy (CrowdStrike, APEX, Trapmine) ⇒ báo nhầm theo phiếu `logs/handover/20261119-VT1_*` (SecureAge đã nộp; 👤 gửi 2 email soạn sẵn). **Còn 👤:** nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ một mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md` mục 5) ⇒ **Publish** (updater bắt buộc: Publish là đẩy tới mọi máy). **20/11: thử nâng cấp chuyển sang Windows Sandbox, bộ kiểm `tools/sandbox/` - phiếu `20261120-SB1`.** Sau Publish: deploy website (trang tải về đọc `releases/latest` lúc build), `tools/apply_winget_manifest.py` (manifest trong artifact `installers`) + nộp winget (đợi #476024), Scoop tự lên nhờ scoop-bucket#24.
 - [ ] **STD50** Bản sắc v5.0.0: **PR 1 ✅** #104 (sync v5.0.0, `products.css`, màu hue 212, bo góc `sac`, Be Vietnam Pro,
   xoá dải tsu/dev - TS-8), **PR 2 ✅** #105 (`trinh-dien` + `luoi-quet`, og-image). Còn: ảnh chụp trên Windows thật
   (`scan-*-vi`, `tweaks-dark-vi`) + video demo quay lại ⇒ đóng phiếu `20261121-STD50`.
 - [x] **LG1** ✅ 21/11/2026 #103: logo Tsu Cwico trong app (header, Giới thiệu, màn trống, cập nhật, lỗi, favicon trùng byte
   website), khối nhà làm logo TsuDEV; trang "Đã đăng nhập" nhúng favicon. Phiếu `20261120-LG1` ĐÓNG.
-- [ ] **PRO2** Pro kỳ 1 năm: **2.1 ✅** #102 (nhắc gia hạn 7 ngày + báo hết kỳ, 6 test 7.6). 2.2 (đồng bộ qua TsuDEV Sync)
-  làm cùng PRO1 P3. Phiếu `20261120-PRO2`.
+- [x] **PRO2** Pro kỳ 1 năm: **2.1 ✅** #102 (nhắc gia hạn 7 ngày + báo hết kỳ, 6 test 7.6); nội dung 7.6 mới #117. 2.2
+  (đồng bộ qua TsuDEV Sync) BỎ theo SYN1. Phiếu `20261120-PRO2`.
 - [ ] **PRO1** Lưu cục bộ mặc định; Pro = đồng bộ cài đặt (TsuDEV Sync, crate `tsusync`); nhắc nhiều thiết bị mỗi 30
   ngày. Phiếu `logs/handover/20261119-PRO1_luu-cuc-bo-pro-dong-bo.md`, kế hoạch phase ở **ADR-0002 mục 3**.
   **P1 ✅** 20/11 (#94; kiểm kê 0 byte rời máy, chuẩn v3.9.1, `cwico_core::pro`, hộp thoại `ProNotice`). **P2 ✅ mã** 21/11 (#102: đăng nhập loopback PKCE, refresh token ở
   Credential Manager, kiểm JWS ES256, màn Pro, huy hiệu, THREAT_MODEL) - còn bước 7 trên Windows thật (phiếu PRO1 mục 7).
-  **P3** chờ PRO-D3. Hợp đồng: PRODUCT_POLICY 7.4 bản v3.9.1 (KHÔNG theo mục 9.2 phiếu gốc - đã lỗi thời).
+  **P3 BỎ 26/11/2026** (SYN1: không đồng bộ lên internet; ADR-0002 sửa đổi) - đồng bộ giữa máy nếu làm thì theo
+  `LOCAL_SYNC.md`/`tsulink`, ADR mới. Hợp đồng JWS: PRODUCT_POLICY 7.4 (chuẩn v8.3.0).
 - [ ] **P2-MSIX** Đích MSIX (`Version` = `YY.M.DDNN.0`) + nộp Microsoft Store + nút Store trên website. Chờ 👤 tạo tài
   khoản Partner Center cá nhân (phiếu P2 mục 4.1) - không đoán Identity Name/Publisher.
 - [x] **T8** ✅ 19/11/2026 (phiên tsucwico-c4): #92 gộp `20de2ab`, deploy Worker version `2fb094b0`; đo production: 1 video
@@ -46,6 +55,13 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 26/11/2026 - Phiên tsucwico-2e: **dọn đĩa toàn máy** (ổ C 9,2 → 22 GB trống, phiếu `20261126-DD1`, phối hợp tsudisk-4c);
+  **SEC3**: gộp Dependabot #109 #110 #112 #113 #114, #111 thay bằng #115 (p256 0.14, MSRV khai đúng 1.95, cookie 0.18.3
+  RUSTSEC-2026-0594), gitleaks toàn lịch sử 0, cargo/npm audit 0; **LG4/SYN1** #116 gỡ thông báo tự hiện 7.3, xoá khoá cục
+  bộ cũ, test ca 17, chuẩn v8.3.0 (+ sửa theme-color website); **PRO3/SYN1** #117 màn Pro + 7.5/7.6 mới, bỏ Q3, ADR-0002
+  sửa đổi (P3 `tsusync` BỎ); **AV1** sổ `docs/store/antivirus.md`; **SEC1** ĐÓNG; `.wrangler/` vào `.gitignore`. Chưa
+  deploy website (token CF thu hồi). Xoá nhánh remote đã gộp bị chặn quyền ⇒ 👤.
 
 - 22/11/2026 - Phiên tsucwico-86: vẫn chặn ở 👤 - `ketqua/` Sandbox trống, VirusTotal NSIS 3/74 (lượt 21/11 16:04 UTC),
   `tsudev.com/oidc/*` vẫn 503, Release nháp. Sửa 2 lỗi axe trong app (PR a11y), đóng QU-STD-BRAND + DEP-1 (mục cũ).
