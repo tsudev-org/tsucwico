@@ -30,3 +30,4 @@
 - 27/11/2026 - tsucwico-6da2: deploy `b64df5cd`; đo production (context mới, mạng 150 ms/4 Mbps) 8 lần: 1366 px CLS 0-0,035,
   360 px CLS 0 hoặc 0,257 (~50%) - lần vẽ đầu trước khi font preload tới, máy đo chỉ có DejaVu nên font dự phòng đo số
   không áp dụng. Đề xuất `font-display: optional` cho 400/600 - chờ chủ dự án chốt.
+- 27/11/2026 - tsucwico-6da2: chủ dự án ủy quyền ⇒ `font-display: optional` (#123, deploy `6ed55d62`): production 16/16 CLS 0. Lần đầu mạng chậm có thể hiện (một phần) font hệ thống; lần tải lại đủ Be Vietnam Pro (đo CDP getPlatformFontsForNode).
