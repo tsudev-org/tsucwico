@@ -103,6 +103,8 @@ mod tests {
             donor: false,
             badge: Badge::Pro,
             devices_30d: 1,
+            status: None,
+            status_reason: None,
         }
     }
 

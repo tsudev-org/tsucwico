@@ -11,11 +11,11 @@ use base64::Engine as _;
 use sha2::{Digest, Sha256};
 use url::Url;
 
-use super::CLIENT_ID;
+use super::discovery::Provider;
+use super::{CLIENT_ID, ISSUER};
 
-pub const AUTHORIZE_URL: &str = "https://tsudev.com/oidc/auth";
-pub const TOKEN_URL: &str = "https://tsudev.com/oidc/token";
-pub const REVOCATION_URL: &str = "https://tsudev.com/oidc/token/revocation";
+/// The product API on tsudev.com - not an OIDC endpoint, so discovery does
+/// not list it.
 pub const ENTITLEMENTS_URL: &str = "https://tsudev.com/api/me/entitlements";
 /// `offline_access` is granted anyway by the provider; asking for it keeps
 /// the request honest about the refresh token the app will hold.
@@ -48,8 +48,10 @@ impl SignInRequest {
         pkce_challenge(&self.code_verifier)
     }
 
-    pub fn authorize_url(&self) -> String {
-        let mut url = Url::parse(AUTHORIZE_URL).expect("constant URL");
+    /// The gateway page the system browser opens: the provider's
+    /// authorisation endpoint, from discovery, plus this attempt's request.
+    pub fn authorize_url(&self, provider: &Provider) -> String {
+        let mut url = provider.authorization_endpoint.clone();
         url.query_pairs_mut()
             .append_pair("response_type", "code")
             .append_pair("client_id", CLIENT_ID)
@@ -66,7 +68,7 @@ impl SignInRequest {
 
     /// Judges the request line of one loopback connection, e.g.
     /// `GET /callback?code=..&state=.. HTTP/1.1`.
-    pub fn callback(&self, request_line: &str) -> Callback {
+    pub fn callback(&self, request_line: &str, provider: &Provider) -> Callback {
         let mut words = request_line.split_whitespace();
         let (Some("GET"), Some(target)) = (words.next(), words.next()) else {
             return Callback::NotOurs;
@@ -87,6 +89,13 @@ impl SignInRequest {
         if get("state").as_deref() != Some(self.state.as_str()) {
             return Callback::WrongState;
         }
+        // RFC 9207: the answer names who sent it, on success and on error,
+        // so a code from another authorisation server is never exchanged.
+        match get("iss") {
+            Some(iss) if iss != ISSUER => return Callback::WrongIssuer,
+            None if provider.iss_in_callback => return Callback::WrongIssuer,
+            _ => {}
+        }
         if let Some(error) = get("error") {
             return Callback::Denied(error);
         }
@@ -105,6 +114,8 @@ pub enum Callback {
     Denied(String),
     /// Right path but the state does not match - abort the attempt.
     WrongState,
+    /// `iss` is missing or names another server - abort the attempt.
+    WrongIssuer,
     /// Another path (a browser asking for `/favicon.ico`): answer 404 and
     /// keep waiting.
     NotOurs,
@@ -124,6 +135,11 @@ fn random_b64(n: usize) -> Result<String, getrandom::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::pro::discovery::tests::PRODUCTION;
+
+    fn provider() -> Provider {
+        Provider::from_json(PRODUCTION).unwrap()
+    }
 
     #[test]
     fn pkce_matches_rfc7636_appendix_b() {
@@ -137,9 +153,10 @@ mod tests {
     fn the_authorize_url_carries_the_contract() {
         let r = SignInRequest::new(51_234).unwrap();
         assert_eq!(r.code_verifier.len(), 43);
-        let url = Url::parse(&r.authorize_url()).unwrap();
+        let url = Url::parse(&r.authorize_url(&provider())).unwrap();
         let q: std::collections::HashMap<_, _> = url.query_pairs().into_owned().collect();
         assert_eq!(url.origin().ascii_serialization(), "https://tsudev.com");
+        assert_eq!(url.path(), "/oidc/auth");
         assert_eq!(q["client_id"], "tsucwico");
         assert_eq!(q["redirect_uri"], "http://127.0.0.1:51234/callback");
         assert_eq!(q["code_challenge_method"], "S256");
@@ -153,25 +170,61 @@ mod tests {
     #[test]
     fn callback_takes_the_code_only_with_our_state() {
         let r = SignInRequest::new(1).unwrap();
-        let line = |q: &str| format!("GET /callback?{q} HTTP/1.1");
+        let p = provider();
+        let line = |q: &str| format!("GET /callback?{q}&iss={ISSUER} HTTP/1.1");
         assert_eq!(
-            r.callback(&line(&format!("code=abc&state={}", r.state))),
+            r.callback(&line(&format!("code=abc&state={}", r.state)), &p),
             Callback::Code("abc".into())
         );
         assert_eq!(
-            r.callback(&line("code=abc&state=forged")),
+            r.callback(&line("code=abc&state=forged"), &p),
             Callback::WrongState
         );
-        assert_eq!(r.callback(&line("code=abc")), Callback::WrongState);
+        assert_eq!(r.callback(&line("code=abc"), &p), Callback::WrongState);
         assert_eq!(
-            r.callback(&line(&format!("error=access_denied&state={}", r.state))),
+            r.callback(&line(&format!("error=access_denied&state={}", r.state)), &p),
             Callback::Denied("access_denied".into())
         );
-        assert_eq!(r.callback("GET /favicon.ico HTTP/1.1"), Callback::NotOurs);
         assert_eq!(
-            r.callback(&format!("POST /callback?code=a&state={} HTTP/1.1", r.state)),
+            r.callback("GET /favicon.ico HTTP/1.1", &p),
             Callback::NotOurs
         );
-        assert_eq!(r.callback(""), Callback::NotOurs);
+        assert_eq!(
+            r.callback(
+                &format!("POST /callback?code=a&state={} HTTP/1.1", r.state),
+                &p
+            ),
+            Callback::NotOurs
+        );
+        assert_eq!(r.callback("", &p), Callback::NotOurs);
+    }
+
+    #[test]
+    fn callback_refuses_a_missing_or_foreign_issuer() {
+        let r = SignInRequest::new(1).unwrap();
+        let mut p = provider();
+        let line = |tail: &str| format!("GET /callback?state={}&{tail} HTTP/1.1", r.state);
+        for tail in [
+            "code=abc",
+            "code=abc&iss=https%3A%2F%2Fevil.example",
+            "error=access_denied",
+        ] {
+            assert_eq!(r.callback(&line(tail), &p), Callback::WrongIssuer, "{tail}");
+        }
+        assert_eq!(
+            r.callback(&line("code=abc&iss=https%3A%2F%2Ftsudev.com%2Foidc"), &p),
+            Callback::Code("abc".into())
+        );
+        // A provider that does not advertise `iss`: absence is fine, a wrong
+        // one still is not.
+        p.iss_in_callback = false;
+        assert_eq!(
+            r.callback(&line("code=abc"), &p),
+            Callback::Code("abc".into())
+        );
+        assert_eq!(
+            r.callback(&line("code=abc&iss=x"), &p),
+            Callback::WrongIssuer
+        );
     }
 }

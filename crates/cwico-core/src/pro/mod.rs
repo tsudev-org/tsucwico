@@ -14,8 +14,10 @@
 use serde::{Deserialize, Serialize};
 use time::{Duration, OffsetDateTime};
 
+pub mod discovery;
 pub mod jws;
 pub mod renewal;
+pub mod session;
 pub mod signin;
 
 /// OIDC `client_id` of this product at tsudev.com - also the `app` parameter
@@ -28,6 +30,57 @@ pub const ISSUER: &str = "https://tsudev.com/oidc";
 /// Pro plans page for builds outside an app store (PRODUCT_POLICY 7.4) -
 /// also the target of the "Renew" button (7.6).
 pub const PRO_URL: &str = "https://tsudev.com/pro?app=tsucwico";
+
+/// The pages of the sign-in gateway the Account section can open
+/// (AUTH_AND_ACCOUNT 2.1, 14.4). The UI names one of these; it never passes a
+/// URL.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum AccountPage {
+    /// "Open account page".
+    Profile,
+    /// Where an account deletion is requested; the gateway re-authenticates.
+    Deletion,
+    /// "Why sign in?".
+    WhySignIn,
+    /// How to appeal a restriction or a suspension.
+    Appeal,
+}
+
+impl AccountPage {
+    pub const fn url(self) -> &'static str {
+        match self {
+            Self::Profile => "https://tsudev.com/settings/profile",
+            Self::Deletion => "https://tsudev.com/settings/security",
+            Self::WhySignIn => "https://tsudev.com/privacy#dang-nhap",
+            Self::Appeal => "https://tsudev.com/rules#bao-cao",
+        }
+    }
+}
+
+/// An account state the user has to be told about (AUTH_AND_ACCOUNT 9.2).
+/// Decided by the server; the app only displays it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AccountState {
+    Restricted,
+    Suspended,
+    Locked,
+    PendingDeletion,
+}
+
+impl AccountState {
+    /// `active`, `deleted` and values this build does not know show nothing.
+    pub fn from_claim(status: &str) -> Option<Self> {
+        match status {
+            "restricted" => Some(Self::Restricted),
+            "suspended" => Some(Self::Suspended),
+            "locked" => Some(Self::Locked),
+            "pending_deletion" => Some(Self::PendingDeletion),
+            _ => None,
+        }
+    }
+}
 
 /// Longest lifetime an entitlement token may claim (`exp` <= `iat` + 7 days).
 pub const MAX_TOKEN_LIFETIME: Duration = Duration::days(7);
@@ -58,6 +111,12 @@ pub struct EntitlementClaims {
     /// `pro` | `donor` | `both` | `none`, already filtered by `badge_display`.
     pub badge: Badge,
     pub devices_30d: u32,
+    /// Account state and machine-readable reason (AUTH_AND_ACCOUNT 14.4.3).
+    /// Absent from tokens cached by older builds of the server.
+    #[serde(default)]
+    pub status: Option<String>,
+    #[serde(default)]
+    pub status_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -194,7 +253,49 @@ mod tests {
             donor: false,
             badge: Badge::None,
             devices_30d: devices,
+            status: None,
+            status_reason: None,
         }
+    }
+
+    #[test]
+    fn claims_carry_the_account_status_when_the_server_sends_it() {
+        let mut v = serde_json::to_value(claims(day(0), 1, 0)).unwrap();
+        let o = v.as_object_mut().unwrap();
+        o.remove("status");
+        o.remove("status_reason");
+        let old: EntitlementClaims = serde_json::from_value(v.clone()).unwrap();
+        assert_eq!(old.status, None);
+        v["status"] = "suspended".into();
+        v["status_reason"] = "account_suspended".into();
+        let new: EntitlementClaims = serde_json::from_value(v).unwrap();
+        assert_eq!(
+            new.status.as_deref().and_then(AccountState::from_claim),
+            Some(AccountState::Suspended)
+        );
+        assert_eq!(new.status_reason.as_deref(), Some("account_suspended"));
+    }
+
+    #[test]
+    fn only_states_worth_telling_are_shown() {
+        for s in ["active", "deleted", "", "something_new"] {
+            assert_eq!(AccountState::from_claim(s), None, "{s}");
+        }
+        assert_eq!(
+            AccountState::from_claim("pending_deletion"),
+            Some(AccountState::PendingDeletion)
+        );
+    }
+
+    #[test]
+    fn account_pages_stay_on_the_gateway() {
+        use AccountPage::*;
+        for page in [Profile, Deletion, WhySignIn, Appeal] {
+            assert!(page.url().starts_with("https://tsudev.com/"));
+        }
+        let page: AccountPage = serde_json::from_str("\"why-sign-in\"").unwrap();
+        assert_eq!(page, WhySignIn);
+        assert!(serde_json::from_str::<AccountPage>("\"https://evil.example\"").is_err());
     }
 
     #[test]

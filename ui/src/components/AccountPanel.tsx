@@ -10,7 +10,7 @@ import type { AccountView, Locale } from "../types";
 import type { TranslationKey } from "../i18n";
 import { translator } from "../i18n";
 import * as api from "../api";
-import { Button, Notice, Panel } from "./primitives";
+import { Button, Modal, Notice, Panel } from "./primitives";
 import { TsuBadge } from "./TsuBadge";
 import { noticeDate } from "./RenewalNotice";
 
@@ -26,6 +26,7 @@ export function AccountPanel({
   const t = translator(locale);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const run = async (action: () => Promise<AccountView>) => {
     setBusy(true);
@@ -47,6 +48,12 @@ export function AccountPanel({
   };
 
   const proLapsed = account.signedIn && !account.proActive && account.proUntil > 0;
+  const { notice } = account;
+
+  const reasonText = (reason: string | null) => {
+    const text = t(`account.reason.${reason}` as TranslationKey);
+    return text ?? t("account.reason.other");
+  };
 
   return (
     <>
@@ -59,7 +66,7 @@ export function AccountPanel({
             </h3>
             <p className="mt-1 text-[13px]" style={{ color: "var(--text-secondary)" }}>
               {!account.signedIn
-                ? t("account.optional")
+                ? t(account.sessionExpired ? "account.sessionExpired" : "account.optional")
                 : account.proActive
                   ? t("account.proUntil").replace("{date}", noticeDate(locale, account.proUntil))
                   : proLapsed
@@ -72,18 +79,56 @@ export function AccountPanel({
               </p>
             )}
           </div>
-          {account.signedIn ? (
-            <Button disabled={busy} onClick={() => void run(api.accountSignOut)}>
-              {t("account.signOut")}
+          <div className="flex flex-wrap gap-2">
+            {!account.signedIn &&
+              (busy ? (
+                <Button onClick={() => void api.accountSignInCancel()}>{t("account.cancel")}</Button>
+              ) : (
+                <Button variant="outline" onClick={() => void run(api.accountSignIn)}>
+                  {t("account.signIn")} ↗
+                </Button>
+              ))}
+            <Button onClick={() => void api.openAccountPage("profile")}>
+              {t("account.openPage")} ↗
             </Button>
-          ) : busy ? (
-            <Button onClick={() => void api.accountSignInCancel()}>{t("account.cancel")}</Button>
-          ) : (
-            <Button variant="outline" onClick={() => void run(api.accountSignIn)}>
-              {t("account.signIn")} ↗
-            </Button>
-          )}
+            {(account.signedIn || account.sessionExpired) && !(busy && !account.signedIn) && (
+              <Button disabled={busy} onClick={() => void run(api.accountSignOut)}>
+                {t("account.signOut")}
+              </Button>
+            )}
+          </div>
         </div>
+        {!account.signedIn && (
+          <div className="mt-2">
+            <Button variant="ghost" onClick={() => void api.openAccountPage("why-sign-in")}>
+              {t("account.why")} ↗
+            </Button>
+          </div>
+        )}
+        {notice && (
+          <div className="mt-3">
+            <Notice
+              tone={notice.state === "suspended" ? "danger" : "warning"}
+              title={t(`account.state.${notice.state}`)}
+            >
+              <p>
+                {reasonText(notice.reason)} {t("account.stateHint")}
+              </p>
+              <div className="mt-2">
+                <Button onClick={() => void api.openAccountPage("appeal")}>
+                  {t("account.appeal")} ↗
+                </Button>
+              </div>
+            </Notice>
+          </div>
+        )}
+        {account.signedIn && (
+          <div className="mt-2">
+            <Button variant="ghost" onClick={() => setConfirmDelete(true)}>
+              {t("account.delete")}
+            </Button>
+          </div>
+        )}
         {busy && !account.signedIn && (
           <p className="mt-3 text-[12px]" role="status" style={{ color: "var(--text-muted)" }}>
             {t("account.signingIn")} {t("account.signingInHint")}
@@ -115,6 +160,33 @@ export function AccountPanel({
           </Button>
         </div>
       </Panel>
+
+      <Modal
+        open={confirmDelete}
+        title={t("account.deleteTitle")}
+        onClose={() => setConfirmDelete(false)}
+        width="max-w-lg"
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
+              {t("account.cancel")}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                setConfirmDelete(false);
+                void api.openAccountPage("deletion");
+              }}
+            >
+              {t("account.deleteConfirm")} ↗
+            </Button>
+          </>
+        }
+      >
+        <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+          {t("account.deleteBody")}
+        </p>
+      </Modal>
     </>
   );
 }

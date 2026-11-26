@@ -107,6 +107,8 @@ export default function App() {
     proUntil: 0,
     badge: "none",
     devices30d: 0,
+    sessionExpired: false,
+    notice: null,
   });
   const [renewal, setRenewal] = useState<RenewalNoticeData | null>(null);
   const busyRef = useRef(false);

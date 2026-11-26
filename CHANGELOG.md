@@ -21,6 +21,20 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ## Unreleased
 
+### Changed
+
+- Account section follows the single sign-in gateway rule (tsudev-standards
+  v9.0.0, AUTH_AND_ACCOUNT 2.1): the button reads "Sign in in your browser";
+  new "Open account page", "Delete account" (with a confirmation step, opens
+  the gateway's deletion page) and "Why sign in?" links. Sign-in endpoints
+  come from the tsudev.com OpenID discovery document - fetched only after you
+  press Sign in - instead of being written into the app, and the browser's
+  answer must name tsudev.com as its issuer (RFC 9207).
+- An expired session now says "Your session expired - sign in again" in the
+  Account section (no dialog) instead of silently signing out, and an account
+  that tsudev.com restricted or suspended shows a badge, the reason and an
+  Appeal link. Everything that runs on this PC keeps working either way.
+
 ### Added
 
 - Website page `/security/` ("Bảo mật và tin cậy"): how to report a

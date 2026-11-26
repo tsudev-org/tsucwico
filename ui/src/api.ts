@@ -12,6 +12,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type {
   AboutInfo,
+  AccountPage,
   AccountView,
   RenewalNotice,
   ApiError,
@@ -181,6 +182,22 @@ export async function accountSignInCancel(): Promise<void> {
 export async function accountSignOut(): Promise<AccountView> {
   if (!isDesktop()) return fixtures.signedOut();
   return call<AccountView>("account_sign_out");
+}
+
+const ACCOUNT_PAGES: Record<AccountPage, string> = {
+  profile: "https://tsudev.com/settings/profile",
+  deletion: "https://tsudev.com/settings/security",
+  "why-sign-in": "https://tsudev.com/privacy#dang-nhap",
+  appeal: "https://tsudev.com/rules#bao-cao",
+};
+
+/** A fixed page of the sign-in gateway; on the desktop Rust holds the URL. */
+export async function openAccountPage(page: AccountPage): Promise<void> {
+  if (!isDesktop()) {
+    window.open(ACCOUNT_PAGES[page], "_blank", "noopener,noreferrer");
+    return;
+  }
+  return call<void>("open_account_page", { page });
 }
 
 export async function openProPage(): Promise<void> {

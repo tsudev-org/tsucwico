@@ -362,7 +362,20 @@ export interface AccountView {
   proUntil: number;
   badge: Badge;
   devices30d: number;
+  /** Signed out because the session ran out (AUTH_AND_ACCOUNT 14.4.2.5). */
+  sessionExpired: boolean;
+  /** Restriction or suspension decided by the server (14.4.3). */
+  notice: AccountNotice | null;
 }
+
+export interface AccountNotice {
+  state: "restricted" | "suspended" | "locked" | "pending_deletion";
+  /** Machine-readable reason, e.g. `account_suspended`. */
+  reason: string | null;
+}
+
+/** `cwico_core::pro::AccountPage` - fixed pages of the sign-in gateway. */
+export type AccountPage = "profile" | "deletion" | "why-sign-in" | "appeal";
 
 /** `cwico_core::pro::renewal::RenewalNotice` (PRODUCT_POLICY 7.6). */
 export type RenewalNotice =
