@@ -1,11 +1,8 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** (1) **UI2 CLS khổ 360 trên production** (đo 27/11 sau deploy `b64df5cd`): nhảy 0,257 ở ~50% lần
-> tải lạnh - lần vẽ đầu đôi khi xảy ra TRƯỚC khi font preload tới (`font-display: swap`), đầu trang 2 → 1 hàng. Máy WSL chỉ
-> có DejaVu (không có Segoe/Arial/Roboto) nên font dự phòng đo số không có tác dụng ở đây - chưa biết trên Windows thật.
-> Đề xuất chờ 👤 chốt: `font-display: optional` cho 400/600 đã preload (không bao giờ nhảy; lần đầu mạng chậm có thể hiện
-> font hệ thống), hoặc giữ nguyên. (2) **REL-TSU-1** vẫn chờ 👤 (Sandbox, VT NSIS 3/51). (3) Phiếu MỞ: **INT1** (Opus),
-> **UI2** (Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (4) 👤: co VHDX (phiếu DD1 mục 3).
+> **Phiên kế tiếp:** (1) **REL-TSU-1** vẫn chờ 👤 (Sandbox chưa có `ketqua/`, VT 26.11.1901 NSIS 3/51). (2) Phiếu MỞ:
+> **INT1** (Opus), **UI2** (còn Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (3) 👤: co VHDX (phiếu DD1
+> mục 3). Deploy: OAuth wrangler do 👤 đăng nhập 27/11; `~/.config/tsudev/cloudflare.env` vẫn là token đã thu hồi.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
@@ -58,6 +55,10 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 27/11/2026 - Phiên tsucwico-6da2 (tiếp): chủ dự án ủy quyền làm phương án tối ưu ⇒ #123 `font-display: optional`
+  (gộp `1e15801`), deploy Worker `6ed55d62`; production 16/16 lần CLS 0 (360/1366 x Sáng/Tối). Đánh đổi đo được: lần đầu
+  mạng chậm (400 ms) hiện font hệ thống, 150 ms/360 px có chỗ còn font hệ thống; lần tải lại đủ Be Vietnam Pro.
 
 - 27/11/2026 - Phiên tsucwico-6da2 (tiếp): 👤 `wrangler login` ⇒ deploy Worker version `b64df5cd` (main `9da97b1`). Đo
   production: theme-color Sáng `#eef1f5` (nền `rgb(238,241,245)`), Tối `#0a0a0a`; `/security/` 10 liên kết Kiểm chứng;
