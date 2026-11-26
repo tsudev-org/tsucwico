@@ -20,3 +20,8 @@ E4 security.txt (Contact security@tsudev.com, test Expires) · E5 SSL Labs · E6
 ## Kết quả xử lý
 
 - 25/11/2026 - tsudev-8d: mở phiếu.
+- 26/11/2026 - tsucwico (SES-20261126-2316-6da2): E4 + trang `/security/` (dữ liệu `docs/security/trust.json`, nạp ở
+  `website/src/lib/tin-cay.ts` - dừng build khi thiếu trường/đo > 120 ngày; cổng `check-dist` chặn `Expires` < 30 ngày
+  và kiểm NỘI DUNG trang). Đo bằng API, không cần Edge: SSL Labs A+ (v2 `publish=off`), Observatory A+ 140 12/12,
+  HSTS `tsudev.com` **preloaded**, Scorecard 7.2, BP 100%, PVR bật; VirusTotal 26.11.1002: MSI 0/62, NSIS 3/71, CLI
+  3/71 (ghi đúng số). E8 SignPath "Chưa có" (ghi lý do). Chưa deploy (token Cloudflare thu hồi) ⇒ 👤.

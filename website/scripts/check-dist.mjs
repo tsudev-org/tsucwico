@@ -1,4 +1,5 @@
 // Kiểm tra bản build (chạy sau astro build, CI chặn khi lỗi):
+// - security.txt còn hạn 30-366 ngày, có mailto security@tsudev.com, Policy /security/; trang /security/ có nội dung thật;
 // - mọi trang có title đúng khuôn, og:site_name = TsuDEV, canonical, description 120-160 ký tự (ECOSYSTEM_IDENTITY mục 2.2);
 // - không có script/CSS nội tuyến (CSP chặn); script ngoài chỉ được là /js/loc.js, /js/hien-dan.js và /js/theme.js; không có on*="...";
 // - /js/theme.js (chống nháy màu) nạp đồng bộ trong <head>, trước mọi stylesheet; _headers giữ script-src 'self';
@@ -120,6 +121,23 @@ for (const f of ['video/gioi-thieu.mp4', 'video/gioi-thieu.webm', 'video/gioi-th
 }
 if (!/media-src 'self'/.test(readFileSync(join(dist, '_headers'), 'utf8'))) loi.push(`_headers: thiếu media-src 'self' - video sẽ bị chặn`);
 
+// security.txt (RFC 9116, phiếu 20261125-SEC2 E4): có mailto security@tsudev.com, Policy trỏ /security/, Expires còn
+// >= 30 ngày và không quá 1 năm tính từ lúc build - quá hạn thì dừng build để nhớ gia hạn.
+{
+  const st = readFileSync(join(dist, '.well-known/security.txt'), 'utf8');
+  if (!/^Contact: mailto:security@tsudev\.com$/m.test(st)) loi.push('security.txt: thiếu Contact: mailto:security@tsudev.com');
+  if (!/^Policy: https:\/\/cwico\.tsudev\.com\/security\/$/m.test(st)) loi.push('security.txt: Policy phải là https://cwico.tsudev.com/security/');
+  if (!/^Canonical: https:\/\/cwico\.tsudev\.com\/\.well-known\/security\.txt$/m.test(st)) loi.push('security.txt: Canonical sai');
+  const het = Date.parse(st.match(/^Expires: (\S+)$/m)?.[1] ?? '');
+  const conNgay = (het - Date.now()) / 86_400_000;
+  if (!(conNgay >= 30 && conNgay <= 366)) loi.push(`security.txt: Expires còn ${Math.round(conNgay)} ngày (cần 30-366)`);
+}
+// Trang /security/ phải có nội dung thật (phiếu SEC2 mục 2): mục Báo lỗ hổng + ít nhất một liên kết "Kiểm chứng".
+{
+  const f = join(dist, 'security/index.html');
+  const h = existsSync(f) ? readFileSync(f, 'utf8') : '';
+  if (!h.includes('id="bao-lo-hong"') || !h.includes('mailto:security@tsudev.com') || !h.includes('Kiểm chứng ↗')) loi.push('security/: thiếu nội dung Báo lỗ hổng hoặc bảng bằng chứng');
+}
 for (const l of loi) console.error('[check-dist] LỖI', l);
 console.log(`[check-dist] ${trang.size} trang, ${lienKet.length} liên kết, ${loi.length} lỗi`);
 process.exit(loi.length ? 1 : 0);

@@ -21,6 +21,20 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
 
 ## Unreleased
 
+### Added
+
+- Website page `/security/` ("Bảo mật và tin cậy"): how to report a
+  vulnerability (security@tsudev.com, GitHub private advisory, reply within
+  7 days) and a table of trust evidence you can check yourself - SSL Labs,
+  Mozilla Observatory, HSTS preload, OpenSSF Best Practices and Scorecard,
+  VirusTotal for each installer, release checksums and signatures - each with
+  a link to the third-party result page and the date it was measured. Low
+  scores are shown as they are; what is missing is listed with the reason.
+  Data comes from `docs/security/trust.json` at build time; the build stops
+  when a measurement is older than 120 days. `security.txt` now lists
+  `mailto:security@tsudev.com` and points `Policy:` to `/security/`; the build
+  stops when its `Expires` is less than 30 days away.
+
 ### Changed
 
 - No more notices that open by themselves to ask for something

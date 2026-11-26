@@ -1,6 +1,7 @@
-# Báo cáo lỗ hổng bảo mật của cwico (RFC 9116)
+# Báo cáo lỗ hổng bảo mật của Tsu Cwico (RFC 9116). Expires <= 1 năm: scripts/check-dist.mjs dừng build khi còn < 30 ngày.
+Contact: mailto:security@tsudev.com
 Contact: https://github.com/tsudev-org/tsucwico/security/advisories/new
-Expires: 2027-11-01T00:00:00.000Z
+Expires: 2027-11-25T00:00:00.000Z
 Preferred-Languages: vi, en
 Canonical: https://cwico.tsudev.com/.well-known/security.txt
-Policy: https://cwico.tsudev.com/bao-mat/
+Policy: https://cwico.tsudev.com/security/
