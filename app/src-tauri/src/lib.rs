@@ -345,24 +345,6 @@ fn open_donate_page(app: AppHandle) -> ApiResult<()> {
         .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
 }
 
-/// Whether to show the "several devices, no Pro" notice (PRODUCT_POLICY 7.3).
-/// The UI passes its stored `tsu.pro_notice.last_shown`; the rule lives in
-/// `cwico_core::pro`, the status comes from the cached, re-verified JWS.
-/// Signed out ⇒ always `None`, and never touches the network.
-#[tauri::command]
-async fn pro_notice(
-    account: State<'_, account::Account>,
-    last_shown: Option<String>,
-) -> Result<Option<u32>, ()> {
-    use cwico_core::pro::{notice_due, parse_last_shown};
-    let status = account.status().await;
-    Ok(notice_due(
-        &status,
-        parse_last_shown(last_shown.as_deref()),
-        time::OffsetDateTime::now_utc(),
-    ))
-}
-
 /// Renewal reminder / expiry notice of PRODUCT_POLICY 7.6. `last_active_ms`
 /// is when the window last went to the background (`None` on a cold start).
 #[tauri::command]
@@ -530,7 +512,6 @@ pub fn run() {
             open_maker_site,
             open_donate_page,
             open_pro_page,
-            pro_notice,
             pro_renewal_notice,
             account_status,
             account_refresh,

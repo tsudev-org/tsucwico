@@ -43,7 +43,6 @@ import { Brand, MakerBrand } from "./components/Brand";
 import { AboutView } from "./components/AboutView";
 import { ConfirmCaution } from "./components/ConfirmCaution";
 import { PlanDialog } from "./components/PlanDialog";
-import { ProNotice } from "./components/ProNotice";
 import { RenewalNotice } from "./components/RenewalNotice";
 import { RunPanel, eventToLine, type LogLine } from "./components/RunPanel";
 import { SoftwareTable } from "./components/SoftwareTable";
@@ -102,7 +101,6 @@ export default function App() {
   const [tweakBusy, setTweakBusy] = useState(false);
   const [tweakOutcomes, setTweakOutcomes] = useState<TweakOutcome[]>([]);
   // Device count for the "several devices, no Pro" notice, or null.
-  const [proDevices, setProDevices] = useState<number | null>(null);
   const [account, setAccount] = useState<AccountView>({
     signedIn: false,
     proActive: false,
@@ -187,16 +185,16 @@ export default function App() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  // Start-up: the cached account, then a refresh (signed out = no network),
-  // then at most one notice. The renewal reminder / expiry notice of
-  // PRODUCT_POLICY 7.6 wins over the "several devices" one of 7.3; both are
-  // decided in `cwico_core::pro`. Any failure simply means "no notice".
+  // Start-up: the cached account, then a refresh (signed out = no network).
+  // The only notice that may open by itself is the renewal reminder / expiry
+  // notice of PRODUCT_POLICY 7.6 - and only for someone who bought Pro; the
+  // rule is in `cwico_core::pro`. Nothing else invites to sign in, buy Pro or
+  // donate on its own (PRODUCT_POLICY 3.8, AUTH_AND_ACCOUNT 14.4).
   useEffect(() => {
-    let mark: string | null = null;
     try {
-      mark = localStorage.getItem(api.PRO_NOTICE_KEY);
+      for (const key of api.LEGACY_LOCAL_KEYS) localStorage.removeItem(key);
     } catch {
-      /* storage unavailable: treat as never shown */
+      /* storage unavailable: nothing to clean */
     }
     void (async () => {
       const cached = await api.accountStatus().catch(() => null);
@@ -204,18 +202,7 @@ export default function App() {
       const fresh = await api.accountRefresh().catch(() => api.accountStatus().catch(() => null));
       if (fresh) setAccount(fresh);
       const due = await api.proRenewalNotice(null).catch(() => null);
-      if (due) {
-        setRenewal(due);
-        return;
-      }
-      const devices = await api.proNotice(mark).catch(() => null);
-      if (devices === null) return;
-      setProDevices(devices);
-      try {
-        localStorage.setItem(api.PRO_NOTICE_KEY, new Date().toISOString());
-      } catch {
-        /* the notice may return next start; harmless */
-      }
+      if (due) setRenewal(due);
     })();
   }, []);
 
@@ -839,19 +826,6 @@ export default function App() {
         onClose={() => setRenewal(null)}
       />
 
-      <ProNotice
-        devices={proDevices}
-        locale={locale}
-        onPro={() => {
-          setProDevices(null);
-          void api.openProPage();
-        }}
-        onBackup={() => {
-          setProDevices(null);
-          void api.openBackupDir();
-        }}
-        onClose={() => setProDevices(null)}
-      />
     </div>
   );
 }

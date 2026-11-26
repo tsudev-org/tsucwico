@@ -230,4 +230,23 @@ mod tests {
         c.pro_until = 0;
         assert_eq!(renewal_notice(Some(&c), true, None, true, t(0)), None);
     }
+
+    // PRODUCT_POLICY 3.8 point 5 / AUTH_AND_ACCOUNT 14.4.5 case 17: signed
+    // out, or signed in without Pro on several devices, >= 5 opens with the
+    // clock moved past 30 days - the app shows nothing by itself. This rule
+    // is the only start-up notice left (the 7.3 notice was removed).
+    #[test]
+    fn free_user_sees_no_notice_over_five_opens_and_thirty_days() {
+        for open in 0..6_i64 {
+            let now = t(open * 7 * DAY);
+            assert_eq!(renewal_notice(None, false, None, true, now), None);
+            let mut c = jws(now, now);
+            c.pro_until = 0;
+            c.badge = Badge::None;
+            c.devices_30d = 3;
+            let seen = valid(&c, now);
+            assert!(seen.is_some(), "token must verify on open {open}");
+            assert_eq!(renewal_notice(seen, false, None, true, now), None);
+        }
+    }
 }
