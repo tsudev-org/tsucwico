@@ -1,12 +1,11 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** (1) Nếu #120 (UI2 font, CLS 0) chưa gộp: CI xanh ⇒ gộp. (2) **Deploy website** (gồm màu nền Sáng
-> `#EEF1F5` #116 + `/security/` #119 + font #120): token `~/.config/tsudev/cloudflare.env` vẫn là bản ĐÃ THU HỒI (tệp không đổi từ 16/11,
-> đo 26/11 23:16), OAuth wrangler hết hạn ⇒ 👤 `npx wrangler login` hoặc token mới qua `tsu-nhan-bi-mat` (phiếu SEC1). Sau
-> deploy đo: theme-color Sáng `#eef1f5`, `curl https://cwico.tsudev.com/security/ | grep "Báo lỗ hổng"`, security.txt
-> có `mailto:security@`, quay khung hình tải lạnh trang chủ CLS ≈ 0 (phiếu UI2). (3) **REL-TSU-1** vẫn chờ 👤: không có `tools/sandbox/ketqua/`; VirusTotal 26.11.1901 NSIS 3/51
-> (lượt 25/11 04:36, CrowdStrike/APEX/Trapmine), MSI/CLI 0. (4) Phiếu MỞ: **INT1** (Opus), **UI2** (A đợt 1 xong; còn đo production, Lighthouse/INP, B),
-> **QR1**. (5) 👤: co VHDX (phiếu DD1 mục 3).
+> **Phiên kế tiếp:** (1) **UI2 CLS khổ 360 trên production** (đo 27/11 sau deploy `b64df5cd`): nhảy 0,257 ở ~50% lần
+> tải lạnh - lần vẽ đầu đôi khi xảy ra TRƯỚC khi font preload tới (`font-display: swap`), đầu trang 2 → 1 hàng. Máy WSL chỉ
+> có DejaVu (không có Segoe/Arial/Roboto) nên font dự phòng đo số không có tác dụng ở đây - chưa biết trên Windows thật.
+> Đề xuất chờ 👤 chốt: `font-display: optional` cho 400/600 đã preload (không bao giờ nhảy; lần đầu mạng chậm có thể hiện
+> font hệ thống), hoặc giữ nguyên. (2) **REL-TSU-1** vẫn chờ 👤 (Sandbox, VT NSIS 3/51). (3) Phiếu MỞ: **INT1** (Opus),
+> **UI2** (Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (4) 👤: co VHDX (phiếu DD1 mục 3).
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
 > Quy trình: `.standards/docs/AGENT_PROTOCOL.md`.
@@ -17,7 +16,8 @@
   `https://tsudev.com/.well-known/tsudev/versions.json` + `.sig` Ed25519, modal khoá toàn màn (Cập nhật + Xuất dữ liệu),
   gửi `X-Tsu-App`, xử lý `426`. Cần Opus (mật mã). Chờ tsudev phát hành bản kê (đợt 1).
 - [ ] **SEC2** Trang `/security` + `security.txt`: **mã ✅** 26/11 (#119 gộp `1c4c558`, `docs/security/trust.json`); còn deploy +
-  đo production, E8 SignPath (nộp đơn - 👤) - phiếu `20261125-SEC2`.
+  E8 SignPath (nộp đơn - 👤) - phiếu `20261125-SEC2`. **Deploy ✅** 27/11 Worker `b64df5cd`: `/security/` có
+  nội dung thật, security.txt mailto + Policy.
 - [ ] **UI2** Rà website bằng trình duyệt (A) + hiện đại hoá (B) - phiếu `20261125-UI2`. **A đợt 1 ✅** 26/11 (#120: preload
   font + dự phòng đo số, CLS 0,087-0,14 → 0; 54 tổ hợp 0 lỗi). Còn: đo production sau deploy, Lighthouse/INP, phần B.
 - [ ] **QR1** QR4 + UI1 (tương phản biểu tượng ≥ 3:1, test chặn tái phát) - phiếu `20261124-QR1`.
@@ -58,6 +58,10 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 27/11/2026 - Phiên tsucwico-6da2 (tiếp): 👤 `wrangler login` ⇒ deploy Worker version `b64df5cd` (main `9da97b1`). Đo
+  production: theme-color Sáng `#eef1f5` (nền `rgb(238,241,245)`), Tối `#0a0a0a`; `/security/` 10 liên kết Kiểm chứng;
+  security.txt `mailto:security@tsudev.com`; 4 preload font. CLS: 1366 0-0,035, 360 0 hoặc 0,257 (đua font - xem Phiên kế tiếp).
 
 - 26/11/2026 - Phiên tsucwico-6da2: deploy website BỊ CHẶN (token CF thu hồi, OAuth hết hạn). **SEC2**: trang
   `/security/` + `trust.json` + security.txt `mailto:security@tsudev.com`, cổng Expires/nội dung trong `check-dist`; đo:
