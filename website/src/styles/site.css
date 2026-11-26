@@ -4,7 +4,9 @@
    Chế độ màu do public/theme.js đặt vào data-theme; CSS không hỏi hệ điều hành. */
 
 :root {
-  --font-family: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* 'Be Vietnam Pro Fallback' (fonts.css): font hệ thống chỉnh số đo, không nhảy bố cục khi font thật tới (phiếu UI2 mục 0.2).
+     --font-display của products.css nối var(--font-family) nên tiêu đề cũng nhận bậc dự phòng này. */
+  --font-family: 'Be Vietnam Pro', 'Be Vietnam Pro Fallback', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --khung: 72rem;
 }
 
