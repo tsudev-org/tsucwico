@@ -17,17 +17,9 @@ pub const RENEWAL_WINDOW: Duration = Duration::days(7);
 /// as a new "open" (7.6).
 pub const REOPEN_AFTER: Duration = Duration::minutes(30);
 
-/// How long the cloud copy stays downloadable after Pro lapses (7.2).
-pub const CLOUD_GRACE: Duration = Duration::days(90);
-
 /// Local key holding the `pro_until` (Unix seconds) the expiry notice was
 /// last shown for - the name is part of the shared contract (7.6).
 pub const EXPIRED_NOTIFIED_KEY: &str = "tsu.pro_expired.notified_until";
-
-/// Whether this product syncs anything to the cloud yet. Settings sync
-/// arrives with phase P3 (ADR-0002); until then the expiry notice drops the
-/// sentence about the cloud copy, as 7.6 requires of products without one.
-pub const HAS_CLOUD_SYNC: bool = false;
 
 /// What to show at this app open, if anything.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -36,13 +28,10 @@ pub enum RenewalNotice {
     /// `days_left` is rounded up and at least 1.
     #[serde(rename_all = "camelCase")]
     Renew { days_left: u32, pro_until: i64 },
-    /// `cloud_delete_at` is `pro_until` + 90 days, or `None` when the product
-    /// has no cloud copy to speak of.
+    /// Pro has no cloud copy any more (PRODUCT_POLICY v2.0.0 dropped Q3), so
+    /// the notice only says the badge and Pro themes are off.
     #[serde(rename_all = "camelCase")]
-    Expired {
-        pro_until: i64,
-        cloud_delete_at: Option<i64>,
-    },
+    Expired { pro_until: i64 },
 }
 
 /// Whether becoming active now is a new app open: a cold start
@@ -87,10 +76,7 @@ pub fn renewal_notice(
     if !seen_pro || notified_until == Some(pro_until) {
         return None;
     }
-    Some(RenewalNotice::Expired {
-        pro_until,
-        cloud_delete_at: HAS_CLOUD_SYNC.then(|| pro_until + CLOUD_GRACE.whole_seconds()),
-    })
+    Some(RenewalNotice::Expired { pro_until })
 }
 
 #[cfg(test)]
@@ -181,8 +167,7 @@ mod tests {
         assert_eq!(
             first,
             Some(RenewalNotice::Expired {
-                pro_until: end.unix_timestamp(),
-                cloud_delete_at: None
+                pro_until: end.unix_timestamp()
             })
         );
         // The app stores pro_until under EXPIRED_NOTIFIED_KEY; the next open is quiet.

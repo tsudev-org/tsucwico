@@ -72,7 +72,7 @@ export async function account(): Promise<AccountView> {
 export async function proRenewalNotice(): Promise<RenewalNotice | null> {
   const m = previewModes();
   if (m.includes("pro-renew")) return { kind: "renew", daysLeft: 5, proUntil: nowSec() + 5 * DAY };
-  if (m.includes("pro-expired")) return { kind: "expired", proUntil: nowSec() - 2 * DAY, cloudDeleteAt: null };
+  if (m.includes("pro-expired")) return { kind: "expired", proUntil: nowSec() - 2 * DAY };
   return null;
 }
 

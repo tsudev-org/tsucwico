@@ -38,9 +38,7 @@ export function RenewalNotice({
     ? t("renew.body")
         .replace("{n}", String(Math.max(1, notice.daysLeft)))
         .replace("{date}", noticeDate(locale, notice.proUntil))
-    : notice.cloudDeleteAt === null
-      ? t("expired.body")
-      : `${t("expired.body")} ${t("expired.cloud").replace("{date}", noticeDate(locale, notice.cloudDeleteAt))}`;
+    : t("expired.body");
 
   return (
     <Modal
