@@ -101,7 +101,10 @@ export function AccountPanel({
           {t("pro.title")} <TsuBadge badge="pro" locale={locale} />
         </h3>
         <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
-          {t("pro.what")}
+          {t("pro.positioning")}
+        </p>
+        <p className="mt-2 text-[13px]" style={{ color: "var(--text-secondary)" }}>
+          {t("pro.benefits")}
         </p>
         <p className="mt-2 text-[12px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
           {t("pro.terms").replace("{price}", t("pro.price"))}

@@ -30,6 +30,10 @@ Older releases were tagged `tsudev-cwico-v26.8.19` (= `26.8.1901`) and
   in, Pro and Donate only open when you click them (Account, About). The one
   notice kept is the Pro renewal / expiry reminder of 7.6, shown only to
   people who bought Pro.
+- Pro screen and Pro notices follow tsudev-standards PRODUCT_POLICY 3.7 / 7.5 /
+  7.6 (v8.3.0): Pro is an optional way to support the author; the only benefit
+  shown is the one that works today (the Pro badge). Pro no longer promises
+  settings sync or a cloud copy - your data never leaves this PC.
 
 - Tsu Cwico gets its own look, in the app and on cwico.tsudev.com: a petrol
   blue accent taken from the logo's arrow (`#0EB5CE` dark / `#087485`

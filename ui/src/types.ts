@@ -367,4 +367,4 @@ export interface AccountView {
 /** `cwico_core::pro::renewal::RenewalNotice` (PRODUCT_POLICY 7.6). */
 export type RenewalNotice =
   | { kind: "renew"; daysLeft: number; proUntil: number }
-  | { kind: "expired"; proUntil: number; cloudDeleteAt: number | null };
+  | { kind: "expired"; proUntil: number };

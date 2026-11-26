@@ -5,6 +5,11 @@
 - **Phiếu**: `logs/handover/20261119-PRO1_luu-cuc-bo-pro-dong-bo.md` (phiếu gốc
   `~/projects/logs/handover/20261119-PRO1_*`)
 - **Liên quan**: hạng C - ngoại tuyến (STATE "Quyết định quan trọng" 09/11/2026), ADR-0001
+- **Sửa đổi 26/11/2026** (phiếu `20261125-SYN1`, `20261125-PRO3`, `20261126-LG4`; PRODUCT_POLICY v2.0.0-v3.0.0, bộ quy
+  ước v8.3.0): chủ dự án quyết định **không đồng bộ dữ liệu người dùng lên internet** - bỏ Pro Q3 (đồng bộ/sao lưu đám
+  mây). Pro chỉ còn Q1 huy hiệu + Q2 giao diện Pro (Q2 chưa làm ở app ⇒ màn Pro chỉ liệt kê Q1, 3.7.3 điểm 2). Mục 2.2,
+  2.6 và phase P3 dưới đây **thay thế**: P3 cũ (đồng bộ qua `tsusync`) BỎ; đồng bộ giữa hai máy (nếu làm) dùng thư viện
+  `tsulink` theo `LOCAL_SYNC.md`, miễn phí, cần ADR mới. Phần đăng nhập/JWS/huy hiệu (P2) giữ nguyên.
 
 ## 1. Kiểm kê: dữ liệu nào đang rời máy (20/11/2026, bản 26.11.1901)
 
@@ -54,7 +59,7 @@ miễn phí, không có đường đồng bộ miễn phí nào phải tắt. Đ
 | --- | --- | --- |
 | **P1** ✅ | Kiểm kê, ADR này, chuẩn v3.9.1, `cwico_core::pro` (claims, trạng thái, nhắc 30 ngày, mã cài đặt), hộp thoại + i18n vi/en, khối "Dữ liệu chỉ ở máy này" ở Giới thiệu, `DONATE_URL` có `?app=tsucwico` | - |
 | **P2** ✅ 21/11 (#102; còn đo đầu cuối trên Windows) | Đăng nhập loopback PKCE + DPAPI, kiểm JWS ES256 (RustCrypto `p256`), lưu mã cài đặt, nút Đăng nhập/Đăng xuất + huy hiệu vẽ từ `assets/badges/`, màn Pro (điều khoản PRODUCT_POLICY 7.5 trước nút), phiếu rà soát bảo mật + `docs/THREAT_MODEL.md` (giả mạo quyền lợi, token bị đánh cắp, cổng loopback bị chiếm), đo proxy 0 byte | tsudev đăng ký client `tsucwico` (redirect loopback) + PRO-B gộp (tsudev#336) + B3 (`/pro`) |
-| **P3** | Đồng bộ cài đặt qua crate `tsusync`; 402 ⇒ màn Pro, không thử lại; "Chưa đồng bộ" khi 429/5xx; đo < 100 ms | PRO-D3 (crate Rust `tsusync`) |
+| ~~**P3**~~ BỎ 26/11/2026 (SYN1) | ~~Đồng bộ cài đặt qua crate `tsusync`~~; 402 ⇒ màn Pro, không thử lại; "Chưa đồng bộ" khi 429/5xx; đo < 100 ms | PRO-D3 (crate Rust `tsusync`) |
 
 ## 4. Hệ quả
 
