@@ -25,9 +25,10 @@ default-members = [
 [workspace.package]
 version      = "26.11.1901"
 edition      = "2021"
-# 1.82 for `Option::is_none_or`, which the path and command-line
-# parsers read far better with than `map_or(true, ..)`.
-rust-version = "1.82"
+# 1.95: the highest `rust-version` among locked dependencies (windows 0.100
+# family; sha2 0.11 needs 1.88, p256 0.14 / elliptic-curve 0.14 need 1.87).
+# Re-check after dependency bumps: `cargo metadata` rust_version maximum.
+rust-version = "1.95"
 authors      = ["tsudev <contact@tsudev.com>"]
 homepage     = "https://tsudev.com"
 repository   = "https://github.com/tsudev-org/tsucwico"
@@ -51,7 +52,7 @@ regex       = "1"
 getrandom   = "0.3"
 # ES256 check of the TsuDEV entitlement JWS (PRODUCT_POLICY 7.4) - RustCrypto,
 # pure Rust, verify only.
-p256        = { version = "0.13", default-features = false, features = ["ecdsa", "std"] }
+p256        = { version = "0.14", default-features = false, features = ["ecdsa", "std"] }
 base64      = "0.22"
 sha2        = "0.11"
 url         = "2"
