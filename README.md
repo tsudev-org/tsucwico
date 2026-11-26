@@ -15,7 +15,7 @@ Một sản phẩm của [TsuDEV](https://tsudev.com).
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tsudev-org/tsucwico/badge)](https://securityscorecards.dev/viewer/?uri=github.com/tsudev-org/tsucwico)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16838/badge)](https://www.bestpractices.dev/projects/16838)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2482bd)](LICENSE)
-[![Rust](https://img.shields.io/badge/rust-1.82%2B-ef6d18)](https://www.rust-lang.org)
+[![Rust](https://img.shields.io/badge/rust-1.95%2B-ef6d18)](https://www.rust-lang.org)
 [![Safety rules](https://img.shields.io/badge/safety%20rules-58-2482bd)](data/safety-db.json)
 [![Tests](https://img.shields.io/badge/tests-141-2482bd)](#tests)
 

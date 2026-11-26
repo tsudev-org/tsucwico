@@ -240,7 +240,7 @@ pub(crate) mod tests {
     }
 
     pub(crate) fn jwks_for(key: &SigningKey, kid: &str) -> Jwks {
-        let point = key.verifying_key().to_encoded_point(false);
+        let point = key.verifying_key().to_sec1_point(false);
         Jwks {
             keys: vec![Jwk {
                 kty: "EC".into(),
