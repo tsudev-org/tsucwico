@@ -1,11 +1,11 @@
 # STATE.md - Trạng thái project
 
-> **Phiên kế tiếp:** (1) Nếu PR SEC2 (`/security/`) chưa gộp: CI xanh ⇒ gộp. (2) **Deploy website** (gồm màu nền Sáng
-> `#EEF1F5` #116 + `/security/`): token `~/.config/tsudev/cloudflare.env` vẫn là bản ĐÃ THU HỒI (tệp không đổi từ 16/11,
+> **Phiên kế tiếp:** (1) Nếu #120 (UI2 font, CLS 0) chưa gộp: CI xanh ⇒ gộp. (2) **Deploy website** (gồm màu nền Sáng
+> `#EEF1F5` #116 + `/security/` #119 + font #120): token `~/.config/tsudev/cloudflare.env` vẫn là bản ĐÃ THU HỒI (tệp không đổi từ 16/11,
 > đo 26/11 23:16), OAuth wrangler hết hạn ⇒ 👤 `npx wrangler login` hoặc token mới qua `tsu-nhan-bi-mat` (phiếu SEC1). Sau
 > deploy đo: theme-color Sáng `#eef1f5`, `curl https://cwico.tsudev.com/security/ | grep "Báo lỗ hổng"`, security.txt
-> có `mailto:security@`. (3) **REL-TSU-1** vẫn chờ 👤: không có `tools/sandbox/ketqua/`; VirusTotal 26.11.1901 NSIS 3/51
-> (lượt 25/11 04:36, CrowdStrike/APEX/Trapmine), MSI/CLI 0. (4) Phiếu MỞ: **INT1** (Opus), **UI2** (A: rà Playwright),
+> có `mailto:security@`, quay khung hình tải lạnh trang chủ CLS ≈ 0 (phiếu UI2). (3) **REL-TSU-1** vẫn chờ 👤: không có `tools/sandbox/ketqua/`; VirusTotal 26.11.1901 NSIS 3/51
+> (lượt 25/11 04:36, CrowdStrike/APEX/Trapmine), MSI/CLI 0. (4) Phiếu MỞ: **INT1** (Opus), **UI2** (A đợt 1 xong; còn đo production, Lighthouse/INP, B),
 > **QR1**. (5) 👤: co VHDX (phiếu DD1 mục 3).
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
@@ -16,9 +16,10 @@
 - [ ] **INT1** Toàn vẹn ứng dụng (phiếu `20261125-INT1`, chuẩn v8.3.0 `APP_INTEGRITY.md`): cổng phiên bản đọc
   `https://tsudev.com/.well-known/tsudev/versions.json` + `.sig` Ed25519, modal khoá toàn màn (Cập nhật + Xuất dữ liệu),
   gửi `X-Tsu-App`, xử lý `426`. Cần Opus (mật mã). Chờ tsudev phát hành bản kê (đợt 1).
-- [ ] **SEC2** Trang `/security` + `security.txt`: **mã ✅** 26/11 (PR SEC2, `docs/security/trust.json`); còn deploy +
+- [ ] **SEC2** Trang `/security` + `security.txt`: **mã ✅** 26/11 (#119 gộp `1c4c558`, `docs/security/trust.json`); còn deploy +
   đo production, E8 SignPath (nộp đơn - 👤) - phiếu `20261125-SEC2`.
-- [ ] **UI2** Rà website bằng trình duyệt (A) + hiện đại hoá (B) - phiếu `20261125-UI2`.
+- [ ] **UI2** Rà website bằng trình duyệt (A) + hiện đại hoá (B) - phiếu `20261125-UI2`. **A đợt 1 ✅** 26/11 (#120: preload
+  font + dự phòng đo số, CLS 0,087-0,14 → 0; 54 tổ hợp 0 lỗi). Còn: đo production sau deploy, Lighthouse/INP, phần B.
 - [ ] **QR1** QR4 + UI1 (tương phản biểu tượng ≥ 3:1, test chặn tái phát) - phiếu `20261124-QR1`.
 - [ ] **AV1** 👤 gửi thư CrowdStrike/Trapmine (sổ `docs/store/antivirus.md`); đo lại VT 3-7 ngày sau.
 - [ ] **REL-TSU-1** Bản đầu tiên mang tên Tsu Cwico + khuôn thẻ v3: **Release nháp [`v26.11.1901`](https://github.com/tsudev-org/tsucwico/releases/tag/v26.11.1901)** (19/11/2026, phiên tsucwico-ea, run 44531891240). Đã kiểm trên nháp: 10 tệp đúng khuôn (`tsucwico_26.11.1901_windows-x64-setup.exe`, `_windows-x64.msi`, `_windows-x64-cli.exe`, `_sbom.spdx.json`, `.sig`, `latest.json`, `SHA256SUMS.txt` + `.sig` + `.sigstore.json`); `sha256sum -c` 7/7; `tools/verify_update_signature.py` - bản đã cài chấp nhận 3 gói; `gh attestation verify` 4/4 (ký bởi `release.yml@refs/tags/v26.11.1901`); Sigstore `OK`; CLI có CompanyName TsuDEV / FileVersion 26.11.1901; `latest.json` cùng dạng URL với 26.11.10.2 (đã cập nhật thật được). **VirusTotal**: MSI + CLI 0/74; bộ cài NSIS 3/74 engine học máy (CrowdStrike, APEX, Trapmine) ⇒ báo nhầm theo phiếu `logs/handover/20261119-VT1_*` (SecureAge đã nộp; 👤 gửi 2 email soạn sẵn). **Còn 👤:** nâng cấp thật trên máy ảo Windows có snapshot từ 26.11.1002 (MSI và NSIS) - mỗi đường chỉ một mục "Tsu Cwico" trong Add/Remove Programs (ADR-0001 mục 3, `docs/RELEASING.md` mục 5) ⇒ **Publish** (updater bắt buộc: Publish là đẩy tới mọi máy). **20/11: thử nâng cấp chuyển sang Windows Sandbox, bộ kiểm `tools/sandbox/` - phiếu `20261120-SB1`.** Sau Publish: deploy website (trang tải về đọc `releases/latest` lúc build), `tools/apply_winget_manifest.py` (manifest trong artifact `installers`) + nộp winget (đợi #476024), Scoop tự lên nhờ scoop-bucket#24.
@@ -61,7 +62,8 @@
 - 26/11/2026 - Phiên tsucwico-6da2: deploy website BỊ CHẶN (token CF thu hồi, OAuth hết hạn). **SEC2**: trang
   `/security/` + `trust.json` + security.txt `mailto:security@tsudev.com`, cổng Expires/nội dung trong `check-dist`; đo:
   SSL Labs A+ 4/4, Observatory A+ 140, HSTS `tsudev.com` preloaded, Scorecard 7.2, BP 100%, VT 26.11.1002 MSI 0/62, NSIS
-  3/71, CLI 3/71. REL-TSU-1 không đổi.
+  3/71, CLI 3/71 (#119 gộp). **UI2 A** #120: chỉ dính nguyên nhân 2 (font) ⇒ preload 400+600 + `Be Vietnam Pro Fallback`,
+  CLS 0. REL-TSU-1 không đổi (VT 26.11.1901 NSIS 3/51). AKB: LES-20261126-2352-5f65, LES-20261126-2352-b6f6.
 
 - 26/11/2026 - Phiên tsucwico-2e: **dọn đĩa toàn máy** (ổ C 9,2 → 22 GB trống, phiếu `20261126-DD1`, phối hợp tsudisk-4c);
   **SEC3**: gộp Dependabot #109 #110 #112 #113 #114, #111 thay bằng #115 (p256 0.14, MSRV khai đúng 1.95, cookie 0.18.3
