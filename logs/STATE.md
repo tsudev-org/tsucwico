@@ -9,8 +9,8 @@
 
 ## Hàng đợi task (làm từ trên xuống)
 
-- [ ] **LOGIN1** Phiếu `20261127-LOGIN1`: sửa V1-V7 (discovery, nút Mở trang tài khoản + Xoá tài khoản, nhãn nút, liên kết
-  "Vì sao nên đăng nhập?", dòng phiên hết hạn, trạng thái tài khoản). Chạm xác thực ⇒ Opus; PR riêng sau PR STD90.
+- [ ] **LOGIN1** Phiếu `20261127-LOGIN1`: **mã ✅** 27/11 V1-V7 + `iss` RFC 9207 trên nhánh `fix/login1-mot-cong-dang-nhap`
+  (commit cục bộ, tách từ STD90). Còn: 👤 đồng ý push ⇒ PR STD90 rồi PR LOGIN1, CI Windows xanh ⇒ đóng phiếu.
 - [x] **STD90** ✅ 27/11/2026: chuẩn v9.0.0 + cổng `check-central-login.sh --strict` trong CI (nhánh
   `chore/std90-sync-v9.0.0`, chưa push - chờ 👤).
 - [ ] **INT1** Toàn vẹn ứng dụng (phiếu `20261125-INT1`, chuẩn v8.3.0 `APP_INTEGRITY.md`): cổng phiên bản đọc
@@ -59,6 +59,9 @@
 | --- | --- | --- |
 
 ## Đã hoàn thành (mới nhất trên cùng)
+
+- 27/11/2026 - **LOGIN1** (mã): discovery OIDC, `iss` callback, nút Mở trang tài khoản / Xoá tài khoản / Vì sao nên đăng
+  nhập?, nhãn "Đăng nhập trên trình duyệt", dòng "Phiên đã hết hạn", huy hiệu trạng thái tài khoản + Khiếu nại.
 
 - 27/11/2026 - **STD90**: đồng bộ v9.0.0, quét đăng nhập 0 nghi vấn, rà mã ra V1-V7 (phiếu LOGIN1).
 

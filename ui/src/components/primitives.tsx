@@ -6,6 +6,7 @@
  * of class names.
  */
 
+import { useId } from "react";
 import type { ReactNode } from "react";
 import type { SafetyClass } from "../types";
 import { safetyBlurb, safetyLabel } from "../i18n";
@@ -198,6 +199,7 @@ export function Modal({
   footer?: ReactNode;
   width?: string;
 }) {
+  const titleId = useId();
   if (!open) return null;
   return (
     <div
@@ -209,6 +211,7 @@ export function Modal({
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby={titleId}
         className={`flex max-h-[85vh] w-full ${width} flex-col overflow-hidden rounded-xl border`}
         style={{
           background: "var(--surface-panel)",
@@ -221,7 +224,7 @@ export function Modal({
           className="flex items-center justify-between border-b px-5 py-3.5"
           style={{ borderColor: "var(--border-subtle)" }}
         >
-          <h2 className="text-base font-semibold">{title}</h2>
+          <h2 id={titleId} className="text-base font-semibold">{title}</h2>
           <button
             type="button"
             onClick={onClose}

@@ -407,6 +407,16 @@ async fn account_sign_out(account: State<'_, account::Account>) -> ApiResult<acc
     Ok(account.sign_out().await?)
 }
 
+/// Opens one of the sign-in gateway's pages (account, deletion, "why sign
+/// in", appeal). The UI names the page; the URL is fixed in the core.
+#[tauri::command]
+fn open_account_page(app: AppHandle, page: cwico_core::pro::AccountPage) -> ApiResult<()> {
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(page.url(), None::<&str>)
+        .map_err(|e| ApiError::other(format!("could not open the browser: {e}")))
+}
+
 /// Opens the TsuDEV Pro page. Takes no URL for the same reason as
 /// `open_product_site`.
 #[tauri::command]
@@ -518,6 +528,7 @@ pub fn run() {
             account_sign_in,
             account_sign_in_cancel,
             account_sign_out,
+            open_account_page,
             open_backup_dir,
             relaunch_as_admin,
         ])

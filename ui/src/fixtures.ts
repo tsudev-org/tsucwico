@@ -53,19 +53,33 @@ const DAY = 86_400;
 const nowSec = () => Math.floor(Date.now() / 1000);
 
 export function signedOut(): AccountView {
-  return { signedIn: false, proActive: false, proUntil: 0, badge: "none", devices30d: 0 };
+  return {
+    signedIn: false,
+    proActive: false,
+    proUntil: 0,
+    badge: "none",
+    devices30d: 0,
+    sessionExpired: false,
+    notice: null,
+  };
 }
 
 /**
  * `?preview=signed-in` (free, donor), `?preview=pro` (Pro, 120 days left),
- * `?preview=pro-renew` (Pro, 5 days left), `?preview=pro-expired`.
+ * `?preview=pro-renew` (Pro, 5 days left), `?preview=pro-expired`,
+ * `?preview=session-expired`, `?preview=restricted`, `?preview=suspended`.
  */
 export async function account(): Promise<AccountView> {
   const m = previewModes();
-  if (m.includes("pro")) return { signedIn: true, proActive: true, proUntil: nowSec() + 120 * DAY, badge: "both", devices30d: 2 };
-  if (m.includes("pro-renew")) return { signedIn: true, proActive: true, proUntil: nowSec() + 5 * DAY, badge: "pro", devices30d: 1 };
-  if (m.includes("pro-expired")) return { signedIn: true, proActive: false, proUntil: nowSec() - 2 * DAY, badge: "none", devices30d: 1 };
-  if (m.includes("signed-in")) return { signedIn: true, proActive: false, proUntil: 0, badge: "donor", devices30d: 1 };
+  if (m.includes("pro")) return { ...signedOut(), signedIn: true, proActive: true, proUntil: nowSec() + 120 * DAY, badge: "both", devices30d: 2 };
+  if (m.includes("pro-renew")) return { ...signedOut(), signedIn: true, proActive: true, proUntil: nowSec() + 5 * DAY, badge: "pro", devices30d: 1 };
+  if (m.includes("pro-expired")) return { ...signedOut(), signedIn: true, proActive: false, proUntil: nowSec() - 2 * DAY, badge: "none", devices30d: 1 };
+  if (m.includes("signed-in")) return { ...signedOut(), signedIn: true, proActive: false, proUntil: 0, badge: "donor", devices30d: 1 };
+  if (m.includes("session-expired")) return { ...signedOut(), sessionExpired: true };
+  for (const state of ["restricted", "suspended"] as const) {
+    if (m.includes(state))
+      return { ...signedOut(), signedIn: true, notice: { state, reason: `account_${state}` } };
+  }
   return signedOut();
 }
 

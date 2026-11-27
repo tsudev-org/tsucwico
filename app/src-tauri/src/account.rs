@@ -14,12 +14,12 @@
 //!   and the notice marks: `account.json` in the app's local data folder -
 //!   none of it is secret, and the JWS is re-verified on every read.
 
-use cwico_core::pro::jws::{self, Jwks, JWKS_URL};
+use cwico_core::pro::discovery::{Provider, DISCOVERY_URL};
+use cwico_core::pro::jws::{self, Jwks};
 use cwico_core::pro::renewal::{self, RenewalNotice};
-use cwico_core::pro::signin::{
-    Callback, SignInRequest, ENTITLEMENTS_URL, REVOCATION_URL, TOKEN_URL,
-};
-use cwico_core::pro::{self, Badge, EntitlementClaims, EntitlementStatus, CLIENT_ID};
+use cwico_core::pro::session::{session, Session};
+use cwico_core::pro::signin::{Callback, SignInRequest, ENTITLEMENTS_URL};
+use cwico_core::pro::{self, AccountState, Badge, EntitlementClaims, EntitlementStatus, CLIENT_ID};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 use std::net::{Ipv4Addr, TcpListener, TcpStream};
@@ -51,6 +51,10 @@ struct Store {
     /// `tsu.pro_expired.notified_until` of PRODUCT_POLICY 7.6.
     #[serde(default, rename = "tsu.pro_expired.notified_until")]
     expired_notified_until: Option<i64>,
+    /// The gateway refused the refresh token: the Account section says the
+    /// session expired until the next sign-in or sign-out (14.4.2.5).
+    #[serde(default)]
+    session_expired: bool,
 }
 
 /// What the UI shows about the account. Carries no token.
@@ -63,6 +67,16 @@ pub struct AccountView {
     pub pro_until: i64,
     pub badge: Badge,
     pub devices_30d: u32,
+    /// Signed out because the session ran out, not because the user chose to.
+    pub session_expired: bool,
+    /// Restriction or suspension decided by the server (14.4.3).
+    pub notice: Option<AccountNotice>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct AccountNotice {
+    pub state: AccountState,
+    pub reason: Option<String>,
 }
 
 impl AccountView {
@@ -77,6 +91,22 @@ impl AccountView {
             pro_until,
             badge: s.badge,
             devices_30d: s.devices_30d,
+            session_expired: false,
+            notice: None,
+        }
+    }
+
+    fn from_claims(c: &EntitlementClaims, s: EntitlementStatus) -> Self {
+        Self {
+            notice: c
+                .status
+                .as_deref()
+                .and_then(AccountState::from_claim)
+                .map(|state| AccountNotice {
+                    state,
+                    reason: c.status_reason.clone(),
+                }),
+            ..Self::from_status(s, c.pro_until)
         }
     }
 }
@@ -127,6 +157,9 @@ pub struct Account {
     /// racing with the same token would sign the user out.
     tokens: Mutex<Option<(String, Instant)>>,
     cancel: Arc<AtomicBool>,
+    /// Discovery document, fetched at most once per run and only after the
+    /// user pressed "Sign in" or when already signed in (N2).
+    provider: Mutex<Option<Provider>>,
     http: reqwest::Client,
 }
 
@@ -144,6 +177,8 @@ impl Account {
             .user_agent(concat!("TsuCwico/", env!("CARGO_PKG_VERSION")))
             .timeout(Duration::from_secs(20))
             .https_only(true)
+            // A 307 would resend the code or the refresh token elsewhere.
+            .redirect(reqwest::redirect::Policy::none())
             .build()
             .expect("static HTTP client configuration");
         Self {
@@ -151,6 +186,7 @@ impl Account {
             store: Mutex::new(store),
             tokens: Mutex::new(None),
             cancel: Arc::new(AtomicBool::new(false)),
+            provider: Mutex::new(None),
             http,
         }
     }
@@ -159,13 +195,25 @@ impl Account {
     pub async fn view(&self) -> AccountView {
         let store = self.store.lock().await;
         let now = OffsetDateTime::now_utc();
-        match valid_claims(&store, now) {
-            Some((c, s)) => AccountView::from_status(s, c.pro_until),
-            None if has_refresh_token() => AccountView {
-                signed_in: true,
+        let claims = valid_claims(&store, now);
+        match session(
+            has_refresh_token(),
+            store.jws.is_some(),
+            claims.is_some(),
+            store.session_expired,
+        ) {
+            Session::SignedIn => match claims {
+                Some((c, s)) => AccountView::from_claims(&c, s),
+                None => AccountView {
+                    signed_in: true,
+                    ..AccountView::signed_out()
+                },
+            },
+            Session::Expired => AccountView {
+                session_expired: true,
                 ..AccountView::signed_out()
             },
-            None => AccountView::signed_out(),
+            Session::SignedOut => AccountView::signed_out(),
         }
     }
 
@@ -206,19 +254,25 @@ impl Account {
             .map_err(|e| AccountError::Storage(e.to_string()))?
             .port();
         let req = SignInRequest::new(port).map_err(|e| AccountError::Storage(e.to_string()))?;
-        open_browser(&req.authorize_url()).map_err(AccountError::Network)?;
+        // The first packet to tsudev.com: after the click.
+        let provider = self.provider().await?;
+        if self.cancel.load(Ordering::SeqCst) {
+            return Err(AccountError::Cancelled);
+        }
+        open_browser(&req.authorize_url(&provider)).map_err(AccountError::Network)?;
 
         let cancel = self.cancel.clone();
         let waiting = req.clone();
+        let gateway = provider.clone();
         let code = tauri::async_runtime::spawn_blocking(move || {
-            wait_for_callback(listener, &waiting, &cancel)
+            wait_for_callback(listener, &waiting, &gateway, &cancel)
         })
         .await
         .map_err(|e| AccountError::Network(e.to_string()))??;
 
         let tokens: TokenResponse = self
             .post_form(
-                TOKEN_URL,
+                provider.token_endpoint.as_str(),
                 &[
                     ("grant_type", "authorization_code"),
                     ("code", &code),
@@ -228,7 +282,7 @@ impl Account {
                 ],
             )
             .await?;
-        let jwks = self.fetch_jwks().await?;
+        let jwks = self.fetch_jwks(&provider).await?;
         let id_token = tokens
             .id_token
             .as_deref()
@@ -243,6 +297,10 @@ impl Account {
         {
             let mut store = self.store.lock().await;
             store.jwks = Some(jwks.0);
+            // Whatever an earlier session left behind is not this one's.
+            store.jws = None;
+            store.session_expired = false;
+            self.save(&store)?;
         }
         self.fetch_entitlement(&tokens.access_token).await?;
         Ok(self.view().await)
@@ -255,25 +313,15 @@ impl Account {
     /// Revokes the refresh token (best effort) and forgets everything but
     /// the installation id. Data on this PC is untouched.
     pub async fn sign_out(&self) -> Result<AccountView> {
-        let _guard = self.tokens.lock().await;
+        let mut tokens = self.tokens.lock().await;
         if let Some(token) = load_refresh_token() {
-            let revoked = self
-                .http
-                .post(REVOCATION_URL)
-                .form(&[
-                    ("token", token.as_str()),
-                    ("token_type_hint", "refresh_token"),
-                    ("client_id", CLIENT_ID),
-                ])
-                .send()
-                .await;
-            if let Err(e) = revoked {
-                tracing::warn!(error = %e, "token revocation failed; forgetting it locally anyway");
+            if let Err(e) = self.revoke(&token).await {
+                tracing::warn!(error = ?e, "token revocation failed; forgetting it locally anyway");
             }
         }
         delete_refresh_token();
-        drop(_guard);
-        *self.tokens.lock().await = None;
+        *tokens = None;
+        drop(tokens);
         let mut store = self.store.lock().await;
         let id = store.installation_id.take();
         *store = Store {
@@ -320,9 +368,10 @@ impl Account {
             }
         }
         let refresh = load_refresh_token().ok_or(AccountError::Cancelled)?;
+        let provider = self.provider().await?;
         let reply = self
             .http
-            .post(TOKEN_URL)
+            .post(provider.token_endpoint.clone())
             .form(&[
                 ("grant_type", "refresh_token"),
                 ("refresh_token", refresh.as_str()),
@@ -339,6 +388,12 @@ impl Account {
             tracing::info!("refresh token no longer accepted; signing out locally");
             delete_refresh_token();
             *tokens = None;
+            let mut store = self.store.lock().await;
+            // The cached entitlement would otherwise keep saying "signed in"
+            // for up to 7 days.
+            store.jws = None;
+            store.session_expired = true;
+            self.save(&store)?;
             return Err(AccountError::Denied);
         }
         let t: TokenResponse = json_or_error(reply).await?;
@@ -350,17 +405,52 @@ impl Account {
         Ok(t.access_token)
     }
 
-    async fn fetch_jwks(&self) -> Result<(String, Jwks)> {
-        let body = self
-            .http
-            .get(JWKS_URL)
+    async fn provider(&self) -> Result<Provider> {
+        let mut cached = self.provider.lock().await;
+        if let Some(p) = cached.as_ref() {
+            return Ok(p.clone());
+        }
+        let body = self.get_text(DISCOVERY_URL).await?;
+        let p = Provider::from_json(&body)
+            .map_err(|e| AccountError::Rejected(format!("discovery: {e:?}")))?;
+        *cached = Some(p.clone());
+        Ok(p)
+    }
+
+    async fn revoke(&self, token: &str) -> Result<()> {
+        let provider = self.provider().await?;
+        self.http
+            .post(provider.revocation_endpoint)
+            .form(&[
+                ("token", token),
+                ("token_type_hint", "refresh_token"),
+                ("client_id", CLIENT_ID),
+            ])
             .send()
             .await
-            .and_then(reqwest::Response::error_for_status)
-            .map_err(|e| AccountError::Network(e.to_string()))?
-            .text()
+            .map_err(|e| AccountError::Network(e.to_string()))?;
+        Ok(())
+    }
+
+    /// A 2xx body; a redirect is not followed and counts as a failure.
+    async fn get_text(&self, url: &str) -> Result<String> {
+        let reply = self
+            .http
+            .get(url)
+            .send()
             .await
             .map_err(|e| AccountError::Network(e.to_string()))?;
+        if !reply.status().is_success() {
+            return Err(AccountError::Network(format!("HTTP {}", reply.status())));
+        }
+        reply
+            .text()
+            .await
+            .map_err(|e| AccountError::Network(e.to_string()))
+    }
+
+    async fn fetch_jwks(&self, provider: &Provider) -> Result<(String, Jwks)> {
+        let body = self.get_text(provider.jwks_uri.as_str()).await?;
         let jwks =
             Jwks::from_json(&body).map_err(|e| AccountError::Rejected(format!("jwks: {e:?}")))?;
         Ok((body, jwks))
@@ -404,7 +494,8 @@ impl Account {
         // No cached JWKS, or it no longer verifies (the server rotated its
         // key): fetch the JWKS once more and decide with that.
         if !matches!(checked, Some(Ok(_))) {
-            let (raw, fresh) = self.fetch_jwks().await?;
+            let provider = self.provider().await?;
+            let (raw, fresh) = self.fetch_jwks(&provider).await?;
             checked = Some(jws::verify_entitlement(&body.jws, &fresh, now));
             self.store.lock().await.jwks = Some(raw);
         }
@@ -486,6 +577,7 @@ fn valid_claims(
 fn wait_for_callback(
     listener: TcpListener,
     req: &SignInRequest,
+    provider: &Provider,
     cancel: &AtomicBool,
 ) -> Result<String> {
     listener
@@ -504,7 +596,7 @@ fn wait_for_callback(
         let Some((line, mut stream)) = read_request_line(stream) else {
             continue;
         };
-        match req.callback(&line) {
+        match req.callback(&line, provider) {
             Callback::NotOurs => {
                 let _ = stream.write_all(
                     b"HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\nConnection: close\r\n\r\n",
@@ -525,6 +617,10 @@ fn wait_for_callback(
             Callback::WrongState => {
                 respond(&mut stream, false);
                 return Err(AccountError::Rejected("state mismatch".into()));
+            }
+            Callback::WrongIssuer => {
+                respond(&mut stream, false);
+                return Err(AccountError::Rejected("issuer mismatch".into()));
             }
         }
     }

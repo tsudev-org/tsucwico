@@ -1,8 +1,8 @@
 //! Signature check of the entitlement JWS (PRODUCT_POLICY 7.4).
 //!
 //! The token is a compact JWS signed by tsudev.com with its OIDC key:
-//! header `alg` = `ES256`, `typ` = `tsu-ent+jwt`, `kid` naming a key of
-//! `https://tsudev.com/oidc/jwks`. Anything else is refused before the
+//! header `alg` = `ES256`, `typ` = `tsu-ent+jwt`, `kid` naming a key of the
+//! issuer's JWKS (`jwks_uri` of the discovery document). Anything else is refused before the
 //! claims are even parsed - an `alg` the server never uses is the classic
 //! way to forge a token (`none`, or HS256 keyed with the public key).
 //!
@@ -20,9 +20,6 @@ use time::OffsetDateTime;
 pub const ALG: &str = "ES256";
 /// Media type of an entitlement token (`typ` header).
 pub const TYP: &str = "tsu-ent+jwt";
-/// Where the signing keys are published (from the OIDC discovery document).
-pub const JWKS_URL: &str = "https://tsudev.com/oidc/jwks";
-
 /// One public key of the issuer's JWKS. Only P-256 EC keys are usable;
 /// others (an RSA key published for `id_token` of other clients, say) are
 /// kept so a `kid` that names them is refused rather than "not found".
