@@ -63,3 +63,6 @@ ký lại bằng khoá khác ⇒ `403 untrusted_client` + modal không chính th
   - **Việc 👤 (trước INT1-5, làm sớm được)**: tạo Environment `versions` (nhánh `main` + thẻ `v*`) + secret
     `TSU_VERSIONS_TOKEN` từ biến `VERSIONS_RAISE_TOKEN` trong `~/.config/tsudev/keys/tsu-versions-2026.env` (bẫy: tên
     biến nguồn KHÁC tên secret). Lệnh từng bước: `docs/PLAN.md` Phase INT1-5.
+- 27/11/2026 - tsucwico: 👤 tạo Environment `versions` (chính sách `branch main` + `tag v*`, không reviewer) + secret
+  `TSU_VERSIONS_TOKEN` (tạo 09:26 UTC, chỉ ở Environment này) bằng cách A trong `docs/PLAN.md`; agent đối chiếu qua API
+  (chỉ tên + siêu dữ liệu). INT1-5 không còn chờ 👤 phần secret.

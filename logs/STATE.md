@@ -1,7 +1,7 @@
 # STATE.md - Trạng thái project
 
 > **Phiên kế tiếp:** (0) **INT1 Phase INT1-1** (lõi `cwico_core::integrity`) - `docs/PLAN.md` + ADR-0003; mật mã ⇒
-> Plan Mode (Opus) trước khi viết mã. 👤 tạo Environment `versions` + secret `TSU_VERSIONS_TOKEN` (lệnh: PLAN INT1-5).
+> Plan Mode (Opus) trước khi viết mã. Environment `versions` + secret `TSU_VERSIONS_TOKEN` ✅ 27/11 (👤).
 > (1) **REL-TSU-1** vẫn chờ 👤 (Sandbox chưa có `ketqua/`, VT 26.11.1901 NSIS 3/51). (2) Phiếu MỞ:
 > **INT1** (Opus), **UI2** (còn Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (3) 👤: co VHDX (phiếu DD1
 > mục 3). Deploy: OAuth wrangler do 👤 đăng nhập 27/11; `~/.config/tsudev/cloudflare.env` vẫn là token đã thu hồi.
