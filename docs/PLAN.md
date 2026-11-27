@@ -64,7 +64,7 @@ Nghiệm thu: test CLI đạt, `check-standards.sh` + `check-central-login.sh --
 
 - [ ] `release.yml`: `--remap-path-prefix`
 - [ ] `.github/workflows/kenh-phat-hanh.yml` (ADR-0003 mục 13), ghim SHA action, quyền tối thiểu
-- [ ] 👤 tạo Environment `versions` + secret `TSU_VERSIONS_TOKEN` (cách làm ngay dưới; làm sớm được, không phụ thuộc mã)
+- [x] 👤 tạo Environment `versions` + secret `TSU_VERSIONS_TOKEN` - ✅ 27/11/2026 (cách A; secret tạo 09:26 UTC, chính sách `branch main` + `tag v*`, không reviewer, không có ở mức repo)
 
 ### Cách tạo Environment `versions` + secret `TSU_VERSIONS_TOKEN`
 
