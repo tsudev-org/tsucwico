@@ -14,7 +14,9 @@
 - [x] **STD90** ✅ 27/11/2026: chuẩn v9.0.0 + cổng `check-central-login.sh --strict` trong CI (#126).
 - [ ] **INT1** Toàn vẹn ứng dụng (phiếu `20261125-INT1`, chuẩn v8.3.0 `APP_INTEGRITY.md`): cổng phiên bản đọc
   `https://tsudev.com/.well-known/tsudev/versions.json` + `.sig` Ed25519, modal khoá toàn màn (Cập nhật + Xuất dữ liệu),
-  gửi `X-Tsu-App`, xử lý `426`. Cần Opus (mật mã). Chờ tsudev phát hành bản kê (đợt 1).
+  gửi `X-Tsu-App`, xử lý `426`. Cần Opus (mật mã). Bản kê + JWKS đã chạy production (27/11, chưa có mục `tsucwico`).
+  **INT1-0 ✅** 27/11: ADR-0003 (chủ dự án chốt: mọi người dùng, cả `latest.json` lẫn bản kê) + `docs/PLAN.md`.
+  **Bước tiếp: Phase INT1-1** (lõi `cwico_core::integrity`, `ring`, test mục 6) - xem `docs/PLAN.md`.
 - [ ] **SEC2** Trang `/security` + `security.txt`: **mã ✅** 26/11 (#119 gộp `1c4c558`, `docs/security/trust.json`); còn deploy +
   E8 SignPath (nộp đơn - 👤) - phiếu `20261125-SEC2`. **Deploy ✅** 27/11 Worker `b64df5cd`: `/security/` có
   nội dung thật, security.txt mailto + Policy.
