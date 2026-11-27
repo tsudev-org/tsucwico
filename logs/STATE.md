@@ -1,7 +1,7 @@
 # STATE.md - Trạng thái project
 
 > **Phiên kế tiếp:** (1) **REL-TSU-1** vẫn chờ 👤 (Sandbox chưa có `ketqua/`, VT 26.11.1901 NSIS 3/51). (2) Phiếu MỞ:
-> **LOGIN1** (một cổng đăng nhập V1-V7, Opus, PR riêng), **INT1** (Opus), **UI2** (còn Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (3) 👤: co VHDX (phiếu DD1
+> **INT1** (Opus), **UI2** (còn Lighthouse/INP, phần B), **QR1**, SEC2-d (E8 SignPath - 👤). (3) 👤: co VHDX (phiếu DD1
 > mục 3). Deploy: OAuth wrangler do 👤 đăng nhập 27/11; `~/.config/tsudev/cloudflare.env` vẫn là token đã thu hồi.
 
 > Agent đọc file này ở đầu mỗi phiên và cập nhật ở cuối mỗi phiên.
@@ -9,10 +9,9 @@
 
 ## Hàng đợi task (làm từ trên xuống)
 
-- [ ] **LOGIN1** Phiếu `20261127-LOGIN1`: **mã ✅** 27/11 V1-V7 + `iss` RFC 9207 trên nhánh `fix/login1-mot-cong-dang-nhap`
-  (commit cục bộ, tách từ STD90). Còn: 👤 đồng ý push ⇒ PR STD90 rồi PR LOGIN1, CI Windows xanh ⇒ đóng phiếu.
-- [x] **STD90** ✅ 27/11/2026: chuẩn v9.0.0 + cổng `check-central-login.sh --strict` trong CI (nhánh
-  `chore/std90-sync-v9.0.0`, chưa push - chờ 👤).
+- [x] **LOGIN1** ✅ 27/11/2026 #127: V1-V7 + `iss` RFC 9207, CI 12/12. Phiếu ĐÓNG; đăng nhập đầu cuối trên Windows thật
+  vẫn ở phiếu PRO1 bước 7 (👤).
+- [x] **STD90** ✅ 27/11/2026: chuẩn v9.0.0 + cổng `check-central-login.sh --strict` trong CI (#126).
 - [ ] **INT1** Toàn vẹn ứng dụng (phiếu `20261125-INT1`, chuẩn v8.3.0 `APP_INTEGRITY.md`): cổng phiên bản đọc
   `https://tsudev.com/.well-known/tsudev/versions.json` + `.sig` Ed25519, modal khoá toàn màn (Cập nhật + Xuất dữ liệu),
   gửi `X-Tsu-App`, xử lý `426`. Cần Opus (mật mã). Chờ tsudev phát hành bản kê (đợt 1).
@@ -60,7 +59,7 @@
 
 ## Đã hoàn thành (mới nhất trên cùng)
 
-- 27/11/2026 - **LOGIN1** (mã): discovery OIDC, `iss` callback, nút Mở trang tài khoản / Xoá tài khoản / Vì sao nên đăng
+- 27/11/2026 - **STD90** #126 + **LOGIN1** #127 gộp, CI xanh (README số test 177). **LOGIN1**: discovery OIDC, `iss` callback, nút Mở trang tài khoản / Xoá tài khoản / Vì sao nên đăng
   nhập?, nhãn "Đăng nhập trên trình duyệt", dòng "Phiên đã hết hạn", huy hiệu trạng thái tài khoản + Khiếu nại.
 
 - 27/11/2026 - **STD90**: đồng bộ v9.0.0, quét đăng nhập 0 nghi vấn, rà mã ra V1-V7 (phiếu LOGIN1).
