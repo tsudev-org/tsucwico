@@ -44,7 +44,7 @@
 | tsudev | ⬜ | ⬜ | ⬜ | đợt 1 |
 | tsudev-ui-flutter | ⬜ | ⬜ | - | đợt 1 |
 | qulythuchi / tsuscan / sound-db / lotus-share / app-la-ban | ⬜ | ⬜ | ⬜ | đợt 2 |
-| tsufiles / tsuswico / tsudisk / tsutramon / tsucwico / tsucontact | ⬜ | ⬜ (máy chủ quyết) | ⬜ | đợt 2 |
+| tsufiles / tsuswico / tsudisk / tsutramon / tsucwico / tsucontact | ⬜ | ⬜ (máy chủ quyết) | ⬜ | đợt 2; tsucwico: ADR-0003 + PLAN #129, đang INT1-1 |
 | TsuGameLabs (game-kit + 6 game) | ⬜ | ⬜ | ⬜ làm rối mạnh | đợt 2 |
 
 ## 4. Điều kiện đóng
@@ -55,3 +55,11 @@ ký lại bằng khoá khác ⇒ `403 untrusted_client` + modal không chính th
 ## 5. Kết quả xử lý
 
 - 25/11/2026 - projects-05: mở phiếu; tsudev-standards v7.0.0 PR #85. Chủ dự án gộp #85; bản sao phát vào `logs/handover/` của các repo (chưa commit - phiên repo tự commit).
+- 27/11/2026 - tsucwico (phiên SES-20261127-1045-fd44): **INT1-0 ✅** #129 gộp `0ace453` - ADR-0003 + `docs/PLAN.md`
+  (Phase INT1-0 đến INT1-5). Chủ dự án chốt: kiểm bản kê cho **mọi người dùng**, cả `latest.json` (GitHub) lẫn
+  `versions.json` (tsudev.com). Bản kê production 27/11 chưa có mục `tsucwico`. Repo chưa có Environment nào.
+  - **Phiên kế tiếp: Phase INT1-1** (lõi `cwico_core::integrity`, `ring`, test APP_INTEGRITY mục 6) - đọc
+    `docs/PLAN.md` + `docs/adr/0003-*.md`; tiền lệ đã chạy: tsudisk ADR-0012 + `tests/TsuDisk.Core.Tests/VersionGateTests.cs`.
+  - **Việc 👤 (trước INT1-5, làm sớm được)**: tạo Environment `versions` (nhánh `main` + thẻ `v*`) + secret
+    `TSU_VERSIONS_TOKEN` từ biến `VERSIONS_RAISE_TOKEN` trong `~/.config/tsudev/keys/tsu-versions-2026.env` (bẫy: tên
+    biến nguồn KHÁC tên secret). Lệnh từng bước: `docs/PLAN.md` Phase INT1-5.

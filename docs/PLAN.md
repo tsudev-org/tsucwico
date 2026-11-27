@@ -64,7 +64,41 @@ Nghiệm thu: test CLI đạt, `check-standards.sh` + `check-central-login.sh --
 
 - [ ] `release.yml`: `--remap-path-prefix`
 - [ ] `.github/workflows/kenh-phat-hanh.yml` (ADR-0003 mục 13), ghim SHA action, quyền tối thiểu
-- [ ] 👤 tạo Environment `versions` + secret `TSU_VERSIONS_TOKEN` (giá trị lấy ở tsudev, nhập qua stdin)
+- [ ] 👤 tạo Environment `versions` + secret `TSU_VERSIONS_TOKEN` (cách làm ngay dưới; làm sớm được, không phụ thuộc mã)
+
+### Cách tạo Environment `versions` + secret `TSU_VERSIONS_TOKEN`
+
+Nguồn giá trị: biến `VERSIONS_RAISE_TOKEN` trong `~/.config/tsudev/keys/tsu-versions-2026.env` (KEY=VALUE, 600). Bẫy:
+tên biến nguồn KHÁC tên secret. Không in giá trị ra màn hình, không dán vào chat/tệp git.
+
+**Cách A - dòng lệnh (gõ trong Claude Code với tiền tố `!`, hoặc terminal WSL):**
+
+```bash
+R=tsudev-org/tsucwico
+# 1. Environment chỉ cho nhánh/thẻ khai báo
+gh api -X PUT repos/$R/environments/versions \
+  -F 'deployment_branch_policy[protected_branches]=false' \
+  -F 'deployment_branch_policy[custom_branch_policies]=true'
+# 2. Cho phép nhánh main (workflow_dispatch/schedule) + thẻ v* (phát hành)
+gh api -X POST repos/$R/environments/versions/deployment-branch-policies -f name=main -f type=branch
+gh api -X POST repos/$R/environments/versions/deployment-branch-policies -f name='v*' -f type=tag
+# 3. Secret: nạp biến trong subshell, truyền qua biến, không in
+( set -a; . ~/.config/tsudev/keys/tsu-versions-2026.env; set +a
+  gh secret set TSU_VERSIONS_TOKEN --env versions --repo $R --body "$VERSIONS_RAISE_TOKEN" )
+# 4. Kiểm (chỉ tên + chính sách, không giá trị)
+gh api repos/$R/environments/versions/secrets --jq '.secrets[].name'
+gh api repos/$R/environments/versions/deployment-branch-policies --jq '.branch_policies[] | "\(.type) \(.name)"'
+```
+
+Kỳ vọng bước 4: `TSU_VERSIONS_TOKEN`; `branch main`, `tag v*`.
+
+**Cách B - giao diện web:** github.com/tsudev-org/tsucwico ⇒ **Settings** ⇒ **Environments** ⇒ **New environment**,
+tên `versions` ⇒ **Configure environment** ⇒ mục **Deployment branches and tags** chọn **Selected branches and tags** ⇒
+**Add deployment branch or tag rule**: Ref type **Branch**, pattern `main`; thêm lần nữa: Ref type **Tag**, pattern `v*`
+⇒ mục **Environment secrets** ⇒ **Add environment secret**: Name `TSU_VERSIONS_TOKEN`, Value = giá trị
+`VERSIONS_RAISE_TOKEN` (mở tệp bằng trình soạn thảo trên máy, chép phần sau dấu `=`, không kèm dấu nháy/xuống dòng) ⇒
+**Add secret**. Không bật "Required reviewers" (workflow chạy theo lịch sẽ treo chờ duyệt). Không đặt secret này ở mức
+repo hay Environment khác (tiền lệ tsudisk #90: chỉ ở `versions`).
 - [ ] Cập nhật bảng mục 3 phiếu INT1 (hàng tsucwico), DoD APP_INTEGRITY mục 8
 
 Nghiệm thu: workflow chạy `workflow_dispatch` khô (không token ⇒ dừng sạch); thử thật trên Windows (👤): nâng `latest` ⇒
