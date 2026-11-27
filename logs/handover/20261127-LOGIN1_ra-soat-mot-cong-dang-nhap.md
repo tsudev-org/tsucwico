@@ -2,7 +2,7 @@
 
 > Mẫu theo `AUTH_AND_ACCOUNT.md` mục 2.1. KHÔNG dán giá trị bí mật, token hay dữ liệu tài khoản vào phiếu.
 
-- **Trạng thái**: MỞ - **Bộ quy ước**: v9.0.0 - **Phiên**: tsucwico (STD90), 27/11/2026
+- **Trạng thái**: ĐÓNG (27/11/2026, #127) - **Bộ quy ước**: v9.0.0 - **Phiên**: tsucwico (STD90), 27/11/2026
 - **Bề mặt**: desktop (Tauri) + website tĩnh + CLI - **Có tài khoản TsuDEV**: có (app desktop, không bắt buộc)
 
 ## 1. Kết quả quét
@@ -23,13 +23,13 @@
 
 | Vi phạm (tệp:dòng) | Cách sửa | Di trú dữ liệu | PR | Trạng thái |
 | --- | --- | --- | --- | --- |
-| V1 `crates/cwico-core/src/pro/signin.rs:16-18`, `jws.rs:24`: ghi cứng authorize/token/revocation/JWKS (mục 2, 2.1) | Đọc `https://tsudev.com/oidc/.well-known/openid-configuration` sau cú bấm; kiểm `issuer` khớp `ISSUER`, mọi endpoint `https://tsudev.com`; không gọi mạng trước khi đăng nhập | không | | ĐÃ SỬA (nhánh `fix/login1-mot-cong-dang-nhap`) |
-| V2 `ui/src/components/AccountPanel.tsx`: không có nút "Mở trang tài khoản" | Lệnh Tauri URL cố định `https://tsudev.com/settings/profile` (đo 200) | không | | ĐÃ SỬA (nhánh `fix/login1-mot-cong-dang-nhap`) |
-| V3 như trên: không có "Xoá tài khoản" | Nút hiện khi đã đăng nhập, bước xác nhận, mở `https://tsudev.com/settings/security` (trang xoá của cổng) | không | | ĐÃ SỬA (nhánh `fix/login1-mot-cong-dang-nhap`) |
-| V4 `ui/src/i18n` `account.signIn`: "Đăng nhập TsuDEV" | Đổi thành "Đăng nhập trên trình duyệt" / "Sign in in your browser" | không | | ĐÃ SỬA (nhánh `fix/login1-mot-cong-dang-nhap`) |
-| V5 thiếu "Vì sao nên đăng nhập?" (mục 14.4.2.1) | Liên kết `https://tsudev.com/privacy#dang-nhap` khi chưa đăng nhập | không | | ĐÃ SỬA (nhánh `fix/login1-mot-cong-dang-nhap`) |
-| V6 `app/src-tauri/src/account.rs` `access_token`: phiên bị từ chối thì về "chưa đăng nhập" không nói gì (14.4.2.5) | Lưu cờ hết phiên, hiện "Phiên đã hết hạn - Đăng nhập lại", không hộp thoại | khoá mới trong `account.json` | | ĐÃ SỬA (nhánh `fix/login1-mot-cong-dang-nhap`) |
-| V7 app không đọc `status` tài khoản (14.4.3) | Đọc claim `status`/`status_reason`; `suspended`/`restricted` hiện huy hiệu + lý do + đường khiếu nại trong mục Tài khoản; xác minh nguồn claim theo hợp đồng tsudev trước | không | | ĐÃ SỬA (nhánh `fix/login1-mot-cong-dang-nhap`) |
+| V1 `crates/cwico-core/src/pro/signin.rs:16-18`, `jws.rs:24`: ghi cứng authorize/token/revocation/JWKS (mục 2, 2.1) | Đọc `https://tsudev.com/oidc/.well-known/openid-configuration` sau cú bấm; kiểm `issuer` khớp `ISSUER`, mọi endpoint `https://tsudev.com`; không gọi mạng trước khi đăng nhập | không | | ĐÃ SỬA #127 |
+| V2 `ui/src/components/AccountPanel.tsx`: không có nút "Mở trang tài khoản" | Lệnh Tauri URL cố định `https://tsudev.com/settings/profile` (đo 200) | không | | ĐÃ SỬA #127 |
+| V3 như trên: không có "Xoá tài khoản" | Nút hiện khi đã đăng nhập, bước xác nhận, mở `https://tsudev.com/settings/security` (trang xoá của cổng) | không | | ĐÃ SỬA #127 |
+| V4 `ui/src/i18n` `account.signIn`: "Đăng nhập TsuDEV" | Đổi thành "Đăng nhập trên trình duyệt" / "Sign in in your browser" | không | | ĐÃ SỬA #127 |
+| V5 thiếu "Vì sao nên đăng nhập?" (mục 14.4.2.1) | Liên kết `https://tsudev.com/privacy#dang-nhap` khi chưa đăng nhập | không | | ĐÃ SỬA #127 |
+| V6 `app/src-tauri/src/account.rs` `access_token`: phiên bị từ chối thì về "chưa đăng nhập" không nói gì (14.4.2.5) | Lưu cờ hết phiên, hiện "Phiên đã hết hạn - Đăng nhập lại", không hộp thoại | khoá mới trong `account.json` | | ĐÃ SỬA #127 |
+| V7 app không đọc `status` tài khoản (14.4.3) | Đọc claim `status`/`status_reason`; `suspended`/`restricted` hiện huy hiệu + lý do + đường khiếu nại trong mục Tài khoản; xác minh nguồn claim theo hợp đồng tsudev trước | không | | ĐÃ SỬA #127 |
 
 Gia cố kèm V1 (khuyến nghị, không phải vi phạm đã xác định): kiểm tham số `iss` ở callback (RFC 9207, discovery báo hỗ trợ).
 
@@ -48,10 +48,11 @@ nhập tài khoản (hiện đã đạt). Sửa mã đăng nhập: dùng Opus, P
   biên dịch trên Linux (cảnh báo `Emitter` không dùng ở `update.rs` có từ trước, chỉ trên Linux); UI build + test;
   axe-core 20 tổ hợp (5 trạng thái x Sáng/Tối x vi/en) 0 lỗi, hộp xác nhận xoá 0 lỗi sau khi thêm `aria-labelledby`
   cho `Modal`; `check-central-login.sh --strict` 0 nghi vấn.
-- CHƯA kiểm: `cargo check` đích Windows (máy này thiếu bộ biên dịch MSVC cho `ring`) - dựa CI; đăng nhập đầu cuối
+- CI #127 xanh 12/12 (gồm Windows build và cổng `--strict`); README số test 168 → 177. STD90 gộp #126.
+- CHƯA kiểm: đăng nhập đầu cuối
   trên Windows thật (phiếu PRO1 bước 7, 👤).
 - Ghi nhận cho chủ dự án: AUTH_AND_ACCOUNT mục 2 nêu discovery ở `https://tsudev.com/.well-known/openid-configuration`
   nhưng địa chỉ đó trả 404; discovery thật nằm dưới issuer `https://tsudev.com/oidc/.well-known/...` (đúng OIDC
   Discovery 4). Câu chữ chuẩn nên sửa ở tsudev-standards - không sửa hộ.
 
-Đóng phiếu sau khi PR gộp và CI (gồm cổng `--strict`) xanh.
+ĐÓNG 27/11/2026: #127 gộp, CI xanh. Việc còn lại thuộc phiếu PRO1 bước 7 (👤).
